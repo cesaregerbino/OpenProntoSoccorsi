@@ -1,0 +1,7 @@
+CREATE TABLE access_numbers(
+  Date TEXT,
+  Counter DOUBLE
+);
+
+ INSERT INTO access_numbers (Counter) VALUES (0);
+.quit

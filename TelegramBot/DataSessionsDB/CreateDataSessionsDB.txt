@@ -1,0 +1,5 @@
+CREATE TABLE data_sessions(
+  chat_id TEXT,
+  language TEXT
+);
+.quit
