@@ -1,0 +1,31 @@
+CREATE TABLE ps_details(
+  osm_id TEXT,
+  ps_name TEXT,
+  city TEXT,
+  address TEXT,
+  tel TEXT,
+  email TEXT,
+  url_website TEXT,
+  url_data TEXT,
+  data_type TEXT,
+  xpath_numeri_bianco_attesa TEXT,
+  xpath_tempi_bianco_attesa TEXT,
+  xpath_numeri_bianco_visita TEXT,
+  xpath_tempi_bianco_visita TEXT,
+  xpath_numeri_verde_attesa TEXT,
+  xpath_tempi_verde_attesa TEXT,
+  xpath_numeri_verde_visita TEXT,
+  xpath_tempi_verde_visita TEXT,
+  xpath_numeri_giallo_attesa TEXT,
+  xpath_tempi_giallo_attesa TEXT,
+  xpath_numeri_giallo_visita TEXT,
+  xpath_tempi_giallo_visita TEXT,
+  xpath_numeri_rosso_attesa TEXT,
+  xpath_tempi_rosso_attesa TEXT,
+  xpath_numeri_rosso_visita TEXT,
+  xpath_tempi_rosso_visita TEXT
+);
+.mode csv
+.separator |
+.import ps_details.csv ps_details
+.quit
