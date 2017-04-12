@@ -23,7 +23,6 @@ class mainloop{
 			*  $chat_id = $result["message"] ["chat"]["id"];
 			*/
 
-
 			$text = $update["message"] ["text"];
 			$chat_id = $update["message"] ["chat"]["id"];
 			$user_id=$update["message"]["from"]["id"];
@@ -87,9 +86,9 @@ class mainloop{
          //http://localhost/OpenProntoSoccorso/API/getMunicipalityByLatLon.php?lat=44.351698&lon=10.753116
          $url = 'http://localhost/OpenProntoSoccorso/API/getMunicipalityByLatLon.php?lat='.$my_lat.'&lon='.$my_lon;
 
-		     //echo "URL = ".$url;
-				 //echo "\n";
-		     //echo "\n";
+		     echo "URL = ".$url;
+				 echo "\n";
+		     echo "\n";
 
 		     //#Set CURL parameters: pay attention to the PROXY config !!!!
 		     $ch = curl_init();
@@ -120,11 +119,53 @@ class mainloop{
 
 				 if (($my_Comune != "NODATA") AND ($my_Comune != "ERROR") AND ($currentLanguage != ''))
 					 {
-						 //$theReply = "Il comune identificato è: ".$my_Comune;
+						 $theReply = "Il comune identificato è: ".$my_Comune;
 						 $theReply = $arrayMessages['MUNICIPALITY']." ".$my_Comune;
-						 //$arrayMessages['LANG__CHOICE'];
+						 $arrayMessages['LANG__CHOICE'];
 						 $content = array('chat_id' => $chat_id, 'text' => $theReply,'disable_web_page_preview'=>true);
 						 $telegram->sendMessage($content);
+
+/*
+						 $url = 'http://localhost/OpenProntoSoccorso/API/getProntoSoccorsoByMunicipality.php?municipality='.$my_Comune;
+
+				     echo "URL = ".$url;
+						 echo "\n";
+				     echo "\n";
+
+				     //#Set CURL parameters: pay attention to the PROXY config !!!!
+				     $ch = curl_init();
+				     curl_setopt($ch, CURLOPT_AUTOREFERER, TRUE);
+				     curl_setopt($ch, CURLOPT_HEADER, 0);
+				     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+				     curl_setopt($ch, CURLOPT_URL, $url);
+				     curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
+				     //curl_setopt($ch, CURLOPT_PROXY, '<proxy.xxx.com:<port>');
+				     curl_setopt($ch, CURLOPT_PROXY, '');
+				     $data = curl_exec($ch);
+				     curl_close($ch);
+
+				     echo "JSON = ".$data;
+				     echo "\n";
+				     echo "\n";
+
+						 //#Convert to string (json) ...
+				     $json = json_decode($data);
+
+		         $myComune = '';
+			       foreach ($json as $ps) {
+		             echo "Nome = ".$ps[0][ps_name];
+								 echo "\n";
+						     echo "\n";
+								 //$my_Comune = $municipality;
+			       }
+*/
+
+
+
+
+
+
+
 					 }
 				 elseif ($my_Comune == "NODATA" AND ($currentLanguage != ''))
 					 {
@@ -220,10 +261,107 @@ Per maggiori dettagli http://cesaregerbino.wordpress.com/xxxxxxxxxxxx\n";*/
 
 					 if ($isComune == 1)
 					   {
-							 //$theReply = $text." è CORRETTAMENTE un comune italiano!!";
-							 $theReply = $text.$arrayMessages['MUNICIPALITY_NAME'];
+							 $theReply = "Stò cercando le informazioni sui numeri e tempi di attesa dei Pronto Soccorso di ".$text;
+							 //$theReply = $text.$arrayMessages['MUNICIPALITY_NAME'];
 							 $content = array('chat_id' => $chat_id, 'text' => $theReply,'disable_web_page_preview'=>true);
 							 $telegram->sendMessage($content);
+
+
+							 $url = 'http://localhost/OpenProntoSoccorso/API/getProntoSoccorsoDetailsByMunicipality.php?municipality='.$text;
+
+					     //echo "URL = ".$url;
+							 //echo "\n";
+					     //echo "\n";
+
+					     //#Set CURL parameters: pay attention to the PROXY config !!!!
+					     $ch = curl_init();
+					     curl_setopt($ch, CURLOPT_AUTOREFERER, TRUE);
+					     curl_setopt($ch, CURLOPT_HEADER, 0);
+					     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+					     curl_setopt($ch, CURLOPT_URL, $url);
+					     curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
+					     //curl_setopt($ch, CURLOPT_PROXY, '<proxy.xxx.com:<port>');
+					     curl_setopt($ch, CURLOPT_PROXY, '');
+					     $data = curl_exec($ch);
+					     curl_close($ch);
+
+					     echo "JSON = ".$data;
+					     echo "\n";
+					     echo "\n";
+
+							 //#Convert to string (json) ...
+					     $json = json_decode($data, true);
+
+			         $psWaitTime = '';
+				       foreach ($json['prontoSoccorsi'] as $ps) {
+			             //echo "Nome = ".$ps['ps_name'];
+									 //echo "\n";
+							     //echo "\n";
+									 //$my_Comune = $municipality;
+									 $psWaitTime .= "Nome PS :".$ps['ps_name'];
+									 $psWaitTime .= "\n";
+									 $psWaitTime .= "Città: ".$ps['city'];
+									 $psWaitTime .= "\n";
+									 $psWaitTime .= "Indirizzo: ".$ps['address'];
+									 $psWaitTime .= "\n";
+									 $psWaitTime .= "Telefono: ".$ps['tel'];
+									 $psWaitTime .= "\n";
+									 $psWaitTime .= "Email: ".$ps['email'];
+									 $psWaitTime .= "\n";
+									 $psWaitTime .= "Sito web: ".$ps['url_website'];
+									 $psWaitTime .= "\n";
+									 $psWaitTime .= "N° codici bianco in attesa: ".$ps['numeri_bianco_attesa'];
+									 $psWaitTime .= "\n";
+									 $psWaitTime .= "Tempo attesa per codici bianco: ".$ps['tempi_bianco_attesa'];
+									 $psWaitTime .= "\n";
+									 $psWaitTime .= "N° codici bianco in visita: ".$ps['numeri_bianco_in_visita'];
+									 $psWaitTime .= "\n";
+									 $psWaitTime .= "Tempo attesa per codici bianco in visita: ".$ps['tempi_bianco_in_visita'];
+									 $psWaitTime .= "\n";
+
+									 $psWaitTime .= "N° codici verdi in attesa: ".$ps['numeri_verde_attesa'];
+									 $psWaitTime .= "\n";
+									 $psWaitTime .= "Tempo attesa per codici verdi: ".$ps['tempi_verde_attesa'];
+									 $psWaitTime .= "\n";
+									 $psWaitTime .= "N° codici verdi in visita: ".$ps['numeri_verde_in_visita'];
+									 $psWaitTime .= "\n";
+									 $psWaitTime .= "Tempo attesa per codici verdi in visita: ".$ps['tempi_verde_in_visita'];
+									 $psWaitTime .= "\n";
+
+									 $psWaitTime .= "N° codici giallo in attesa: ".$ps['numeri_giallo_attesa'];
+									 $psWaitTime .= "\n";
+									 $psWaitTime .= "Tempo attesa per codici giallo: ".$ps['tempi_giallo_attesa'];
+									 $psWaitTime .= "\n";
+									 $psWaitTime .= "N° codici giallo in visita: ".$ps['numeri_giallo_in_visita'];
+									 $psWaitTime .= "\n";
+									 $psWaitTime .= "Tempo attesa per codici giallo in visita: ".$ps['tempi_giallo_in_visita'];
+									 $psWaitTime .= "\n";
+
+									 $psWaitTime .= "N° codici rosso in attesa: ".$ps['numeri_rosso_attesa'];
+									 $psWaitTime .= "\n";
+									 $psWaitTime .= "Tempo attesa per codici rosso: ".$ps['tempi_rosso_attesa'];
+									 $psWaitTime .= "\n";
+									 $psWaitTime .= "N° codici rosso in visita: ".$ps['numeri_rosso_in_visita'];
+									 $psWaitTime .= "\n";
+									 $psWaitTime .= "Tempo attesa per codici rosso in visita: ".$ps['tempi_rosso_in_visita'];
+									 $psWaitTime .= "\n";
+									 $psWaitTime .= "\n";
+									 $psWaitTime .= "*************";
+									 $psWaitTime .= "\n";
+									 $psWaitTime .= "\n";
+
+
+			             $content = array('chat_id' => $chat_id, 'text' => $psWaitTime,'disable_web_page_preview'=>true);
+			             $telegram->sendMessage($content);
+
+				       }
+
+
+
+
+
+
+
 						 }
 					 elseif ($isComune == 0)
 					   {

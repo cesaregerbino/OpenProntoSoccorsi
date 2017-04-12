@@ -135,6 +135,14 @@ E' quindi possibile eliminare files e directories temporanee:
 * ``rm ps_From_OSM.osm``
 * ``rm -R TMP_DIR``
 
+#### Calcolo delle coordinate X e Y per i Pronto Soccorsi ####
+Per calcolare le coordinate X e Y dei Pronto Soccorsi è possibile usare Spatialite nel seguente modo.
+
+ALTER TABLE 'ps_From_OSM_32632' ADD COLUMN X REAL;
+ALTER TABLE 'ps_From_OSM_32632' ADD COLUMN Y REAL;
+UPDATE 'ps_From_OSM_32632' SET X=ST_X("Geometry") , Y=ST_Y("Geometry");
+
+
 
 ## Quali sono i pronto soccorso più "vicini" ad ogni comune d'Italia ##
 
@@ -157,6 +165,8 @@ CREATE TABLE dist_com_ps_1 AS
         pt.ROWID AS pt_rowid,
         pt.OSM_ID as pt_osm_id,
         pt.NAME AS pt_NAME,
+        pt.X AS pt_X,
+        pt.Y AS pt_Y,
         ST_Distance(pg.geometry, pt.geometry) AS dist
  FROM comuni_From_ISTAT_32632 AS pg, ps_From_OSM_32632 AS pt
  ORDER BY pg_rowid, dist;
@@ -171,6 +181,8 @@ CREATE TABLE dist_com_ps_2 AS
         pt_rowid,
         pt_osm_id,
         pt_NAME,
+        pt_X,
+        pt_Y,
         dist
  FROM dist_com_ps_1;
 ```
