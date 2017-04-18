@@ -15,7 +15,7 @@
    # Loading SpatiaLite as an extension ...
    $db_data_sessions->loadExtension('mod_spatialite.so');
 
-   $q="SELECT comune FROM comuni32632 WHERE WITHIN(Transform(GeomFromText('POINT(".$lon." ".$lat.")',4326),32632),comuni32632.Geometry)";
+   $q="SELECT comune FROM comuni_From_ISTAT_32632 WHERE WITHIN(Transform(GeomFromText('POINT(".$lon." ".$lat.")',4326),32632),comuni_From_ISTAT_32632.Geometry)";
 
    $municipalityJson = "{";
    $municipalityJson .= "\"municipality\":\"";

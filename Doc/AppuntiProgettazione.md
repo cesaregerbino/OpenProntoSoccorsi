@@ -142,6 +142,14 @@ ALTER TABLE 'ps_From_OSM_32632' ADD COLUMN X REAL;
 ALTER TABLE 'ps_From_OSM_32632' ADD COLUMN Y REAL;
 UPDATE 'ps_From_OSM_32632' SET X=ST_X("Geometry") , Y=ST_Y("Geometry");
 
+#### Calcolo delle coordinate Lat e Lon per i Pronto Soccorsi ####
+Per calcolare le coordinate Lat e Lon dei Pronto Soccorsi è possibile usare Spatialite nel seguente modo.
+
+ALTER TABLE 'ps_From_OSM_32632' ADD COLUMN LON double;
+ALTER TABLE 'ps_From_OSM_32632' ADD COLUMN LAT double;
+UPDATE 'ps_From_OSM_32632' SET LON=ST_X(ST_Transform(geometry,4326));
+UPDATE 'ps_From_OSM_32632' SET LAT=ST_Y(ST_Transform(geometry,4326));
+
 
 
 ## Quali sono i pronto soccorso più "vicini" ad ogni comune d'Italia ##
@@ -155,6 +163,8 @@ mi è stata fornita.
 
 Ovviamente occorre prima di tutto caricare in Spatialite i layer dei comuni (comuni-From-ISTAT-32632) e dei pronto soccorso (ps-From-OSM-32632) creati in precedenza: questa operazione si può effettuare manualmente usando Spatialite GUI di dev fornita.
 
+ATTENZIONE: quando si importano i dati dagli shapefiles ricordarsi di impostare esplicitamente il ssietma di riferimento EPSG 32632 (indicare "32632" come numero)
+
 Successivamente occorre dare i seguenti comandi:
 
 #### Step 1 ####
@@ -167,6 +177,8 @@ CREATE TABLE dist_com_ps_1 AS
         pt.NAME AS pt_NAME,
         pt.X AS pt_X,
         pt.Y AS pt_Y,
+        pt.LON AS pt_LON,
+        pt.LAT AS pt_LAT,
         ST_Distance(pg.geometry, pt.geometry) AS dist
  FROM comuni_From_ISTAT_32632 AS pg, ps_From_OSM_32632 AS pt
  ORDER BY pg_rowid, dist;
@@ -183,6 +195,8 @@ CREATE TABLE dist_com_ps_2 AS
         pt_NAME,
         pt_X,
         pt_Y,
+        pt_LON,
+        pt_LAT,
         dist
  FROM dist_com_ps_1;
 ```

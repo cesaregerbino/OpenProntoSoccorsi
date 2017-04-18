@@ -28,6 +28,8 @@
           # Get the coordinates ...
           $pt_X = $row['pt_X'];
           $pt_Y = $row['pt_Y'];
+          $pt_LON = $row['pt_LON'];
+          $pt_LAT = $row['pt_LAT'];
           try {
 
                # Prepare for the query ...
@@ -48,6 +50,8 @@
                  $jsonResult .= "\"osm_id\": \"".$row['osm_id']."\",";
                  $jsonResult .= "\"x\": \"".$pt_X."\",";
                  $jsonResult .= "\"y\": \"".$pt_Y."\",";
+                 $jsonResult .= "\"Lon\": \"".$pt_LON."\",";
+                 $jsonResult .= "\"Lat\": \"".$pt_LAT."\",";
                  $jsonResult .= "\"ps_name\": \"".$row['ps_name']."\",";
                  $jsonResult .= "\"city\": \"".$row['city']."\",";
                  $jsonResult .= "\"address\": \"".$row['address']."\",";
