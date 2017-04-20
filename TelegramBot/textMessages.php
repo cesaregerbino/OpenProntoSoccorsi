@@ -43,7 +43,7 @@ Per maggiori dettagli http://cesaregerbino.wordpress.com/xxxxxxxxxxxx\n';
       $langEN['SELECTED_LANGUAGE_EN'] = 'The selected language is: ENGLISH All the following messagges will be in english language';
       $langEN['MUNICIPALITY_NAME'] = ' is a Italian municipality!!';
       $langEN['NO_MUNICIPALITY_NAME'] = ' is not an Italian municipality. Try to digit in right mode: th emunicipality name must to start with a capital character, if the name is composed by several words each one must to start with a capital character (es. La Loggia is right, La loggia is wrong ... ), if there are accented letters NOT to use apostrophe (es. Agliè is right, Aglie\' is wrong) ...';
-      $langEN['SEARCHING_PS_INFO'] = 'I\'m searching information on waiting time about Pronto Soccorso ';
+      $langEN['SEARCHING_PS_INFO'] = 'I\'m searching information on waiting time about Pronto Soccorso in ';
 
       $langCurrent = array();
       if ($language == "IT")

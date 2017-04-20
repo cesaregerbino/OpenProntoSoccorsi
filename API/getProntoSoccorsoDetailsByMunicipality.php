@@ -2,6 +2,12 @@
    # Get the Municipality name ...
    $municipality = $_GET['municipality'];
 
+   /*
+   echo "Municipality = ".$municipality;
+   echo "\n";
+   echo "\n";
+   */
+
    # Set access to data base...
    $db = new SQLite3('../Data/OpenProntoSoccorso.sqlite');
 
@@ -38,7 +44,7 @@
                # Execute the query ...
                $results1 = $stmt1->execute();
 
-              # Get the Pronto Soccorso details ...
+               # Get the Pronto Soccorso details ...
                while ($row = $results1->fetchArray(SQLITE3_ASSOC)) {
                  if ($firstIteration == FALSE) {
                    $jsonResult .= ",";

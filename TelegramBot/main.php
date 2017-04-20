@@ -1,3 +1,4 @@
+<?php
 /*
  ***************************************************************************************************
  *** Open Pronto Soccorso - Telegram Bot
@@ -10,8 +11,6 @@
  ***************************************************************************************************
 */
 
-
-<?php
 include("Telegram.php");
 include("textMessages.php");
 
@@ -123,11 +122,11 @@ class mainloop{
          //*** Municipality founded ...
 				 if (($my_Comune != "NODATA") AND ($my_Comune != "ERROR") AND ($currentLanguage != ''))
 					 {
-						 $theReply = "Il comune identificato è: ".$my_Comune;
-						 $theReply = $arrayMessages['MUNICIPALITY']." ".$my_Comune;
-						 $arrayMessages['LANG__CHOICE'];
-						 $content = array('chat_id' => $chat_id, 'text' => $theReply,'disable_web_page_preview'=>true);
-						 $telegram->sendMessage($content);
+						 //$theReply = "Il comune identificato è: ".$my_Comune;
+						 //$theReply = $arrayMessages['MUNICIPALITY']." ".$my_Comune;
+						 //$arrayMessages['LANG__CHOICE'];
+						 //$content = array('chat_id' => $chat_id, 'text' => $theReply,'disable_web_page_preview'=>true);
+						 //$telegram->sendMessage($content);
 
 						 $this->sendResponse($chat_id, $telegram, $my_Comune, $my_lat, $my_lon, $currentLanguage);
 
@@ -234,7 +233,7 @@ Per maggiori dettagli http://cesaregerbino.wordpress.com/xxxxxxxxxxxx\n";*/
            //*** The name is an Italian Municipality ...
 					 if ($isComune == 1)
 					   {
-               $this->sendResponse($chat_id, $telegram, $text,0,0);
+               $this->sendResponse($chat_id, $telegram, $text,0,0,$currentLanguage);
 						 }
 					 //*** The name is NOT an Italian Municipality ...
 					 elseif ($isComune == 0)
@@ -266,12 +265,11 @@ Per maggiori dettagli http://cesaregerbino.wordpress.com/xxxxxxxxxxxx\n";*/
 			$content = array('chat_id' => $chat_id, 'text' => $theReply,'disable_web_page_preview'=>true);
 			$telegram->sendMessage($content);
 
-
 			$url = 'http://localhost/OpenProntoSoccorso/API/getProntoSoccorsoDetailsByMunicipality.php?municipality='.$municipality;
 
-			//echo "URL = ".$url;
-			//echo "\n";
-			//echo "\n";
+			echo "URL = ".$url;
+			echo "\n";
+			echo "\n";
 
 			//#Set CURL parameters: pay attention to the PROXY config !!!!
 			$ch = curl_init();
@@ -294,9 +292,9 @@ Per maggiori dettagli http://cesaregerbino.wordpress.com/xxxxxxxxxxxx\n";*/
 
 			$psWaitTime = '';
 			foreach ($json['prontoSoccorsi'] as $ps) {
-					//echo "Nome = ".$ps['ps_name'];
-					//echo "\n";
-					//echo "\n";
+					echo "Nome = ".$ps['ps_name'];
+					echo "\n";
+					echo "\n";
 					//$my_Comune = $municipality;
 					$psWaitTime .= "Nome PS :".$ps['ps_name'];
 					$psWaitTime .= "\n";
@@ -346,14 +344,13 @@ Per maggiori dettagli http://cesaregerbino.wordpress.com/xxxxxxxxxxxx\n";*/
 					$psWaitTime .= "Tempo attesa per codici rosso in visita: ".$ps['tempi_rosso_in_visita'];
 					$psWaitTime .= "\n";
 
-
-					if ($my_lat != 0) {
+					if (($my_lat != 0) AND ($my_lon != 0)) {
 						$longUrl = "http://localhost/OpenProntoSoccorso/TelegramBot/RenderRoute.php?lat_from=".$my_lat."&lon_from=".$my_lon."&lat_to=".$ps['Lat']."&lon_to=".$ps['Lon']."&map_type=2";
-
-						echo "longUrl = ".$longUrl;
+            $shortUrl = $this->CompactUrl($longUrl);
+						echo "shortUrl = ".$shortUrl;
 						echo "\n";
 						echo "\n";
-						$psWaitTime .= "Il percorso: ".$longUrl;
+						$psWaitTime .= "Il percorso: ".$shortUrl;
 					}
 
 					$psWaitTime .= "\n";
@@ -363,11 +360,39 @@ Per maggiori dettagli http://cesaregerbino.wordpress.com/xxxxxxxxxxxx\n";*/
 
 					$content = array('chat_id' => $chat_id, 'text' => $psWaitTime,'disable_web_page_preview'=>true);
 					$telegram->sendMessage($content);
+
+					$psWaitTime = "";
 				}
 		}
 
 
+		function CompactUrl($longUrl)
+		  {
+		   $apiKey = API;
 
+		   $postData = array('longUrl' => $longUrl);
+		   $jsonData = json_encode($postData);
+
+		   $curlObj = curl_init();
+
+		   curl_setopt($curlObj, CURLOPT_URL, 'https://www.googleapis.com/urlshortener/v1/url?key='.$apiKey.'&fields=id');
+		   curl_setopt($curlObj, CURLOPT_RETURNTRANSFER, 1);
+		   curl_setopt($curlObj, CURLOPT_SSL_VERIFYPEER, 0);
+		   curl_setopt($curlObj, CURLOPT_HEADER, 0);
+		   curl_setopt($curlObj, CURLOPT_HTTPHEADER, array('Content-type:application/json'));
+		   curl_setopt($curlObj, CURLOPT_POST, 1);
+		   curl_setopt($curlObj, CURLOPT_POSTFIELDS, $jsonData);
+
+		   $response = curl_exec($curlObj);
+
+		   // Change the response json string to object
+		   $json = json_decode($response);
+
+		   curl_close($curlObj);
+		   $shortLink = get_object_vars($json);
+
+		   return $shortLink['id'];
+		 }
 
 		function setSelectedLanguageInSession($chat_id, $currentLanguage)
  		{
