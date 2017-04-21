@@ -65,45 +65,60 @@
                  $jsonResult .= "\"email\": \"".$row['email']."\",";
                  $jsonResult .= "\"url_website\": \"".$row['url_website']."\",";
 
+                 //#Set CURL parameters: pay attention to the PROXY config !!!!
+                 $ch = curl_init();
+                 curl_setopt($ch, CURLOPT_AUTOREFERER, TRUE);
+                 curl_setopt($ch, CURLOPT_HEADER, 0);
+                 curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+                 curl_setopt($ch, CURLOPT_URL, $row['url_data']);
+                 curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
+                 curl_setopt($ch, CURLOPT_PROXY, '');
+                 $data = curl_exec($ch);
+                 curl_close($ch);
+
+                 $dom = new DOMDocument();
+                 @$dom->loadHTML($data);
+
                  # The white code details ...
-                 $num_white_waiting = getDetailsWaiting($row['url_data'], $row['xpath_numeri_bianco_attesa']);
+                 $num_white_waiting = getDetailsWaiting($dom, $row['xpath_numeri_bianco_attesa']);
                  $jsonResult .= "\"numeri_bianco_attesa\": \"".$num_white_waiting."\"";
-                 $time_white_waiting = getDetailsWaiting($row['url_data'], $row['xpath_tempi_bianco_attesa']);
+                 $time_white_waiting = getDetailsWaiting($dom, $row['xpath_tempi_bianco_attesa']);
                  $jsonResult .= ",\"tempi_bianco_attesa\": \"".$time_white_waiting."\"";
-                 $num_white_in_visita = getDetailsWaiting($row['url_data'], $row['xpath_numeri_bianco_visita']);
+                 $num_white_in_visita = getDetailsWaiting($dom, $row['xpath_numeri_bianco_visita']);
                  $jsonResult .= ",\"numeri_bianco_in_visita\": \"".$num_white_in_visita."\"";
-                 $time_white_in_visita = getDetailsWaiting($row['url_data'], $row['xpath_tempi_bianco_visita']);
+                 $time_white_in_visita = getDetailsWaiting($dom, $row['xpath_tempi_bianco_visita']);
                  $jsonResult .= ",\"tempi_bianco_in_visita\": \"".$time_white_in_visita."\"";
 
                  # The green code details ...
-                 $num_green_waiting = getDetailsWaiting($row['url_data'], $row['xpath_numeri_verde_attesa']);
+                 $num_green_waiting = getDetailsWaiting($dom, $row['xpath_numeri_verde_attesa']);
                  $jsonResult .= ",\"numeri_verde_attesa\": \"".$num_green_waiting."\"";
-                 $time_green_waiting = getDetailsWaiting($row['url_data'], $row['xpath_tempi_verde_attesa']);
+                 $time_green_waiting = getDetailsWaiting($dom, $row['xpath_tempi_verde_attesa']);
                  $jsonResult .= ",\"tempi_verde_attesa\": \"".$time_green_waiting."\"";
-                 $num_green_in_visita = getDetailsWaiting($row['url_data'], $row['xpath_numeri_verde_visita']);
+                 $num_green_in_visita = getDetailsWaiting($dom, $row['xpath_numeri_verde_visita']);
                  $jsonResult .= ",\"numeri_verde_in_visita\": \"".$num_green_in_visita."\"";
-                 $time_green_in_visita = getDetailsWaiting($row['url_data'], $row['xpath_tempi_verde_visita']);
+                 $time_green_in_visita = getDetailsWaiting($dom, $row['xpath_tempi_verde_visita']);
                  $jsonResult .= ",\"tempi_verde_in_visita\": \"".$time_green_in_visita."\"";
 
                  # The yellow details ...
-                 $num_yellow_waiting = getDetailsWaiting($row['url_data'], $row['xpath_numeri_giallo_attesa']);
+                 $num_yellow_waiting = getDetailsWaiting($dom, $row['xpath_numeri_giallo_attesa']);
                  $jsonResult .= ",\"numeri_giallo_attesa\": \"".$num_yellow_waiting."\"";
-                 $time_yellow_waiting = getDetailsWaiting($row['url_data'], $row['xpath_tempi_giallo_attesa']);
+                 $time_yellow_waiting = getDetailsWaiting($dom, $row['xpath_tempi_giallo_attesa']);
                  $jsonResult .= ",\"tempi_giallo_attesa\": \"".$time_yellow_waiting."\"";
-                 $num_yellow_in_visita = getDetailsWaiting($row['url_data'], $row['xpath_numeri_giallo_visita']);
+                 $num_yellow_in_visita = getDetailsWaiting($dom, $row['xpath_numeri_giallo_visita']);
                  $jsonResult .= ",\"numeri_giallo_in_visita\": \"".$num_yellow_in_visita."\"";
-                 $time_yellow_in_visita = getDetailsWaiting($row['url_data'], $row['xpath_tempi_giallo_visita']);
+                 $time_yellow_in_visita = getDetailsWaiting($dom, $row['xpath_tempi_giallo_visita']);
                  $jsonResult .= ",\"tempi_giallo_in_visita\": \"".$time_yellow_in_visita."\"";
 
                  # The red details ...
-                 $num_red_waiting = getDetailsWaiting($row['url_data'], $row['xpath_numeri_rosso_attesa']);
+                 $num_red_waiting = getDetailsWaiting($dom, $row['xpath_numeri_rosso_attesa']);
                  $jsonResult .= ",\"numeri_rosso_attesa\": \"".$num_red_waiting."\"";
-                 $time_red_waiting = getDetailsWaiting($row['url_data'], $row['xpath_tempi_rosso_attesa']);
+                 $time_red_waiting = getDetailsWaiting($dom, $row['xpath_tempi_rosso_attesa']);
                  $jsonResult .= ",\"tempi_rosso_attesa\": \"".$time_red_waiting."\"";
-                 $num_red_in_visita = getDetailsWaiting($row['url_data'], $row['xpath_numeri_rosso_visita']);
+                 $num_red_in_visita = getDetailsWaiting($dom, $row['xpath_numeri_rosso_visita']);
                  $jsonResult .= ",\"numeri_rosso_in_visita\": \"".$num_red_in_visita."\"";
-                 $time_red_in_visita = getDetailsWaiting($row['url_data'], $row['xpath_tempi_rosso_visita']);
+                 $time_red_in_visita = getDetailsWaiting($dom, $row['xpath_tempi_rosso_visita']);
                  $jsonResult .= ",\"tempi_rosso_in_visita\": \"".$time_red_in_visita."\"";
+
                  $jsonResult .= "}";
                }
           }
@@ -121,20 +136,7 @@
    $db = null;
 
 
-   function getDetailsWaiting($url, $xpath_for_parsing) {
-     //#Set CURL parameters: pay attention to the PROXY config !!!!
-     $ch = curl_init();
-     curl_setopt($ch, CURLOPT_AUTOREFERER, TRUE);
-     curl_setopt($ch, CURLOPT_HEADER, 0);
-     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-     curl_setopt($ch, CURLOPT_URL, $url);
-     curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
-     curl_setopt($ch, CURLOPT_PROXY, '');
-     $data = curl_exec($ch);
-     curl_close($ch);
-
-     $dom = new DOMDocument();
-     @$dom->loadHTML($data);
+   function getDetailsWaiting($dom, $xpath_for_parsing) {
      $xpath = new DOMXPath($dom);
      $colorWaitingNumber = $xpath->query($xpath_for_parsing);
      $theValue =  '';
@@ -144,4 +146,5 @@
      }
      return  $theValue;
    }
+
 ?>
