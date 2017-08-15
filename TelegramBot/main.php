@@ -88,9 +88,11 @@ class mainloop{
          //http://localhost/OpenProntoSoccorso/API/getMunicipalityByLatLon.php?lat=44.351698&lon=10.753116
          $url = 'http://localhost/OpenProntoSoccorso/API/getMunicipalityByLatLon.php?lat='.$my_lat.'&lon='.$my_lon;
 
-		     echo "URL = ".$url;
+		     /*
+				 echo "URL = ".$url;
 				 echo "\n";
 		     echo "\n";
+				 */
 
 		     //#Set CURL parameters: pay attention to the PROXY config !!!!
 		     $ch = curl_init();
@@ -267,9 +269,11 @@ Per maggiori dettagli http://cesaregerbino.wordpress.com/xxxxxxxxxxxx\n";*/
 
 			$url = 'http://localhost/OpenProntoSoccorso/API/getProntoSoccorsoDetailsByMunicipality.php?municipality='.$municipality;
 
-			echo "URL = ".$url;
+
+			/*echo "URL = ".$url;
 			echo "\n";
-			echo "\n";
+			echo "\n";*/
+
 
 			//#Set CURL parameters: pay attention to the PROXY config !!!!
 			$ch = curl_init();
@@ -283,65 +287,69 @@ Per maggiori dettagli http://cesaregerbino.wordpress.com/xxxxxxxxxxxx\n";*/
 			$data = curl_exec($ch);
 			curl_close($ch);
 
-			echo "JSON = ".$data;
-			echo "\n";
-			echo "\n";
+
+			//echo "JSON = ".$data;
+			//echo "\n";
+			//echo "\n";
+
 
 			//#Convert to string (json) ...
 			$json = json_decode($data, true);
 
 			$psWaitTime = '';
 			foreach ($json['prontoSoccorsi'] as $ps) {
-					echo "Nome = ".$ps['ps_name'];
+					/*echo "Nome = ".$ps['ps_name'];
 					echo "\n";
-					echo "\n";
+					echo "\n";*/
+					//$psWaitTime .= "*Nome PS* :".$ps['ps_name'];
 					//$my_Comune = $municipality;
-					$psWaitTime .= "Nome PS :".$ps['ps_name'];
+
+					$psWaitTime .= "<b>Nome PS</b>: ".$ps['ps_name'];
 					$psWaitTime .= "\n";
-					$psWaitTime .= "Città: ".$ps['city'];
+					$psWaitTime .= "<b>Città</b>: ".$ps['city'];
 					$psWaitTime .= "\n";
-					$psWaitTime .= "Indirizzo: ".$ps['address'];
+					$psWaitTime .= "<b>Indirizzo</b>: ".$ps['address'];
 					$psWaitTime .= "\n";
-					$psWaitTime .= "Telefono: ".$ps['tel'];
+					$psWaitTime .= "<b>Telefono</b>: ".$ps['tel'];
 					$psWaitTime .= "\n";
-					$psWaitTime .= "Email: ".$ps['email'];
+					$psWaitTime .= "<b>Email</b>: ".$ps['email'];
 					$psWaitTime .= "\n";
-					$psWaitTime .= "Sito web: ".$ps['url_website'];
+					$psWaitTime .= "<b>Sito web</b>: ".str_replace('&', '&amp;', $ps['url_website']);
 					$psWaitTime .= "\n";
-					$psWaitTime .= "N° codici bianco in attesa: ".$ps['numeri_bianco_attesa'];
+					$psWaitTime .= "<b>N° codici bianco in attesa</b>: ".$ps['numeri_bianco_attesa'];
 					$psWaitTime .= "\n";
-					$psWaitTime .= "Tempo attesa per codici bianco: ".$ps['tempi_bianco_attesa'];
+					$psWaitTime .= "<b>Tempo attesa per codici bianco</b>: ".$ps['tempi_bianco_attesa'];
 					$psWaitTime .= "\n";
-					$psWaitTime .= "N° codici bianco in visita: ".$ps['numeri_bianco_in_visita'];
+					$psWaitTime .= "<b>N° codici bianco in visita</b>: ".$ps['numeri_bianco_in_visita'];
 					$psWaitTime .= "\n";
-					$psWaitTime .= "Tempo attesa per codici bianco in visita: ".$ps['tempi_bianco_in_visita'];
+					$psWaitTime .= "<b>Tempo attesa per codici bianco in visita</b>: ".$ps['tempi_bianco_in_visita'];
 					$psWaitTime .= "\n";
 
-					$psWaitTime .= "N° codici verdi in attesa: ".$ps['numeri_verde_attesa'];
+					$psWaitTime .= "<b>N° codici verdi in attesa</b>: ".$ps['numeri_verde_attesa'];
 					$psWaitTime .= "\n";
-					$psWaitTime .= "Tempo attesa per codici verdi: ".$ps['tempi_verde_attesa'];
+					$psWaitTime .= "<b>Tempo attesa per codici verdi</b>: ".$ps['tempi_verde_attesa'];
 					$psWaitTime .= "\n";
-					$psWaitTime .= "N° codici verdi in visita: ".$ps['numeri_verde_in_visita'];
+					$psWaitTime .= "<b>N° codici verdi in visita</b>: ".$ps['numeri_verde_in_visita'];
 					$psWaitTime .= "\n";
-					$psWaitTime .= "Tempo attesa per codici verdi in visita: ".$ps['tempi_verde_in_visita'];
-					$psWaitTime .= "\n";
-
-					$psWaitTime .= "N° codici giallo in attesa: ".$ps['numeri_giallo_attesa'];
-					$psWaitTime .= "\n";
-					$psWaitTime .= "Tempo attesa per codici giallo: ".$ps['tempi_giallo_attesa'];
-					$psWaitTime .= "\n";
-					$psWaitTime .= "N° codici giallo in visita: ".$ps['numeri_giallo_in_visita'];
-					$psWaitTime .= "\n";
-					$psWaitTime .= "Tempo attesa per codici giallo in visita: ".$ps['tempi_giallo_in_visita'];
+					$psWaitTime .= "<b>Tempo attesa per codici verdi in visita</b>: ".$ps['tempi_verde_in_visita'];
 					$psWaitTime .= "\n";
 
-					$psWaitTime .= "N° codici rosso in attesa: ".$ps['numeri_rosso_attesa'];
+					$psWaitTime .= "<b>N° codici giallo in attesa</b>: ".$ps['numeri_giallo_attesa'];
 					$psWaitTime .= "\n";
-					$psWaitTime .= "Tempo attesa per codici rosso: ".$ps['tempi_rosso_attesa'];
+					$psWaitTime .= "<b>Tempo attesa per codici giallo</b>: ".$ps['tempi_giallo_attesa'];
 					$psWaitTime .= "\n";
-					$psWaitTime .= "N° codici rosso in visita: ".$ps['numeri_rosso_in_visita'];
+					$psWaitTime .= "<b>N° codici giallo in visita</b>: ".$ps['numeri_giallo_in_visita'];
 					$psWaitTime .= "\n";
-					$psWaitTime .= "Tempo attesa per codici rosso in visita: ".$ps['tempi_rosso_in_visita'];
+					$psWaitTime .= "<b>Tempo attesa per codici giallo in visita</b>: ".$ps['tempi_giallo_in_visita'];
+					$psWaitTime .= "\n";
+
+					$psWaitTime .= "<b>N° codici rosso in attesa</b>: ".$ps['numeri_rosso_attesa'];
+					$psWaitTime .= "\n";
+					$psWaitTime .= "<b>Tempo attesa per codici rosso</b>: ".$ps['tempi_rosso_attesa'];
+					$psWaitTime .= "\n";
+					$psWaitTime .= "<b>N° codici rosso in visita</b>: ".$ps['numeri_rosso_in_visita'];
+					$psWaitTime .= "\n";
+					$psWaitTime .= "<b>Tempo attesa per codici rosso in visita</b>: ".$ps['tempi_rosso_in_visita'];
 					$psWaitTime .= "\n";
 
 					if (($my_lat != 0) AND ($my_lon != 0)) {
@@ -358,7 +366,8 @@ Per maggiori dettagli http://cesaregerbino.wordpress.com/xxxxxxxxxxxx\n";*/
 					$psWaitTime .= "\n";
 					$psWaitTime .= "\n";
 
-					$content = array('chat_id' => $chat_id, 'text' => $psWaitTime,'disable_web_page_preview'=>true);
+					$content = array('chat_id' => $chat_id,  'text' => $psWaitTime, 'parse_mode'=> "HTML", 'disable_web_page_preview'=>true);
+					//$content = array('chat_id' => $chat_id,  'text' => $psWaitTime,  'disable_web_page_preview'=>true);
 					$telegram->sendMessage($content);
 
 					$psWaitTime = "";

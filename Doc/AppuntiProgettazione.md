@@ -135,8 +135,10 @@ E' quindi possibile eliminare files e directories temporanee:
 * ``rm ps_From_OSM.osm``
 * ``rm -R TMP_DIR``
 
+A questo punto è possibile caricare i dati in Spatialite: il caricamento avviene manualmente usando Spatialite GUI (versione dev)
+
 #### Calcolo delle coordinate X e Y per i Pronto Soccorsi ####
-Per calcolare le coordinate X e Y dei Pronto Soccorsi è possibile usare Spatialite nel seguente modo.
+Una volta caricati i dati dei pronto soccorsi in Spatialite per calcolare le coordinate X e Y dei Pronto Soccorsi è possibile usare Spatialite nel seguente modo.
 
 ALTER TABLE 'ps_From_OSM_32632' ADD COLUMN X REAL;
 ALTER TABLE 'ps_From_OSM_32632' ADD COLUMN Y REAL;
@@ -163,7 +165,7 @@ mi è stata fornita.
 
 Ovviamente occorre prima di tutto caricare in Spatialite i layer dei comuni (comuni-From-ISTAT-32632) e dei pronto soccorso (ps-From-OSM-32632) creati in precedenza: questa operazione si può effettuare manualmente usando Spatialite GUI di dev fornita.
 
-ATTENZIONE: quando si importano i dati dagli shapefiles ricordarsi di impostare esplicitamente il ssietma di riferimento EPSG 32632 (indicare "32632" come numero)
+ATTENZIONE: quando si importano i dati dagli shapefiles ricordarsi di impostare esplicitamente il sistema di riferimento EPSG 32632 (indicare "32632" come numero)
 
 Successivamente occorre dare i seguenti comandi:
 
@@ -232,6 +234,7 @@ Una ipotesi di struttura dati della tabella delle info di dettaglio per i Pronto
 * email: da mettere a mano
 * url_website: url del sito web dove sell'Ospedale ( Pronto Soccorso)
 * url_data: url del sito web dove ci sono i dati dei tempi e dei numeri dei pazienti in attesa
+* specific_function: da usare se serve una funzione specifica di parsing (altrimenti il valore è NO)
 * data_type: (HTML / JSON)
 * xpath_numeri_bianco: xpath dell'elemento della pagina HTML che contiene il numero di pazienti in attesa con codice bianco
 * xpath_tempi_bianco: xpath dell'elemento della pagina HTML che contiene il temp odi attesa per i pazienti in attesa con codice bianco

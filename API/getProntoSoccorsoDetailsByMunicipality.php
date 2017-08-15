@@ -14,8 +14,15 @@
    # Set access to data base...
    $db = new SQLite3('../Data/OpenProntoSoccorso.sqlite');
 
+   //echo ".... Connessione db OK ...";
+
    # Set the query for the current Municipality ...
    $q="SELECT * FROM dist_com_ps_2 WHERE pg_COMUNE = '".$municipality."'";
+   //echo "Query = ".$q;
+   //echo "\n";
+   //echo "\n";
+
+
    try {
         # Initialize the Json ...
         $jsonResult = "{\"Comune\": \"".$municipality."\", \"prontoSoccorsi\": [";
@@ -33,6 +40,9 @@
 
           # Set the query for the current osm_id ...
           $q1="SELECT * FROM ps_details WHERE osm_id = '".$row['pt_osm_id']."'";
+          //echo "..... Query = ".$q1;
+          //echo "\n";
+          //echo "\n";
 
           # Get the coordinates ...
           $pt_X = $row['pt_X'];
@@ -45,6 +55,11 @@
 
                # Execute the query ...
                $results1 = $stmt1->execute();
+
+               //echo "..... eseguita la query !";
+               //echo "\n";
+               //echo "\n";
+
 
                # Get the Pronto Soccorso details ...
                while ($row = $results1->fetchArray(SQLITE3_ASSOC)) {
@@ -67,6 +82,15 @@
                  $jsonResult .= "\"email\": \"".$row['email']."\",";
                  $jsonResult .= "\"url_website\": \"".$row['url_website']."\",";
 
+                 //echo "..... JsonResult = ".$jsonResult;
+                 //echo "\n";
+                 //echo "\n";
+
+                 //echo "..... url_data = ".$row['url_data'];
+                 //echo "\n";
+                 //echo "\n";
+
+
                  //#Set CURL parameters: pay attention to the PROXY config !!!!
                  $ch = curl_init();
                  curl_setopt($ch, CURLOPT_AUTOREFERER, TRUE);
@@ -77,6 +101,17 @@
                  curl_setopt($ch, CURLOPT_PROXY, '');
                  $data = curl_exec($ch);
                  curl_close($ch);
+
+                 switch ($row['specific_function']) {
+                      case "Molinette":
+                        $data = parsingMolinetteJSON($data);
+                        break;
+                        case "InfantileReginaMargherita":
+                          $data = parsingMolinetteJSON($data);
+                          break;
+                 }
+
+
 
                  if ($row['data_type'] == JSON) {
                    $parser = new Services_JSON(SERVICES_JSON_LOOSE_TYPE);
@@ -186,12 +221,10 @@
    $db = null;
 
 
-
-
    function getDetailsWaitingXPATH($dom, $xpath_for_parsing) {
      $xpath = new DOMXPath($dom);
      $colorWaitingNumber = $xpath->query($xpath_for_parsing);
-     $theValue =  '';
+     $theValue =  'N.D.';
      foreach( $colorWaitingNumber as $node )
      {
        $theValue = $node->nodeValue;
@@ -209,7 +242,85 @@
 
      $match1_decoded = json_decode($match1_encoded);
 
-     return  $match1_decoded[0];
+     if ($match1_decoded[0] != '') {
+      return  $match1_decoded[0];
+     }
+     else {
+      return  "N.D.";
+     }
+   }
+
+   function parsingMolinetteJSON($data) {
+     $json = json_decode($data, true);
+     $json_new = "{\"colors\": [";
+
+     $get_value = 0;
+     $json_new .= "{";
+     $json_new .= "\"colore\": \"bianco\",";
+     foreach ($json['colors'] as $color) {
+       if ($color['colore'] == "bianco") {
+         $json_new .= "\"attesa\": \"".$color['attesa']."\",";
+         $json_new .= "\"visita\": \"".$color['visita']."\"";
+         $get_value = 1;
+       }
+     }
+     if ($get_value == 0) {
+       $json_new .= "\"attesa\": \"0\"".",";
+       $json_new .= "\"visita\": \"0\"";
+     }
+     $json_new .= "},";
+
+     $get_value = 0;
+     $json_new .= "{";
+     $json_new .= "\"colore\": \"verde\",";
+     foreach ($json['colors'] as $color) {
+       if ($color['colore'] == "verde") {
+         $json_new .= "\"attesa\": \"".$color['attesa']."\",";
+         $json_new .= "\"visita\": \"".$color['visita']."\"";
+         $get_value = 1;
+       }
+     }
+     if ($get_value == 0) {
+       $json_new .= "\"attesa\": \"0\"".",";
+       $json_new .= "\"visita\": \"0\"";
+     }
+     $json_new .= "},";
+
+     $get_value = 0;
+     $json_new .= "{";
+     $json_new .= "\"colore\": \"giallo\",";
+     foreach ($json['colors'] as $color) {
+       if ($color['colore'] == "giallo") {
+         $json_new .= "\"attesa\": \"".$color['attesa']."\",";
+         $json_new .= "\"visita\": \"".$color['visita']."\"";
+         $get_value = 1;
+       }
+     }
+     if ($get_value == 0) {
+       $json_new .= "\"attesa\": \"0\"".",";
+       $json_new .= "\"visita\": \"0\"";
+     }
+     $json_new .= "},";
+
+     $get_value = 0;
+     $json_new .= "{";
+     $json_new .= "\"colore\": \"rosso\",";
+     foreach ($json['colors'] as $color) {
+       if ($color['colore'] == "rosso") {
+         $json_new .= "\"attesa\": \"".$color['attesa']."\",";
+         $json_new .= "\"visita\": \"".$color['visita']."\"";
+         $get_value = 1;
+       }
+     }
+     if ($get_value == 0) {
+       $json_new .= "\"attesa\": \"0\"".",";
+       $json_new .= "\"visita\": \"0\"";
+     }
+     $json_new .= "}";
+
+     $json_new .= "]}";
+
+     return $json_new;
    }
 
 ?>

@@ -7,6 +7,7 @@ CREATE TABLE ps_details(
   email TEXT,
   url_website TEXT,
   url_data TEXT,
+  specific_function TEXT,
   data_type TEXT,
   xpath_numeri_bianco_attesa TEXT,
   xpath_tempi_bianco_attesa TEXT,
@@ -23,7 +24,10 @@ CREATE TABLE ps_details(
   xpath_numeri_rosso_attesa TEXT,
   xpath_tempi_rosso_attesa TEXT,
   xpath_numeri_rosso_visita TEXT,
-  xpath_tempi_rosso_visita TEXT
+  xpath_tempi_rosso_visita TEXT,
+  zona TEXT,
+  id_ps TEXT
+
 );
 .mode csv
 .separator |
