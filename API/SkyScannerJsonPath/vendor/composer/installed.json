@@ -1,0 +1,52 @@
+[
+    {
+        "name": "skyscanner/jsonpath",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/Skyscanner/JsonPath-PHP.git",
+            "reference": "71c4ce39f8a09828b1df30509197fb6a141872e1"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/Skyscanner/JsonPath-PHP/zipball/71c4ce39f8a09828b1df30509197fb6a141872e1",
+            "reference": "71c4ce39f8a09828b1df30509197fb6a141872e1",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.3"
+        },
+        "require-dev": {
+            "phpunit/phpunit": "~4.0",
+            "sami/sami": ">=3.3.0",
+            "satooshi/php-coveralls": ">=1.0.1"
+        },
+        "time": "2017-08-07 08:20:34",
+        "type": "library",
+        "installation-source": "source",
+        "autoload": {
+            "psr-0": {
+                "JsonPath\\": "src/Skyscanner/",
+                "Utilities\\": "src/Skyscanner/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "Apache 2.0"
+        ],
+        "authors": [
+            {
+                "name": "Alessio Linares",
+                "email": "alessio.linares@skyscanner.net",
+                "role": "Software Engineer"
+            }
+        ],
+        "description": "JSONPath implementation for querying and updating JSON objects",
+        "keywords": [
+            "json",
+            "jsonpath",
+            "path"
+        ]
+    }
+]

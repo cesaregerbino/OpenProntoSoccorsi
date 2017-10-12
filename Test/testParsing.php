@@ -1,11 +1,16 @@
 <?php
     ini_set('display_errors', 1);
 
-    $url = 'https://www.galliera.it/118';
+    //$url = 'http://www.galliera.it/118';
+    //$url = 'http://listeps.cittadellasalute.to.it/?id=01090101';
+    //$url = 'http://www.asl1.liguria.it/templateProntoSoccorso.asp';
+    //$url = 'https://www.mauriziano.it/flex/cm/pages/ServeBLOB.php/L/IT/IDPagina/669';
+    $url = 'https://servizionline.sanita.fvg.it/tempiAttesaService/tempiAttesaPs|N';
 
-    print "The url ... ".$url;
-    echo '<br>';
-    echo '<br>';
+
+    //print "The url ... ".$url;
+    //echo '<br>';
+    //echo '<br>';
 
     //#Set CURL parameters: pay attention to the PROXY config !!!!
     $ch = curl_init();
@@ -25,10 +30,13 @@
     //curl_setopt($curl, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US) AppleWebKit/534.10 (KHTML, like Gecko) Chrome/8.0.552.224 Safari/534.10');
     //$data = curl_exec($curl);
     //curl_close($curl);
+    //print_r(curl_getinfo($ch));
+    //print_r(curl_error($ch));
+    print_r($data);
 
     //print "Data ... ".$data;
-    //echo '<br>';
-    //echo '<br>';
+    echo '<br>';
+    echo '<br>';
 
     $dom = new DOMDocument();
     @$dom->loadHTML($data);
@@ -47,15 +55,24 @@
     //  echo '<br>';
     //}
 
-    $greenWaitingNumber = $xpath->query('/html/body/div[2]/div[2]/div/div/ul/li[6]/span');
-    foreach( $greenWaitingNumber as $node )
+    //$greenWaitingNumber = $xpath->query('/html/body/div[2]/div[1]/div/div/ul/li[6]/span');
+    //$Number = $xpath->query('/html/body/table/tbody/tr/td[2]/table[2]/tbody/tr/td[3]/table/tbody/tr[2]/td[1]/table/tbody/tr/td/div[1]/div[3]/div[1]/text()');
+    //$Number = $xpath->query('(//div[@class="datiOspedaleCodici"]/div[2]/text())[2]');
+    $Number = $xpath->query('$..aziende[?(@.descrizione==\"A.S.U.I. - Trieste\")]..prontoSoccorsi[?(@.descrizione==\"Pronto Soccorso e Terapia Urgenza Trieste\")]..dipartimenti[?(@.descrizione==\"Pronto Soccorso Maggiore\")]..codiciColore[?(@.descrizione==\"Bianco\")]..situazionePazienti..numeroPazientiInAttesa');
+    print_r($Number);
+
+    //Try like that: find('//div[@id='field1_name']/div[2]').text
+
+
+
+    foreach( $Number as $n )
     {
-      echo "P.S Galliera - Numero pazienti codice verde: " .$node->nodeValue;
+      echo "Text: " .$n->nodeValue;
       echo '<br>';
       echo '<br>';
     }
 
-     echo "New: ".$greenWaitingNumber[0]->nodeValue;
+     //echo "New: ".$greenWaitingNumber[0]->nodeValue;
 
 
 

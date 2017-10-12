@@ -1,6 +1,8 @@
 <?php
-   require_once('json.php');      // JSON parser
-   require_once('jsonpath-0.8.0.php');  // JSONPath evaluator
+   //require_once('json.php');      // JSON parser
+   //require_once('jsonpath-0.8.0.php');  // JSONPath evaluator
+
+   include "/var/www/html/OpenProntoSoccorso/API/SkyScannerJsonPath/vendor/autoload.php";
 
    date_default_timezone_set('Europe/Rome');
 
@@ -9,6 +11,8 @@
 
    # Get the Municipality name ...
    $municipality = $_GET['municipality'];
+
+   //$municipality = "Trieste";
 
    //echo "Municipality = ".$_GET['municipality'];
    //echo "\n";
@@ -116,9 +120,13 @@
 
                  }
 
-                 if ($row['data_type'] == JSON) {
-                   $parser = new Services_JSON(SERVICES_JSON_LOOSE_TYPE);
-                   $o = $parser->decode($data);
+                 if ($row['data_type'] == "JSON") {
+                   //$parser = new Services_JSON(SERVICES_JSON_LOOSE_TYPE);
+                   //$o = $parser->decode($data);
+
+                   $jsonObject = new JsonPath\JsonObject($data);
+
+                   //print_r ($o);
                    # The white code details ...
                    $num_white_waiting = getDetailsWaitingJSON($row['xpath_numeri_bianco_attesa']);
                    $jsonResult .= "\"numeri_bianco_attesa\": \"".$num_white_waiting."\"";
@@ -222,6 +230,7 @@
            print "Something went wrong or Connection to database failed! ".$e->getMessage();
    }
    $db = null;
+
    function getDetailsWaitingXPATH($dom, $xpath_for_parsing) {
      $xpath = new DOMXPath($dom);
      $colorWaitingNumber = $xpath->query($xpath_for_parsing);
@@ -232,11 +241,20 @@
      }
      return  $theValue;
    }
+
+/*
    function getDetailsWaitingJSON($xpath_for_parsing) {
      global $parser;
      global $o;
+     //print_r ($parser);
+     echo "<br>";
+     echo "<br>";
+     //echo "xpath_for_parsing = ".$xpath_for_parsing;
+     echo "<br>";
+     echo "<br>";
      $match1 = jsonPath($o, $xpath_for_parsing);
      $match1_encoded = $parser->encode($match1);
+     print_r($match1_encoded);
      $match1_decoded = json_decode($match1_encoded);
      if ($match1_decoded[0] != '') {
       return  $match1_decoded[0];
@@ -245,6 +263,59 @@
       return  "N.D.";
      }
    }
+*/
+
+
+   function getDetailsWaitingJSON($xpath_for_parsing) {
+     //global $parser;
+     //global $o;
+
+     global $jsonObject;
+
+     if ($xpath_for_parsing == "N.D.") {
+        return "N.D.";
+       }
+     else {
+     //$xpath_for_parsing = "$..aziende[?(@.descrizione==\"A.S.U.I. - Trieste\")]..prontoSoccorsi[?(@.descrizione==\"Pronto Soccorso e Terapia Urgenza Trieste\")]..dipartimenti[?(@.descrizione==\"Pronto Soccorso Maggiore\")]..codiciColore[?(@.descrizione==\"Verde\")]..situazionePazienti..numeroPazientiInAttesa";
+     //$xpath_for_parsing = '$..aziende[?(@.descrizione=="A.S.U.I. - Trieste")]';
+     //$xpath_for_parsing = '$..aziende[?(@.descrizione=="A.S.U.I. - Trieste")]..prontoSoccorsi[?(@.descrizione=="Pronto Soccorso e Terapia Urgenza Trieste")]..dipartimenti[?(@.descrizione=="Pronto Soccorso Maggiore")]..codiciColore[?(@.descrizione=="Bianco")]..situazionePazienti..numeroPazientiInAttesa';
+
+     //print_r ($jsonObject);
+     //print ($jsonObject);
+     //echo "<br>";
+     //echo "<br>";
+     //echo "xpath_for_parsing = ".$xpath_for_parsing;
+     //echo "<br>";
+     //echo "<br>";
+     $match1 = $jsonObject->get($xpath_for_parsing);
+     //print json_encode($match1);
+     //echo "<br>";
+     //echo "<br>";
+
+     //$match1 = jsonPath($o, $xpath_for_parsing);
+     //$match1_encoded = $parser->encode($match1);
+     //print_r($match1_encoded);
+     //$match1_decoded = json_decode($match1_encoded);
+     //print_r($match1_encoded[0]);
+     //if ($match1_decoded[0] != '')
+     /*if ($match1_encoded[0] != '') {
+      return  $match1_encoded[0];
+     }
+     else {
+      return  "N.D.";
+    }*/
+    /*
+      if ($match1[0] != '') {
+        return  $match1[0];
+       }
+      else {
+        return  "N.D.";
+      } */
+      return  $match1[0];
+
+   }  }
+
+
    function parsingMolinetteJSON($data) {
      $json = json_decode($data, true);
      $json_new = "{\"colors\": [";

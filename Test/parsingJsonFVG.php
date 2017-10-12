@@ -1272,19 +1272,22 @@ $geoArray = json_decode($geoJson, true);
 //$.aziende[0].prontoSoccorsi[0].dipartimenti[1]
 
 foreach ($geoArray['aziende'] as $azienda) {
-        echo $azienda['descrizione'];
+        echo "Descrizione Azienda: ".$azienda['descrizione'];
         echo "\n";
         echo "\n";
 				foreach ($azienda['prontoSoccorsi'] as $ps) {
-				        echo $ps['descrizione'];
+				        echo "Descrizione Pronto Soccorso: ".$ps['descrizione'];
 				        echo "\n";
 				        echo "\n";
 								foreach ($ps['dipartimenti'] as $dip) {
-												echo $dip['descrizione'];
+												echo "Descrizione Dipartimento: ".$dip['descrizione'];
 												echo "\n";
 												echo "\n";
 												foreach ($dip['codiciColore'] as $codCol) {
-																echo $codCol['situazionePazienti']['numeroPazienti'];
+													      echo "Codice: ".$codCol['descrizione'];
+													      echo " - ";
+													      //echo "\n";
+																echo "Numero Pazienti: ".$codCol['situazionePazienti']['numeroPazienti'];
 																echo "\n";
 																echo "\n";
 												}
