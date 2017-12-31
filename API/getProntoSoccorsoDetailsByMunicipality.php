@@ -1,8 +1,6 @@
 <?php
-   //require_once('json.php');      // JSON parser
-   //require_once('jsonpath-0.8.0.php');  // JSONPath evaluator
-
-   include "/var/www/html/OpenProntoSoccorso/API/SkyScannerJsonPath/vendor/autoload.php";
+   //include "/var/www/html/OpenProntoSoccorso/API/SkyScannerJsonPath/vendor/autoload.php";
+   include "../Utility/SkyScannerJsonPath/vendor/autoload.php";
 
    date_default_timezone_set('Europe/Rome');
 
@@ -12,7 +10,7 @@
    # Get the Municipality name ...
    $municipality = $_GET['municipality'];
 
-   //$municipality = "Trieste";
+   //$municipality = "Bologna";
 
    //echo "Municipality = ".$_GET['municipality'];
    //echo "\n";
@@ -21,7 +19,7 @@
    # Set access to data base...
    $db = new SQLite3('../Data/OpenProntoSoccorso.sqlite');
 
-   //echo ".... Connessione db OK ...";
+   //echo ".... DB connection OK ...";
 
    # Set the query for the current Municipality ...
    $q="SELECT * FROM dist_com_ps_2 WHERE pg_COMUNE = '".$municipality."'";
@@ -62,7 +60,7 @@
                # Execute the query ...
                $results1 = $stmt1->execute();
 
-               //echo "..... eseguita la query !";
+               //echo "..... query executed !";
                //echo "\n";
                //echo "\n";
 
@@ -93,120 +91,224 @@
                  //echo "\n";
                  //echo "\n";
 
-                 //#Set CURL parameters: pay attention to the PROXY config !!!!
-                 $ch = curl_init();
-                 curl_setopt($ch, CURLOPT_AUTOREFERER, TRUE);
-                 curl_setopt($ch, CURLOPT_HEADER, 0);
-                 curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-                 curl_setopt($ch, CURLOPT_URL, $row['url_data']);
-                 curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
-                 curl_setopt($ch, CURLOPT_PROXY, '');
-                 $data = curl_exec($ch);
-                 curl_close($ch);
 
-                 //echo "specific function 1 = " .$row['specific_function'];
-                 //$specific_function = $row['specific_function'];
+                 if ($row['data_type'] == "POST") {
+                   switch ($row['specific_function']) {
+                        # The Sardinia hospitals case ...
+                        case "OspedaliSardegna":
+                          # Get the data via POST request for Sardinia hospital ...
+                          $data = getDataViaPostOspedaliSardegna($row);
 
-                 switch ($row['specific_function']) {
-                      case "Molinette":
-                        $data = parsingMolinetteJSON($data);
-                        break;
-                      case "InfantileReginaMargherita":
-                        $data = parsingMolinetteJSON($data);
-                        break;
-                      case "OspedaleImperia": # Need to postprocess the json output ...
-                        $special_case = "OspedaleImperia";
-                        break;
+                          $dom = new DOMDocument();
+                          @$dom->loadHTML($data);
+                          # The white code details ...
+                          $num_white_waiting = getDetailsWaitingXPATH($dom, $row['xpath_numeri_bianco_attesa'], $special_case, "num_white_waiting");
+                          $jsonResult .= "\"numeri_bianco_attesa\": \"".$num_white_waiting."\"";
+                          $time_white_waiting = getDetailsWaitingXPATH($dom, $row['xpath_tempi_bianco_attesa'], $special_case, "time_white_waiting");
+                          $jsonResult .= ",\"tempi_bianco_attesa\": \"".$time_white_waiting."\"";
+                          $num_white_in_visita = getDetailsWaitingXPATH($dom, $row['xpath_numeri_bianco_visita'], $special_case, "num_white_in_visita");
+                          $jsonResult .= ",\"numeri_bianco_in_visita\": \"".$num_white_in_visita."\"";
+                          $time_white_in_visita = getDetailsWaitingXPATH($dom, $row['xpath_tempi_bianco_visita'], $special_case, "time_white_in_visita");
+                          $jsonResult .= ",\"tempi_bianco_in_visita\": \"".$time_white_in_visita."\"";
+                          # The green code details ...
+                          $num_green_waiting = getDetailsWaitingXPATH($dom, $row['xpath_numeri_verde_attesa'], $special_case, "num_green_waiting");
+                          $jsonResult .= ",\"numeri_verde_attesa\": \"".$num_green_waiting."\"";
+                          $time_green_waiting = getDetailsWaitingXPATH($dom, $row['xpath_tempi_verde_attesa'], $special_case, "time_green_waiting");
+                          $jsonResult .= ",\"tempi_verde_attesa\": \"".$time_green_waiting."\"";
+                          $num_green_in_visita = getDetailsWaitingXPATH($dom, $row['xpath_numeri_verde_visita'], $special_case, "num_green_in_visita");
+                          $jsonResult .= ",\"numeri_verde_in_visita\": \"".$num_green_in_visita."\"";
+                          $time_green_in_visita = getDetailsWaitingXPATH($dom, $row['xpath_tempi_verde_visita'], $special_case, "time_green_in_visita");
+                          $jsonResult .= ",\"tempi_verde_in_visita\": \"".$time_green_in_visita."\"";
+                          # The yellow details ...
+                          $num_yellow_waiting = getDetailsWaitingXPATH($dom, $row['xpath_numeri_giallo_attesa'], $special_case, "num_yellow_waiting");
+                          $jsonResult .= ",\"numeri_giallo_attesa\": \"".$num_yellow_waiting."\"";
+                          $time_yellow_waiting = getDetailsWaitingXPATH($dom, $row['xpath_tempi_giallo_attesa'], $special_case, "time_yellow_waiting");
+                          $jsonResult .= ",\"tempi_giallo_attesa\": \"".$time_yellow_waiting."\"";
+                          $num_yellow_in_visita = getDetailsWaitingXPATH($dom, $row['xpath_numeri_giallo_visita'], $special_case, "num_yellow_in_visita");
+                          $jsonResult .= ",\"numeri_giallo_in_visita\": \"".$num_yellow_in_visita."\"";
+                          $time_yellow_in_visita = getDetailsWaitingXPATH($dom, $row['xpath_tempi_giallo_visita'], $special_case, "time_yellow_in_visita");
+                          $jsonResult .= ",\"tempi_giallo_in_visita\": \"".$time_yellow_in_visita."\"";
+                          # The red details ...
+                          $num_red_waiting = getDetailsWaitingXPATH($dom, $row['xpath_numeri_rosso_attesa'], $special_case, "num_red_waiting");
+                          $jsonResult .= ",\"numeri_rosso_attesa\": \"".$num_red_waiting."\"";
+                          $time_red_waiting = getDetailsWaitingXPATH($dom, $row['xpath_tempi_rosso_attesa'], $special_case, "time_red_waiting");
+                          $jsonResult .= ",\"tempi_rosso_attesa\": \"".$time_red_waiting."\"";
+                          $num_red_in_visita = getDetailsWaitingXPATH($dom, $row['xpath_numeri_rosso_visita'], $special_case, "num_red_in_visita");
+                          $jsonResult .= ",\"numeri_rosso_in_visita\": \"".$num_red_in_visita."\"";
+                          $time_red_in_visita = getDetailsWaitingXPATH($dom, $row['xpath_tempi_rosso_visita'], $special_case, "time_red_in_visita");
+                          $jsonResult .= ",\"tempi_rosso_in_visita\": \"".$time_red_in_visita."\"";
+                          $jsonResult .= "}";
 
+                          break;
+                   }
+                 } else {
+                   # Set CURL parameters: pay attention to the PROXY config !!!!
+                   $ch = curl_init();
+                   curl_setopt($ch, CURLOPT_AUTOREFERER, TRUE);
+                   curl_setopt($ch, CURLOPT_HEADER, 0);
+                   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+                   curl_setopt($ch, CURLOPT_URL, $row['url_data']);
+                   curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
+                   curl_setopt($ch, CURLOPT_PROXY, '');
+                   $data = curl_exec($ch);
+                   curl_close($ch);
+
+                   # Manage the special cases ...
+                   switch ($row['specific_function']) {
+                        case "Molinette":
+                          $data = parsingMolinetteJSON($data); # Transform the data ...
+                          break;
+                        case "InfantileReginaMargherita":
+                          $data = parsingMolinetteJSON($data); # Transform the data ...
+                          break;
+                        case "OspedaleImperia": # Need to postprocess the json output ...
+                          $special_case = "OspedaleImperia";
+                          break;
+                        case "OspedaleMantova": # Need to postprocess the json output ...
+                          $special_case = "OspedaleMantova";
+                          break;
+                        case "OspedalePieveCoriano": # Need to postprocess the json output ...
+                          $special_case = "OspedalePieveCoriano";
+                          break;
+                        case "OspedaliBologna": # Need to postprocess the json output ...
+                          $special_case = "OspedaliBologna";
+                          break;
+                   }
+
+                   switch ($row['data_type']) {
+                     # Manage the JSON data case ...
+                     case "JSON":
+                       //$parser = new Services_JSON(SERVICES_JSON_LOOSE_TYPE);
+                       //$o = $parser->decode($data);
+                       $jsonObject = new JsonPath\JsonObject($data);
+                       //print_r ($o);
+
+                       # The white code details ...
+                       $num_white_waiting = getDetailsWaitingJSON($row['xpath_numeri_bianco_attesa']);
+                       $jsonResult .= "\"numeri_bianco_attesa\": \"".$num_white_waiting."\"";
+                       $time_white_waiting = getDetailsWaitingJSON($row['xpath_tempi_bianco_attesa']);
+                       $jsonResult .= ",\"tempi_bianco_attesa\": \"".$time_white_waiting."\"";
+                       $num_white_in_visita = getDetailsWaitingJSON($row['xpath_numeri_bianco_visita']);
+                       $jsonResult .= ",\"numeri_bianco_in_visita\": \"".$num_white_in_visita."\"";
+                       $time_white_in_visita = getDetailsWaitingJSON($row['xpath_tempi_bianco_visita']);
+                       $jsonResult .= ",\"tempi_bianco_in_visita\": \"".$time_white_in_visita."\"";
+                       # The yellow code details ...
+                       $num_yellow_waiting = getDetailsWaitingJSON($row['xpath_numeri_giallo_attesa']);
+                       $jsonResult .= ",\"numeri_giallo_attesa\": \"".$num_yellow_waiting."\"";
+                       $time_yellow_waiting = getDetailsWaitingJSON($row['xpath_tempi_giallo_attesa']);
+                       $jsonResult .= ",\"tempi_giallo_attesa\": \"".$time_yellow_waiting."\"";
+                       $num_yellow_in_visita = getDetailsWaitingJSON($row['xpath_numeri_giallo_visita']);
+                       $jsonResult .= ",\"numeri_giallo_in_visita\": \"".$num_yellow_in_visita."\"";
+                       $time_yellow_in_visita = getDetailsWaitingJSON($row['xpath_tempi_giallo_visita']);
+                       $jsonResult .= ",\"tempi_giallo_in_visita\": \"".$time_yellow_in_visita."\"";
+                       # The green code details ...
+                       $num_green_waiting = getDetailsWaitingJSON($row['xpath_numeri_verde_attesa']);
+                       $jsonResult .= ",\"numeri_verde_attesa\": \"".$num_green_waiting."\"";
+                       $time_green_waiting = getDetailsWaitingJSON($row['xpath_tempi_verde_attesa']);
+                       $jsonResult .= ",\"tempi_verde_attesa\": \"".$time_green_waiting."\"";
+                       $num_green_in_visita = getDetailsWaitingJSON($row['xpath_numeri_verde_visita']);
+                       $jsonResult .= ",\"numeri_verde_in_visita\": \"".$num_green_in_visita."\"";
+                       $time_green_in_visita = getDetailsWaitingJSON($row['xpath_tempi_verde_visita']);
+                       $jsonResult .= ",\"tempi_verde_in_visita\": \"".$time_green_in_visita."\"";
+                       # The red code details ...
+                       $num_red_waiting = getDetailsWaitingJSON($row['xpath_numeri_rosso_attesa']);
+                       $jsonResult .= ",\"numeri_rosso_attesa\": \"".$num_red_waiting."\"";
+                       $time_red_waiting = getDetailsWaitingJSON($row['xpath_tempi_rosso_attesa']);
+                       $jsonResult .= ",\"tempi_rosso_attesa\": \"".$time_red_waiting."\"";
+                       $num_red_in_visita = getDetailsWaitingJSON($row['xpath_numeri_rosso_visita']);
+                       $jsonResult .= ",\"numeri_rosso_in_visita\": \"".$num_red_in_visita."\"";
+                       $time_red_in_visita = getDetailsWaitingJSON($row['xpath_tempi_rosso_visita']);
+                       $jsonResult .= ",\"tempi_rosso_in_visita\": \"".$time_red_in_visita."\"";
+                       $jsonResult .= "}";
+
+                       break;
+                     # Manage the XPATH data case ...
+                     case "XPATH":
+                       $dom = new DOMDocument();
+                       @$dom->loadHTML($data);
+                       # The white code details ...
+                       $num_white_waiting = getDetailsWaitingXPATH($dom, $row['xpath_numeri_bianco_attesa'], $special_case, "num_white_waiting");
+                       $jsonResult .= "\"numeri_bianco_attesa\": \"".$num_white_waiting."\"";
+                       $time_white_waiting = getDetailsWaitingXPATH($dom, $row['xpath_tempi_bianco_attesa'], $special_case, "time_white_waiting");
+                       $jsonResult .= ",\"tempi_bianco_attesa\": \"".$time_white_waiting."\"";
+                       $num_white_in_visita = getDetailsWaitingXPATH($dom, $row['xpath_numeri_bianco_visita'], $special_case, "num_white_in_visita");
+                       $jsonResult .= ",\"numeri_bianco_in_visita\": \"".$num_white_in_visita."\"";
+                       $time_white_in_visita = getDetailsWaitingXPATH($dom, $row['xpath_tempi_bianco_visita'], $special_case, "time_white_in_visita");
+                       $jsonResult .= ",\"tempi_bianco_in_visita\": \"".$time_white_in_visita."\"";
+                       # The green code details ...
+                       $num_green_waiting = getDetailsWaitingXPATH($dom, $row['xpath_numeri_verde_attesa'], $special_case, "num_green_waiting");
+                       $jsonResult .= ",\"numeri_verde_attesa\": \"".$num_green_waiting."\"";
+                       $time_green_waiting = getDetailsWaitingXPATH($dom, $row['xpath_tempi_verde_attesa'], $special_case, "time_green_waiting");
+                       $jsonResult .= ",\"tempi_verde_attesa\": \"".$time_green_waiting."\"";
+                       $num_green_in_visita = getDetailsWaitingXPATH($dom, $row['xpath_numeri_verde_visita'], $special_case, "num_green_in_visita");
+                       $jsonResult .= ",\"numeri_verde_in_visita\": \"".$num_green_in_visita."\"";
+                       $time_green_in_visita = getDetailsWaitingXPATH($dom, $row['xpath_tempi_verde_visita'], $special_case, "time_green_in_visita");
+                       $jsonResult .= ",\"tempi_verde_in_visita\": \"".$time_green_in_visita."\"";
+                       # The yellow details ...
+                       $num_yellow_waiting = getDetailsWaitingXPATH($dom, $row['xpath_numeri_giallo_attesa'], $special_case, "num_yellow_waiting");
+                       $jsonResult .= ",\"numeri_giallo_attesa\": \"".$num_yellow_waiting."\"";
+                       $time_yellow_waiting = getDetailsWaitingXPATH($dom, $row['xpath_tempi_giallo_attesa'], $special_case, "time_yellow_waiting");
+                       $jsonResult .= ",\"tempi_giallo_attesa\": \"".$time_yellow_waiting."\"";
+                       $num_yellow_in_visita = getDetailsWaitingXPATH($dom, $row['xpath_numeri_giallo_visita'], $special_case, "num_yellow_in_visita");
+                       $jsonResult .= ",\"numeri_giallo_in_visita\": \"".$num_yellow_in_visita."\"";
+                       $time_yellow_in_visita = getDetailsWaitingXPATH($dom, $row['xpath_tempi_giallo_visita'], $special_case, "time_yellow_in_visita");
+                       $jsonResult .= ",\"tempi_giallo_in_visita\": \"".$time_yellow_in_visita."\"";
+                       # The red details ...
+                       $num_red_waiting = getDetailsWaitingXPATH($dom, $row['xpath_numeri_rosso_attesa'], $special_case, "num_red_waiting");
+                       $jsonResult .= ",\"numeri_rosso_attesa\": \"".$num_red_waiting."\"";
+                       $time_red_waiting = getDetailsWaitingXPATH($dom, $row['xpath_tempi_rosso_attesa'], $special_case, "time_red_waiting");
+                       $jsonResult .= ",\"tempi_rosso_attesa\": \"".$time_red_waiting."\"";
+                       $num_red_in_visita = getDetailsWaitingXPATH($dom, $row['xpath_numeri_rosso_visita'], $special_case, "num_red_in_visita");
+                       $jsonResult .= ",\"numeri_rosso_in_visita\": \"".$num_red_in_visita."\"";
+                       $time_red_in_visita = getDetailsWaitingXPATH($dom, $row['xpath_tempi_rosso_visita'], $special_case, "time_red_in_visita");
+                       $jsonResult .= ",\"tempi_rosso_in_visita\": \"".$time_red_in_visita."\"";
+                       $jsonResult .= "}";
+
+                       break;
+                     # Manage the XML data case ...
+                     case "XML":
+                       # The white code details ...
+                       $num_white_waiting = getDetailsWaitingXML($data, $row['xpath_numeri_bianco_attesa']);
+                       $jsonResult .= "\"numeri_bianco_attesa\": \"".$num_white_waiting."\"";
+                       $time_white_waiting = getDetailsWaitingXML($data, $row['xpath_tempi_bianco_attesa']);
+                       $jsonResult .= ",\"tempi_bianco_attesa\": \"".$time_white_waiting."\"";
+                       $num_white_in_visita = getDetailsWaitingXML($data, $row['xpath_numeri_bianco_visita']);
+                       $jsonResult .= ",\"numeri_bianco_in_visita\": \"".$num_white_in_visita."\"";
+                       $time_white_in_visita = getDetailsWaitingXML($data, $row['xpath_tempi_bianco_visita']);
+                       $jsonResult .= ",\"tempi_bianco_in_visita\": \"".$time_white_in_visita."\"";
+                       # The green code details ...
+                       $num_green_waiting = getDetailsWaitingXML($data, $row['xpath_numeri_verde_attesa']);
+                       $jsonResult .= ",\"numeri_verde_attesa\": \"".$num_green_waiting."\"";
+                       $time_green_waiting = getDetailsWaitingXML($data, $row['xpath_tempi_verde_attesa']);
+                       $jsonResult .= ",\"tempi_verde_attesa\": \"".$time_green_waiting."\"";
+                       $num_green_in_visita = getDetailsWaitingXML($data, $row['xpath_numeri_verde_visita']);
+                       $jsonResult .= ",\"numeri_verde_in_visita\": \"".$num_green_in_visita."\"";
+                       $time_green_in_visita = getDetailsWaitingXML($data, $row['xpath_tempi_verde_visita']);
+                       $jsonResult .= ",\"tempi_verde_in_visita\": \"".$time_green_in_visita."\"";
+                       # The yellow details ...
+                       $num_yellow_waiting = getDetailsWaitingXML($data, $row['xpath_numeri_giallo_attesa']);
+                       $jsonResult .= ",\"numeri_giallo_attesa\": \"".$num_yellow_waiting."\"";
+                       $time_yellow_waiting = getDetailsWaitingXML($data, $row['xpath_tempi_giallo_attesa']);
+                       $jsonResult .= ",\"tempi_giallo_attesa\": \"".$time_yellow_waiting."\"";
+                       $num_yellow_in_visita = getDetailsWaitingXML($data, $row['xpath_numeri_giallo_visita']);
+                       $jsonResult .= ",\"numeri_giallo_in_visita\": \"".$num_yellow_in_visita."\"";
+                       $time_yellow_in_visita = getDetailsWaitingXML($data, $row['xpath_tempi_giallo_visita']);
+                       $jsonResult .= ",\"tempi_giallo_in_visita\": \"".$time_yellow_in_visita."\"";
+                       # The red details ...
+                       $num_red_waiting = getDetailsWaitingXML($data, $row['xpath_numeri_rosso_attesa']);
+                       $jsonResult .= ",\"numeri_rosso_attesa\": \"".$num_red_waiting."\"";
+                       $time_red_waiting = getDetailsWaitingXML($data, $row['xpath_tempi_rosso_attesa']);
+                       $jsonResult .= ",\"tempi_rosso_attesa\": \"".$time_red_waiting."\"";
+                       $num_red_in_visita = getDetailsWaitingXML($data, $row['xpath_numeri_rosso_visita']);
+                       $jsonResult .= ",\"numeri_rosso_in_visita\": \"".$num_red_in_visita."\"";
+                       $time_red_in_visita = getDetailsWaitingXML($data, $row['xpath_tempi_rosso_visita']);
+                       $jsonResult .= ",\"tempi_rosso_in_visita\": \"".$time_red_in_visita."\"";
+                       $jsonResult .= "}";
+
+                       break;
+                   }
                  }
-
-                 if ($row['data_type'] == "JSON") {
-                   //$parser = new Services_JSON(SERVICES_JSON_LOOSE_TYPE);
-                   //$o = $parser->decode($data);
-
-                   $jsonObject = new JsonPath\JsonObject($data);
-
-                   //print_r ($o);
-                   # The white code details ...
-                   $num_white_waiting = getDetailsWaitingJSON($row['xpath_numeri_bianco_attesa']);
-                   $jsonResult .= "\"numeri_bianco_attesa\": \"".$num_white_waiting."\"";
-                   $time_white_waiting = getDetailsWaitingJSON($row['xpath_tempi_bianco_attesa']);
-                   $jsonResult .= ",\"tempi_bianco_attesa\": \"".$time_white_waiting."\"";
-                   $num_white_in_visita = getDetailsWaitingJSON($row['xpath_numeri_bianco_visita']);
-                   $jsonResult .= ",\"numeri_bianco_in_visita\": \"".$num_white_in_visita."\"";
-                   $time_white_in_visita = getDetailsWaitingJSON($row['xpath_tempi_bianco_visita']);
-                   $jsonResult .= ",\"tempi_bianco_in_visita\": \"".$time_white_in_visita."\"";
-                   # The yellow code details ...
-                   $num_yellow_waiting = getDetailsWaitingJSON($row['xpath_numeri_giallo_attesa']);
-                   $jsonResult .= ",\"numeri_giallo_attesa\": \"".$num_yellow_waiting."\"";
-                   $time_yellow_waiting = getDetailsWaitingJSON($row['xpath_tempi_giallo_attesa']);
-                   $jsonResult .= ",\"tempi_giallo_attesa\": \"".$time_yellow_waiting."\"";
-                   $num_yellow_in_visita = getDetailsWaitingJSON($row['xpath_numeri_giallo_visita']);
-                   $jsonResult .= ",\"numeri_giallo_in_visita\": \"".$num_yellow_in_visita."\"";
-                   $time_yellow_in_visita = getDetailsWaitingJSON($row['xpath_tempi_giallo_visita']);
-                   $jsonResult .= ",\"tempi_giallo_in_visita\": \"".$time_yellow_in_visita."\"";
-                   # The green code details ...
-                   $num_green_waiting = getDetailsWaitingJSON($row['xpath_numeri_verde_attesa']);
-                   $jsonResult .= ",\"numeri_verde_attesa\": \"".$num_green_waiting."\"";
-                   $time_green_waiting = getDetailsWaitingJSON($row['xpath_tempi_verde_attesa']);
-                   $jsonResult .= ",\"tempi_verde_attesa\": \"".$time_green_waiting."\"";
-                   $num_green_in_visita = getDetailsWaitingJSON($row['xpath_numeri_verde_visita']);
-                   $jsonResult .= ",\"numeri_verde_in_visita\": \"".$num_green_in_visita."\"";
-                   $time_green_in_visita = getDetailsWaitingJSON($row['xpath_tempi_verde_visita']);
-                   $jsonResult .= ",\"tempi_verde_in_visita\": \"".$time_green_in_visita."\"";
-                   # The red code details ...
-                   $num_red_waiting = getDetailsWaitingJSON($row['xpath_numeri_rosso_attesa']);
-                   $jsonResult .= ",\"numeri_rosso_attesa\": \"".$num_red_waiting."\"";
-                   $time_red_waiting = getDetailsWaitingJSON($row['xpath_tempi_rosso_attesa']);
-                   $jsonResult .= ",\"tempi_rosso_attesa\": \"".$time_red_waiting."\"";
-                   $num_red_in_visita = getDetailsWaitingJSON($row['xpath_numeri_rosso_visita']);
-                   $jsonResult .= ",\"numeri_rosso_in_visita\": \"".$num_red_in_visita."\"";
-                   $time_red_in_visita = getDetailsWaitingJSON($row['xpath_tempi_rosso_visita']);
-                   $jsonResult .= ",\"tempi_rosso_in_visita\": \"".$time_red_in_visita."\"";
-                   $jsonResult .= "}";
-                 }
-                 elseif ($row['data_type'] == XPATH) {
-                   $dom = new DOMDocument();
-                   @$dom->loadHTML($data);
-                   # The white code details ...
-                   $num_white_waiting = getDetailsWaitingXPATH($dom, $row['xpath_numeri_bianco_attesa']);
-                   $jsonResult .= "\"numeri_bianco_attesa\": \"".$num_white_waiting."\"";
-                   $time_white_waiting = getDetailsWaitingXPATH($dom, $row['xpath_tempi_bianco_attesa']);
-                   $jsonResult .= ",\"tempi_bianco_attesa\": \"".$time_white_waiting."\"";
-                   $num_white_in_visita = getDetailsWaitingXPATH($dom, $row['xpath_numeri_bianco_visita']);
-                   $jsonResult .= ",\"numeri_bianco_in_visita\": \"".$num_white_in_visita."\"";
-                   $time_white_in_visita = getDetailsWaitingXPATH($dom, $row['xpath_tempi_bianco_visita']);
-                   $jsonResult .= ",\"tempi_bianco_in_visita\": \"".$time_white_in_visita."\"";
-                   # The green code details ...
-                   $num_green_waiting = getDetailsWaitingXPATH($dom, $row['xpath_numeri_verde_attesa']);
-                   $jsonResult .= ",\"numeri_verde_attesa\": \"".$num_green_waiting."\"";
-                   $time_green_waiting = getDetailsWaitingXPATH($dom, $row['xpath_tempi_verde_attesa']);
-                   $jsonResult .= ",\"tempi_verde_attesa\": \"".$time_green_waiting."\"";
-                   $num_green_in_visita = getDetailsWaitingXPATH($dom, $row['xpath_numeri_verde_visita']);
-                   $jsonResult .= ",\"numeri_verde_in_visita\": \"".$num_green_in_visita."\"";
-                   $time_green_in_visita = getDetailsWaitingXPATH($dom, $row['xpath_tempi_verde_visita']);
-                   $jsonResult .= ",\"tempi_verde_in_visita\": \"".$time_green_in_visita."\"";
-                   # The yellow details ...
-                   $num_yellow_waiting = getDetailsWaitingXPATH($dom, $row['xpath_numeri_giallo_attesa']);
-                   $jsonResult .= ",\"numeri_giallo_attesa\": \"".$num_yellow_waiting."\"";
-                   $time_yellow_waiting = getDetailsWaitingXPATH($dom, $row['xpath_tempi_giallo_attesa']);
-                   $jsonResult .= ",\"tempi_giallo_attesa\": \"".$time_yellow_waiting."\"";
-                   $num_yellow_in_visita = getDetailsWaitingXPATH($dom, $row['xpath_numeri_giallo_visita']);
-                   $jsonResult .= ",\"numeri_giallo_in_visita\": \"".$num_yellow_in_visita."\"";
-                   $time_yellow_in_visita = getDetailsWaitingXPATH($dom, $row['xpath_tempi_giallo_visita']);
-                   $jsonResult .= ",\"tempi_giallo_in_visita\": \"".$time_yellow_in_visita."\"";
-                   # The red details ...
-                   $num_red_waiting = getDetailsWaitingXPATH($dom, $row['xpath_numeri_rosso_attesa']);
-                   $jsonResult .= ",\"numeri_rosso_attesa\": \"".$num_red_waiting."\"";
-                   $time_red_waiting = getDetailsWaitingXPATH($dom, $row['xpath_tempi_rosso_attesa']);
-                   $jsonResult .= ",\"tempi_rosso_attesa\": \"".$time_red_waiting."\"";
-                   $num_red_in_visita = getDetailsWaitingXPATH($dom, $row['xpath_numeri_rosso_visita']);
-                   $jsonResult .= ",\"numeri_rosso_in_visita\": \"".$num_red_in_visita."\"";
-                   $time_red_in_visita = getDetailsWaitingXPATH($dom, $row['xpath_tempi_rosso_visita']);
-                   $jsonResult .= ",\"tempi_rosso_in_visita\": \"".$time_red_in_visita."\"";
-                   $jsonResult .= "}";
-                }
-               }
+              }
           }
           catch(PDOException $e) {
                   print "Something went wrong or Connection to database failed! ".$e->getMessage();
@@ -222,6 +324,16 @@
                $jsonResult = str_replace('Codice giallo:', '', $jsonResult);
                $jsonResult = str_replace('Codice rosso:', '', $jsonResult);
                break;
+            case "OspedaleMantova": # Postprocess the jsonResult to eliminate strings ...
+               $jsonResult = str_replace('attesa": "[', 'attesa": "', $jsonResult);
+               $jsonResult = str_replace('visita": "[', 'visita": "', $jsonResult);
+               $jsonResult = str_replace(']",', '",', $jsonResult);
+               break;
+            case "OspedalePieveCoriano": # Postprocess the jsonResult to eliminate strings ...
+               $jsonResult = str_replace('attesa": "[', 'attesa": "', $jsonResult);
+               $jsonResult = str_replace('visita": "[', 'visita": "', $jsonResult);
+               $jsonResult = str_replace(']",', '",', $jsonResult);
+               break;
         }
 
         echo $jsonResult;
@@ -231,7 +343,8 @@
    }
    $db = null;
 
-   function getDetailsWaitingXPATH($dom, $xpath_for_parsing) {
+   # Get the details in the case o  XPATH (data inside HTML pages) ..
+   function getDetailsWaitingXPATH($dom, $xpath_for_parsing, $special_case, $type) {
      $xpath = new DOMXPath($dom);
      $colorWaitingNumber = $xpath->query($xpath_for_parsing);
      $theValue =  'N.D.';
@@ -239,83 +352,52 @@
      {
        $theValue = $node->nodeValue;
      }
+
+     # Post elaboration for the special cases ...
+     switch ($special_case) {
+         case "OspedaliBologna": # Postprocess the jsonResult to eliminate strings ...
+            if (($type == "num_white_waiting") or ($type == "num_green_waiting") or ($type == "num_yellow_waiting") or ($type == "num_red_waiting")) {
+              $theValue = substr($theValue, strpos($theValue, 'Utenti in coda: ') + 16);
+            }
+            if (($type == "time_white_waiting") or ($type == "time_green_waiting") or ($type == "time_yellow_waiting") or ($type == "time_red_waiting")) {
+              $theValue = strstr($theValue, ' - Utenti in coda', true);
+            }
+            break;
+     }
+
      return  $theValue;
    }
 
-/*
-   function getDetailsWaitingJSON($xpath_for_parsing) {
-     global $parser;
-     global $o;
-     //print_r ($parser);
-     echo "<br>";
-     echo "<br>";
-     //echo "xpath_for_parsing = ".$xpath_for_parsing;
-     echo "<br>";
-     echo "<br>";
-     $match1 = jsonPath($o, $xpath_for_parsing);
-     $match1_encoded = $parser->encode($match1);
-     print_r($match1_encoded);
-     $match1_decoded = json_decode($match1_encoded);
-     if ($match1_decoded[0] != '') {
-      return  $match1_decoded[0];
-     }
-     else {
-      return  "N.D.";
-     }
-   }
-*/
-
-
+   # Get the details in the case of JSON (data form open services) ...
    function getDetailsWaitingJSON($xpath_for_parsing) {
      //global $parser;
      //global $o;
-
      global $jsonObject;
 
      if ($xpath_for_parsing == "N.D.") {
         return "N.D.";
        }
      else {
-     //$xpath_for_parsing = "$..aziende[?(@.descrizione==\"A.S.U.I. - Trieste\")]..prontoSoccorsi[?(@.descrizione==\"Pronto Soccorso e Terapia Urgenza Trieste\")]..dipartimenti[?(@.descrizione==\"Pronto Soccorso Maggiore\")]..codiciColore[?(@.descrizione==\"Verde\")]..situazionePazienti..numeroPazientiInAttesa";
-     //$xpath_for_parsing = '$..aziende[?(@.descrizione=="A.S.U.I. - Trieste")]';
-     //$xpath_for_parsing = '$..aziende[?(@.descrizione=="A.S.U.I. - Trieste")]..prontoSoccorsi[?(@.descrizione=="Pronto Soccorso e Terapia Urgenza Trieste")]..dipartimenti[?(@.descrizione=="Pronto Soccorso Maggiore")]..codiciColore[?(@.descrizione=="Bianco")]..situazionePazienti..numeroPazientiInAttesa';
-
-     //print_r ($jsonObject);
-     //print ($jsonObject);
-     //echo "<br>";
-     //echo "<br>";
-     //echo "xpath_for_parsing = ".$xpath_for_parsing;
-     //echo "<br>";
-     //echo "<br>";
-     $match1 = $jsonObject->get($xpath_for_parsing);
-     //print json_encode($match1);
-     //echo "<br>";
-     //echo "<br>";
-
-     //$match1 = jsonPath($o, $xpath_for_parsing);
-     //$match1_encoded = $parser->encode($match1);
-     //print_r($match1_encoded);
-     //$match1_decoded = json_decode($match1_encoded);
-     //print_r($match1_encoded[0]);
-     //if ($match1_decoded[0] != '')
-     /*if ($match1_encoded[0] != '') {
-      return  $match1_encoded[0];
-     }
-     else {
-      return  "N.D.";
-    }*/
-    /*
-      if ($match1[0] != '') {
+        $match1 = $jsonObject->get($xpath_for_parsing);
         return  $match1[0];
-       }
-      else {
-        return  "N.D.";
-      } */
-      return  $match1[0];
+     }
+   }
 
-   }  }
+   # Get the details in the case of XML ...
+   function getDetailsWaitingXML($data, $xpath_for_parsing) {
+     $xml = new SimpleXMLElement($data);
 
+     $result = $xml->xpath($xpath_for_parsing);
 
+     $theValue =  'N.D.';
+     while(list( , $node) = each($result)) {
+         $theValue = $node;
+     }
+
+     return $theValue;
+   }
+
+   # Manage the Molinette special case ...
    function parsingMolinetteJSON($data) {
      $json = json_decode($data, true);
      $json_new = "{\"colors\": [";
@@ -381,5 +463,37 @@
      $json_new .= "}";
      $json_new .= "]}";
      return $json_new;
+   }
+
+   # Get the data for Sardinia Hospitals via POST request  ...
+   function getDataViaPostOspedaliSardegna($row) {
+     $ch = curl_init();
+
+     curl_setopt_array($ch, array(
+       CURLOPT_URL => $row['url_data'],
+       CURLOPT_RETURNTRANSFER => true,
+       CURLOPT_ENCODING => "",
+       CURLOPT_MAXREDIRS => 10,
+       CURLOPT_TIMEOUT => 30,
+       CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+       CURLOPT_CUSTOMREQUEST => "POST",
+       CURLOPT_POSTFIELDS => "idMacroArea=null&codiceAziendaSanitaria=null&idAreaVasta=null&idPresidio=null&tipoProntoSoccorso=null&vicini=null&xhr=null",
+       CURLOPT_HTTPHEADER => array(
+         "cache-control: no-cache",
+         "content-type: application/x-www-form-urlencoded"
+       ),
+     ));
+
+     $server_output = curl_exec ($ch);
+
+     curl_close ($ch);
+
+     $jsonObject = new JsonPath\JsonObject($server_output);
+
+     $jsonPathExpr = '$..view';
+
+     $res = $jsonObject->get($jsonPathExpr);
+
+     return $res[0];
    }
 ?>
