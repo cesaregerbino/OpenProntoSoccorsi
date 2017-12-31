@@ -3,6 +3,7 @@
     error_reporting(E_ALL);
 
     include "./tmp/vendor/autoload.php";
+    //include "../Utility/SkyScannerJsonPath/vendor/autoload.php";
 
     $url = 'https://servizionline.sanita.fvg.it/tempiAttesaService/tempiAttesaPs';
 
@@ -17,9 +18,12 @@
     $data = curl_exec($ch);
     curl_close($ch);
 
+    //print json_encode($data);
+
     $jsonObject = new JsonPath\JsonObject($data);
 
-    //$jsonPathExpr = "$..aziende[?(@.descrizione==\"A.S.U.I. - Trieste\")]..prontoSoccorsi[?(@.descrizione==\"Pronto Soccorso e Terapia Urgenza Trieste\")]..dipartimenti[?(@.descrizione==\"Pronto Soccorso Maggiore\")]..codiciColore[?(@.descrizione==\"Verde\")]..situazionePazienti..numeroPazientiInAttesa";
+    //print json_encode($jsonObject);
+
     $jsonPathExpr = '$..aziende[?(@.descrizione=="A.S.U.I. - Trieste")]..prontoSoccorsi[?(@.descrizione=="Pronto Soccorso e Terapia Urgenza Trieste")]..dipartimenti[?(@.descrizione=="Pronto Soccorso Maggiore")]..codiciColore[?(@.descrizione=="Bianco")]..situazionePazienti..numeroPazientiInAttesa';
 
     $r = $jsonObject->get($jsonPathExpr);
