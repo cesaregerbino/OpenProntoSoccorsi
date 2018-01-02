@@ -173,6 +173,12 @@
                         case "OspedaliBologna": # Need to postprocess the json output ...
                           $special_case = "OspedaliBologna";
                           break;
+                        case "OspedalePrato": # Need to postprocess the json output ...
+                          $data = getDataOspedalePrato($row['url_data']);
+                          break;
+                        case "OspedaleCaserta": # Need to manage the custuom response format ...
+                          $special_case = "OspedaleCaserta";
+                          break;
                    }
 
                    switch ($row['data_type']) {
@@ -306,6 +312,52 @@
                        $jsonResult .= "}";
 
                        break;
+
+                     case "CUSTOM":
+                         switch ($special_case) {
+                           case "OspedaleCaserta":
+                             $pieces = explode (",", $data);
+                             # The white code details ...
+                             $num_white_waiting = $pieces[4];
+                             $jsonResult .= "\"numeri_bianco_attesa\": \"".$num_white_waiting."\"";
+                             $time_white_waiting = "N.D.";
+                             $jsonResult .= ",\"tempi_bianco_attesa\": \"".$time_white_waiting."\"";
+                             $num_white_in_visita = "N.D.";
+                             $jsonResult .= ",\"numeri_bianco_in_visita\": \"".$num_white_in_visita."\"";
+                             $time_white_in_visita = "N.D.";
+                             $jsonResult .= ",\"tempi_bianco_in_visita\": \"".$time_white_in_visita."\"";
+                             # The green code details ...
+                             $num_green_waiting = $pieces[3];
+                             $jsonResult .= ",\"numeri_verde_attesa\": \"".$num_green_waiting."\"";
+                             $time_green_waiting = "N.D.";
+                             $jsonResult .= ",\"tempi_verde_attesa\": \"".$time_green_waiting."\"";
+                             $num_green_in_visita = "N.D.";
+                             $jsonResult .= ",\"numeri_verde_in_visita\": \"".$num_green_in_visita."\"";
+                             $time_green_in_visita = "N.D.";
+                             $jsonResult .= ",\"tempi_verde_in_visita\": \"".$time_green_in_visita."\"";
+                             # The yellow details ...
+                             $num_yellow_waiting = $pieces[2];
+                             $jsonResult .= ",\"numeri_giallo_attesa\": \"".$num_yellow_waiting."\"";
+                             $time_yellow_waiting = "N.D.";
+                             $jsonResult .= ",\"tempi_giallo_attesa\": \"".$time_yellow_waiting."\"";
+                             $num_yellow_in_visita = "N.D.";
+                             $jsonResult .= ",\"numeri_giallo_in_visita\": \"".$num_yellow_in_visita."\"";
+                             $time_yellow_in_visita = "N.D.";
+                             $jsonResult .= ",\"tempi_giallo_in_visita\": \"".$time_yellow_in_visita."\"";
+                             # The red details ...
+                             $num_red_waiting = $pieces[1];
+                             $jsonResult .= ",\"numeri_rosso_attesa\": \"".$num_red_waiting."\"";
+                             $time_red_waiting = "N.D.";
+                             $jsonResult .= ",\"tempi_rosso_attesa\": \"".$time_red_waiting."\"";
+                             $num_red_in_visita = "N.D.";
+                             $jsonResult .= ",\"numeri_rosso_in_visita\": \"".$num_red_in_visita."\"";
+                             $time_red_in_visita = "N.D.";
+                             $jsonResult .= ",\"tempi_rosso_in_visita\": \"".$time_red_in_visita."\"";
+                             $jsonResult .= "}";
+
+                             break;
+                            }
+                         break;
                    }
                  }
               }
@@ -496,4 +548,36 @@
 
      return $res[0];
    }
+
+   # Get the data for Prato Hospital ...
+   function getDataOspedalePrato($url) {
+     # Set CURL parameters: pay attention to the PROXY config !!!!
+     $ch = curl_init();
+     curl_setopt($ch, CURLOPT_AUTOREFERER, TRUE);
+     curl_setopt($ch, CURLOPT_HEADER, 0);
+     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+     curl_setopt($ch, CURLOPT_URL, $url);
+     curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
+     curl_setopt($ch, CURLOPT_PROXY, '');
+
+     # In this case is needed manage cookies ..
+     $cookies = "./cookie.txt";
+     curl_setopt($ch, CURLOPT_COOKIEJAR, $cookies);
+     curl_setopt($ch, CURLOPT_COOKIEFILE, $cookies);
+
+     # In this case is needed to get a double request to obtain the real data ...
+     $data = curl_exec($ch);
+     $data = curl_exec($ch);
+
+     curl_close($ch);
+
+     return $data;
+   }
+
+
+
+
+
+
+
 ?>

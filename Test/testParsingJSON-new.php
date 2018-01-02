@@ -5,7 +5,7 @@
     include "./tmp/vendor/autoload.php";
     //include "../Utility/SkyScannerJsonPath/vendor/autoload.php";
 
-    $url = 'https://servizionline.sanita.fvg.it/tempiAttesaService/tempiAttesaPs';
+    $url = 'http://dati.lazio.it/catalog/api/action/datastore_search?resource_id=4a5a084c-b63c-4f4d-b3f0-b1163c0ad077';
 
     //#Set CURL parameters: pay attention to the PROXY config !!!!
     $ch = curl_init();
@@ -24,7 +24,7 @@
 
     //print json_encode($jsonObject);
 
-    $jsonPathExpr = '$..aziende[?(@.descrizione=="A.S.U.I. - Trieste")]..prontoSoccorsi[?(@.descrizione=="Pronto Soccorso e Terapia Urgenza Trieste")]..dipartimenti[?(@.descrizione=="Pronto Soccorso Maggiore")]..codiciColore[?(@.descrizione=="Bianco")]..situazionePazienti..numeroPazientiInAttesa';
+    $jsonPathExpr = '$..result..records[?(@.ISTITUTO=="Santa Scolastica")]..BIANCHI_ATT';
 
     $r = $jsonObject->get($jsonPathExpr);
 
