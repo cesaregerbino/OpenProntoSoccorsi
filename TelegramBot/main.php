@@ -263,8 +263,8 @@ Per maggiori dettagli http://cesaregerbino.wordpress.com/xxxxxxxxxxxx\n";*/
 			$arrayMessages = getArrayMessages($currentLanguage);
 
 			//$theReply = "Stò cercando le informazioni sui numeri e tempi di attesa dei Pronto Soccorso di ".$municipality;
-			$theReply = $arrayMessages['SEARCHING_PS_INFO'].$municipality;
-			$content = array('chat_id' => $chat_id, 'text' => $theReply,'disable_web_page_preview'=>true);
+			$theReply = $arrayMessages['SEARCHING_PS_INFO']."<b>".$municipality."</b>";
+			$content = array('chat_id' => $chat_id, 'text' => $theReply,'disable_web_page_preview'=>true,'parse_mode'=> "HTML");
 			$telegram->sendMessage($content);
 
 			$url = 'http://localhost/OpenProntoSoccorso/API/getProntoSoccorsoDetailsByMunicipality.php?municipality='.$municipality;
@@ -304,52 +304,65 @@ Per maggiori dettagli http://cesaregerbino.wordpress.com/xxxxxxxxxxxx\n";*/
 					//$psWaitTime .= "*Nome PS* :".$ps['ps_name'];
 					//$my_Comune = $municipality;
 
-					$psWaitTime .= "<b>Nome PS</b>: ".$ps['ps_name'];
+					$psWaitTime .= "Nome: <b>".$ps['ps_name']."</b>";
 					$psWaitTime .= "\n";
-					$psWaitTime .= "<b>Città</b>: ".$ps['city'];
+					$psWaitTime .= "Città: <b>".$ps['city']."</b>";
 					$psWaitTime .= "\n";
-					$psWaitTime .= "<b>Indirizzo</b>: ".$ps['address'];
+					$psWaitTime .= "Indirizzo: <b>".$ps['address']."</b>";
 					$psWaitTime .= "\n";
-					$psWaitTime .= "<b>Telefono</b>: ".$ps['tel'];
+					$psWaitTime .= "Telefono: <b>".$ps['tel']."</b>";
 					$psWaitTime .= "\n";
-					$psWaitTime .= "<b>Email</b>: ".$ps['email'];
+					$psWaitTime .= "Email: <b>".$ps['email']."</b>";
 					$psWaitTime .= "\n";
-					$psWaitTime .= "<b>Sito web</b>: ".str_replace('&', '&amp;', $ps['url_website']);
+					$psWaitTime .= "Sito web: ".str_replace('&', '&amp;', $ps['url_website']);
 					$psWaitTime .= "\n";
-					$psWaitTime .= "<b>N° codici bianco in attesa</b>: ".$ps['numeri_bianco_attesa'];
-					$psWaitTime .= "\n";
-					$psWaitTime .= "<b>Tempo attesa per codici bianco</b>: ".$ps['tempi_bianco_attesa'];
-					$psWaitTime .= "\n";
-					$psWaitTime .= "<b>N° codici bianco in visita</b>: ".$ps['numeri_bianco_in_visita'];
-					$psWaitTime .= "\n";
-					$psWaitTime .= "<b>Tempo attesa per codici bianco in visita</b>: ".$ps['tempi_bianco_in_visita'];
 					$psWaitTime .= "\n";
 
-					$psWaitTime .= "<b>N° codici verdi in attesa</b>: ".$ps['numeri_verde_attesa'];
+					$psWaitTime .= "<b>CODICE BIANCO</b>";
 					$psWaitTime .= "\n";
-					$psWaitTime .= "<b>Tempo attesa per codici verdi</b>: ".$ps['tempi_verde_attesa'];
+					$psWaitTime .= "In attesa = <b>".$ps['numeri_bianco_attesa']."</b>";
 					$psWaitTime .= "\n";
-					$psWaitTime .= "<b>N° codici verdi in visita</b>: ".$ps['numeri_verde_in_visita'];
+					$psWaitTime .= "Tempo stimato attesa = <b>".$ps['tempi_bianco_attesa']."</b>";
 					$psWaitTime .= "\n";
-					$psWaitTime .= "<b>Tempo attesa per codici verdi in visita</b>: ".$ps['tempi_verde_in_visita'];
+					$psWaitTime .= "In visita = <b>".$ps['numeri_bianco_in_visita']."</b>";
 					$psWaitTime .= "\n";
-
-					$psWaitTime .= "<b>N° codici giallo in attesa</b>: ".$ps['numeri_giallo_attesa'];
+					$psWaitTime .= "Tempo stimato visita = <b>".$ps['tempi_bianco_in_visita']."</b>";
 					$psWaitTime .= "\n";
-					$psWaitTime .= "<b>Tempo attesa per codici giallo</b>: ".$ps['tempi_giallo_attesa'];
-					$psWaitTime .= "\n";
-					$psWaitTime .= "<b>N° codici giallo in visita</b>: ".$ps['numeri_giallo_in_visita'];
-					$psWaitTime .= "\n";
-					$psWaitTime .= "<b>Tempo attesa per codici giallo in visita</b>: ".$ps['tempi_giallo_in_visita'];
 					$psWaitTime .= "\n";
 
-					$psWaitTime .= "<b>N° codici rosso in attesa</b>: ".$ps['numeri_rosso_attesa'];
+					$psWaitTime .= "<b>CODICE VERDE</b>";
 					$psWaitTime .= "\n";
-					$psWaitTime .= "<b>Tempo attesa per codici rosso</b>: ".$ps['tempi_rosso_attesa'];
+					$psWaitTime .= "In attesa = <b>".$ps['numeri_verde_attesa']."</b>";
 					$psWaitTime .= "\n";
-					$psWaitTime .= "<b>N° codici rosso in visita</b>: ".$ps['numeri_rosso_in_visita'];
+					$psWaitTime .= "Tempo stimato attesa = <b>".$ps['tempi_verde_attesa']."</b>";
 					$psWaitTime .= "\n";
-					$psWaitTime .= "<b>Tempo attesa per codici rosso in visita</b>: ".$ps['tempi_rosso_in_visita'];
+					$psWaitTime .= "In visita = <b>".$ps['numeri_verde_in_visita']."</b>";
+					$psWaitTime .= "\n";
+					$psWaitTime .= "Tempo stimato visita = <b>".$ps['tempi_verde_in_visita']."</b>";
+					$psWaitTime .= "\n";
+					$psWaitTime .= "\n";
+
+					$psWaitTime .= "<b>CODICE GIALLO</b>";
+					$psWaitTime .= "\n";
+					$psWaitTime .= "In attesa = <b>".$ps['numeri_giallo_attesa']."</b>";
+					$psWaitTime .= "\n";
+					$psWaitTime .= "Tempo stimato attesa = <b>".$ps['tempi_giallo_attesa']."</b>";
+					$psWaitTime .= "\n";
+					$psWaitTime .= "In visita = <b>".$ps['numeri_giallo_in_visita']."</b>";
+					$psWaitTime .= "\n";
+					$psWaitTime .= "Tempo stimato visita = <b>".$ps['tempi_giallo_in_visita']."</b>";
+					$psWaitTime .= "\n";
+					$psWaitTime .= "\n";
+
+					$psWaitTime .= "<b>CODICE ROSSO</b>";
+					$psWaitTime .= "\n";
+					$psWaitTime .= "In attesa = <b>".$ps['numeri_rosso_attesa']."</b>";
+					$psWaitTime .= "\n";
+					$psWaitTime .= "Tempo stimato attesa = <b>".$ps['tempi_rosso_attesa']."</b>";
+					$psWaitTime .= "\n";
+					$psWaitTime .= "In visita = <b>".$ps['numeri_rosso_in_visita']."</b>";
+					$psWaitTime .= "\n";
+					$psWaitTime .= "Tempo stimato visita = <b>".$ps['tempi_rosso_in_visita']."</b>";
 					$psWaitTime .= "\n";
 
 					if (($my_lat != 0) AND ($my_lon != 0)) {
