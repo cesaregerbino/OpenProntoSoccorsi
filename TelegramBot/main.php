@@ -304,86 +304,110 @@ Per maggiori dettagli http://cesaregerbino.wordpress.com/xxxxxxxxxxxx\n";*/
 					//$psWaitTime .= "*Nome PS* :".$ps['ps_name'];
 					//$my_Comune = $municipality;
 
-					$psWaitTime .= "Nome: <b>".$ps['ps_name']."</b>";
-					$psWaitTime .= "\n";
-					$psWaitTime .= "Città: <b>".$ps['city']."</b>";
-					$psWaitTime .= "\n";
-					$psWaitTime .= "Indirizzo: <b>".$ps['address']."</b>";
-					$psWaitTime .= "\n";
-					$psWaitTime .= "Telefono: <b>".$ps['tel']."</b>";
-					$psWaitTime .= "\n";
-					$psWaitTime .= "Email: <b>".$ps['email']."</b>";
-					$psWaitTime .= "\n";
-					$psWaitTime .= "Sito web: ".str_replace('&', '&amp;', $ps['url_website']);
-					$psWaitTime .= "\n";
-					$psWaitTime .= "\n";
+					//echo "****** ".$ps['error'][0];
+					//print_r($ps['error'][0]['status']);
+					echo "Status = ".$ps['error'][0]['status'];
+					echo "\n";
+					echo "\n";
 
-					$psWaitTime .= "<b>CODICE BIANCO</b>";
-					$psWaitTime .= "\n";
-					$psWaitTime .= "In attesa = <b>".$ps['numeri_bianco_attesa']."</b>";
-					$psWaitTime .= "\n";
-					$psWaitTime .= "Tempo stimato attesa = <b>".$ps['tempi_bianco_attesa']."</b>";
-					$psWaitTime .= "\n";
-					$psWaitTime .= "In visita = <b>".$ps['numeri_bianco_in_visita']."</b>";
-					$psWaitTime .= "\n";
-					$psWaitTime .= "Tempo stimato visita = <b>".$ps['tempi_bianco_in_visita']."</b>";
-					$psWaitTime .= "\n";
-					$psWaitTime .= "\n";
+					if ($ps['error'][0]['status'] == "KO") {
+             //537208603:AAGn5ODgLppFu04-bi088F4SyKAiITfXH1w
+						 echo "Sono nel caso KO !!!!";
+						 echo "\n";
+						 echo "\n";
 
-					$psWaitTime .= "<b>CODICE VERDE</b>";
-					$psWaitTime .= "\n";
-					$psWaitTime .= "In attesa = <b>".$ps['numeri_verde_attesa']."</b>";
-					$psWaitTime .= "\n";
-					$psWaitTime .= "Tempo stimato attesa = <b>".$ps['tempi_verde_attesa']."</b>";
-					$psWaitTime .= "\n";
-					$psWaitTime .= "In visita = <b>".$ps['numeri_verde_in_visita']."</b>";
-					$psWaitTime .= "\n";
-					$psWaitTime .= "Tempo stimato visita = <b>".$ps['tempi_verde_in_visita']."</b>";
-					$psWaitTime .= "\n";
-					$psWaitTime .= "\n";
+						 $chat_errors_id = "537208603:AAGn5ODgLppFu04-bi088F4SyKAiITfXH1w";
+						 $error_message = "Errore nella chiamata: ".$ps['error'][0]['url'];
+						 $error_message .= "\n";
+						 $error_message .= "Codice di errore http: ".$ps['error'][0]['http_code'];
+						 $error_message .= "\n";
+						 $error_message .= "Testo errore: ".$ps['error'][0]['text_error'];
+						 $error_message .= "\n";
+						 $content = array('chat_id' => $chat_errors_id, 'text' => $error_message,'parse_mode'=> "HTML", 'disable_web_page_preview'=>true);
+						 $telegram->sendMessage($content);
+						}
+					else {
+						$psWaitTime .= "Nome: <b>".$ps['ps_name']."</b>";
+						$psWaitTime .= "\n";
+						$psWaitTime .= "Città: <b>".$ps['city']."</b>";
+						$psWaitTime .= "\n";
+						$psWaitTime .= "Indirizzo: <b>".$ps['address']."</b>";
+						$psWaitTime .= "\n";
+						$psWaitTime .= "Telefono: <b>".$ps['tel']."</b>";
+						$psWaitTime .= "\n";
+						$psWaitTime .= "Email: <b>".$ps['email']."</b>";
+						$psWaitTime .= "\n";
+						$psWaitTime .= "Sito web: ".str_replace('&', '&amp;', $ps['url_website']);
+						$psWaitTime .= "\n";
+						$psWaitTime .= "\n";
 
-					$psWaitTime .= "<b>CODICE GIALLO</b>";
-					$psWaitTime .= "\n";
-					$psWaitTime .= "In attesa = <b>".$ps['numeri_giallo_attesa']."</b>";
-					$psWaitTime .= "\n";
-					$psWaitTime .= "Tempo stimato attesa = <b>".$ps['tempi_giallo_attesa']."</b>";
-					$psWaitTime .= "\n";
-					$psWaitTime .= "In visita = <b>".$ps['numeri_giallo_in_visita']."</b>";
-					$psWaitTime .= "\n";
-					$psWaitTime .= "Tempo stimato visita = <b>".$ps['tempi_giallo_in_visita']."</b>";
-					$psWaitTime .= "\n";
-					$psWaitTime .= "\n";
+						$psWaitTime .= "<b>CODICE BIANCO</b>";
+						$psWaitTime .= "\n";
+						$psWaitTime .= "In attesa = <b>".$ps['numeri_bianco_attesa']."</b>";
+						$psWaitTime .= "\n";
+						$psWaitTime .= "Tempo stimato attesa = <b>".$ps['tempi_bianco_attesa']."</b>";
+						$psWaitTime .= "\n";
+						$psWaitTime .= "In visita = <b>".$ps['numeri_bianco_in_visita']."</b>";
+						$psWaitTime .= "\n";
+						$psWaitTime .= "Tempo stimato visita = <b>".$ps['tempi_bianco_in_visita']."</b>";
+						$psWaitTime .= "\n";
+						$psWaitTime .= "\n";
 
-					$psWaitTime .= "<b>CODICE ROSSO</b>";
-					$psWaitTime .= "\n";
-					$psWaitTime .= "In attesa = <b>".$ps['numeri_rosso_attesa']."</b>";
-					$psWaitTime .= "\n";
-					$psWaitTime .= "Tempo stimato attesa = <b>".$ps['tempi_rosso_attesa']."</b>";
-					$psWaitTime .= "\n";
-					$psWaitTime .= "In visita = <b>".$ps['numeri_rosso_in_visita']."</b>";
-					$psWaitTime .= "\n";
-					$psWaitTime .= "Tempo stimato visita = <b>".$ps['tempi_rosso_in_visita']."</b>";
-					$psWaitTime .= "\n";
+						$psWaitTime .= "<b>CODICE VERDE</b>";
+						$psWaitTime .= "\n";
+						$psWaitTime .= "In attesa = <b>".$ps['numeri_verde_attesa']."</b>";
+						$psWaitTime .= "\n";
+						$psWaitTime .= "Tempo stimato attesa = <b>".$ps['tempi_verde_attesa']."</b>";
+						$psWaitTime .= "\n";
+						$psWaitTime .= "In visita = <b>".$ps['numeri_verde_in_visita']."</b>";
+						$psWaitTime .= "\n";
+						$psWaitTime .= "Tempo stimato visita = <b>".$ps['tempi_verde_in_visita']."</b>";
+						$psWaitTime .= "\n";
+						$psWaitTime .= "\n";
 
-					if (($my_lat != 0) AND ($my_lon != 0)) {
-						$longUrl = "http://localhost/OpenProntoSoccorso/TelegramBot/RenderRoute.php?lat_from=".$my_lat."&lon_from=".$my_lon."&lat_to=".$ps['Lat']."&lon_to=".$ps['Lon']."&map_type=2";
-            $shortUrl = $this->CompactUrl($longUrl);
-						echo "shortUrl = ".$shortUrl;
-						echo "\n";
-						echo "\n";
-						$psWaitTime .= "Il percorso: ".$shortUrl;
+						$psWaitTime .= "<b>CODICE GIALLO</b>";
+						$psWaitTime .= "\n";
+						$psWaitTime .= "In attesa = <b>".$ps['numeri_giallo_attesa']."</b>";
+						$psWaitTime .= "\n";
+						$psWaitTime .= "Tempo stimato attesa = <b>".$ps['tempi_giallo_attesa']."</b>";
+						$psWaitTime .= "\n";
+						$psWaitTime .= "In visita = <b>".$ps['numeri_giallo_in_visita']."</b>";
+						$psWaitTime .= "\n";
+						$psWaitTime .= "Tempo stimato visita = <b>".$ps['tempi_giallo_in_visita']."</b>";
+						$psWaitTime .= "\n";
+						$psWaitTime .= "\n";
+
+						$psWaitTime .= "<b>CODICE ROSSO</b>";
+						$psWaitTime .= "\n";
+						$psWaitTime .= "In attesa = <b>".$ps['numeri_rosso_attesa']."</b>";
+						$psWaitTime .= "\n";
+						$psWaitTime .= "Tempo stimato attesa = <b>".$ps['tempi_rosso_attesa']."</b>";
+						$psWaitTime .= "\n";
+						$psWaitTime .= "In visita = <b>".$ps['numeri_rosso_in_visita']."</b>";
+						$psWaitTime .= "\n";
+						$psWaitTime .= "Tempo stimato visita = <b>".$ps['tempi_rosso_in_visita']."</b>";
+						$psWaitTime .= "\n";
+
+						if (($my_lat != 0) AND ($my_lon != 0)) {
+							$longUrl = "http://localhost/OpenProntoSoccorso/TelegramBot/RenderRoute.php?lat_from=".$my_lat."&lon_from=".$my_lon."&lat_to=".$ps['Lat']."&lon_to=".$ps['Lon']."&map_type=2";
+	            $shortUrl = $this->CompactUrl($longUrl);
+							echo "shortUrl = ".$shortUrl;
+							echo "\n";
+							echo "\n";
+							$psWaitTime .= "Il percorso: ".$shortUrl;
+						}
+
+						$psWaitTime .= "\n";
+						$psWaitTime .= "*************";
+						$psWaitTime .= "\n";
+						$psWaitTime .= "\n";
+
+						$content = array('chat_id' => $chat_id,  'text' => $psWaitTime, 'parse_mode'=> "HTML", 'disable_web_page_preview'=>true);
+						//$content = array('chat_id' => $chat_id,  'text' => $psWaitTime,  'disable_web_page_preview'=>true);
+						$telegram->sendMessage($content);
+
+						$psWaitTime = "";
 					}
-
-					$psWaitTime .= "\n";
-					$psWaitTime .= "*************";
-					$psWaitTime .= "\n";
-					$psWaitTime .= "\n";
-
-					$content = array('chat_id' => $chat_id,  'text' => $psWaitTime, 'parse_mode'=> "HTML", 'disable_web_page_preview'=>true);
-					//$content = array('chat_id' => $chat_id,  'text' => $psWaitTime,  'disable_web_page_preview'=>true);
-					$telegram->sendMessage($content);
-
-					$psWaitTime = "";
 				}
 		}
 
