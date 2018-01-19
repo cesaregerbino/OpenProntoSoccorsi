@@ -2,6 +2,13 @@
    //include "/var/www/html/OpenProntoSoccorso/API/SkyScannerJsonPath/vendor/autoload.php";
    include "../Utility/SkyScannerJsonPath/vendor/autoload.php";
 
+   include("../TelegramBot/Telegram.php");
+
+   $errorManagerTelegramBot = ERROR_MANAGER_TELEGRAM_BOT;
+   $chatIdForErrors = CHAT_ID_FOR_TO_SEND_ERROR_MESSAGES;
+
+   //invokeErrorManagerBot("OpenProntoSoccorsoBot", $errorManagerTelegramBot, $chatIdForErrors, "The new message error");
+
    date_default_timezone_set('Europe/Rome');
 
    # To manage special cases ...
@@ -10,7 +17,7 @@
    # Get the Municipality name ...
    $municipality = $_GET['municipality'];
 
-   //$municipality = "Prato";
+   //$municipality = "Alassio";
 
    //echo "Municipality = ".$_GET['municipality'];
    //echo "\n";
@@ -72,6 +79,8 @@
                  }
                  $firstIteration = FALSE;
                  # Get the generic details ...
+
+                 /*
                  $jsonResult .= "{";
                  $jsonResult .= "\"osm_id\": \"".$row['osm_id']."\",";
                  $jsonResult .= "\"x\": \"".$pt_X."\",";
@@ -84,6 +93,8 @@
                  $jsonResult .= "\"tel\": \"".$row['tel']."\",";
                  $jsonResult .= "\"email\": \"".$row['email']."\",";
                  $jsonResult .= "\"url_website\": \"".$row['url_website']."\",";
+                 */
+
 
                  //echo "..... JsonResult = ".$jsonResult;
                  //echo "\n";
@@ -103,6 +114,21 @@
                           if ($data != "Error") {
                             $dom = new DOMDocument();
                             @$dom->loadHTML($data);
+
+                            $jsonResult .= "{";
+                            $jsonResult .= "\"osm_id\": \"".$row['osm_id']."\",";
+                            $jsonResult .= "\"x\": \"".$pt_X."\",";
+                            $jsonResult .= "\"y\": \"".$pt_Y."\",";
+                            $jsonResult .= "\"Lon\": \"".$pt_LON."\",";
+                            $jsonResult .= "\"Lat\": \"".$pt_LAT."\",";
+                            $jsonResult .= "\"ps_name\": \"".$row['ps_name']."\",";
+                            $jsonResult .= "\"city\": \"".$row['city']."\",";
+                            $jsonResult .= "\"address\": \"".$row['address']."\",";
+                            $jsonResult .= "\"tel\": \"".$row['tel']."\",";
+                            $jsonResult .= "\"email\": \"".$row['email']."\",";
+                            $jsonResult .= "\"url_website\": \"".$row['url_website']."\",";
+
+
                             # The white code details ...
                             $num_white_waiting = getDetailsWaitingXPATH($dom, $row['xpath_numeri_bianco_attesa'], $special_case, "num_white_waiting");
                             $jsonResult .= "\"numeri_bianco_attesa\": \"".$num_white_waiting."\"";
@@ -160,6 +186,10 @@
 
                    if ($data === false || $curl_info['http_code'] != 200) {
                      // curl request KO ...
+                     $errorText = "Errore in chiamata in GET: ".$row['url_data']." - HTTP code error: ".$curl_info['http_code']." - Errore: ".$curl_error;
+                     invokeErrorManagerBot("OpenProntoSoccorsoBot", $errorManagerTelegramBot, $chatIdForErrors, $errorText);
+
+                     /*
                      $jsonResult .= "\"error\": [{";
                      $jsonResult .= "\"status\": \"KO\",";
                      $jsonResult .= "\"url\": \"".$row['url_data']."\",";
@@ -183,6 +213,7 @@
                      $jsonResult .= "\"numeri_rosso_in_visita\": \"\",";
                      $jsonResult .= "\"tempi_rosso_in_visita\": \"\"";
                      $jsonResult .= "}";
+                     */
                    }
                    else {
                      # Manage the special cases ...
@@ -223,12 +254,27 @@
                          $jsonObject = new JsonPath\JsonObject($data);
                          //print_r ($o);
 
+                         /*
                          $jsonResult .= "\"error\": [{";
                          $jsonResult .= "\"status\": \"OK\",";
                          $jsonResult .= "\"url\": \"\",";
                          $jsonResult .= "\"http_code\": \"\",";
                          $jsonResult .= "\"text_error\": \"\"";
                          $jsonResult .= "}],";
+                         */
+                         $jsonResult .= "{";
+                         $jsonResult .= "\"osm_id\": \"".$row['osm_id']."\",";
+                         $jsonResult .= "\"x\": \"".$pt_X."\",";
+                         $jsonResult .= "\"y\": \"".$pt_Y."\",";
+                         $jsonResult .= "\"Lon\": \"".$pt_LON."\",";
+                         $jsonResult .= "\"Lat\": \"".$pt_LAT."\",";
+                         $jsonResult .= "\"ps_name\": \"".$row['ps_name']."\",";
+                         $jsonResult .= "\"city\": \"".$row['city']."\",";
+                         $jsonResult .= "\"address\": \"".$row['address']."\",";
+                         $jsonResult .= "\"tel\": \"".$row['tel']."\",";
+                         $jsonResult .= "\"email\": \"".$row['email']."\",";
+                         $jsonResult .= "\"url_website\": \"".$row['url_website']."\",";
+
 
                          # The white code details ...
                          $num_white_waiting = getDetailsWaitingJSON($row['xpath_numeri_bianco_attesa']);
@@ -275,12 +321,27 @@
                          $dom = new DOMDocument();
                          @$dom->loadHTML($data);
 
+                         /*
                          $jsonResult .= "\"error\": [{";
                          $jsonResult .= "\"status\": \"OK\",";
                          $jsonResult .= "\"url\": \"\",";
                          $jsonResult .= "\"http_code\": \"\",";
                          $jsonResult .= "\"text_error\": \"\"";
                          $jsonResult .= "}],";
+                         */
+
+                         $jsonResult .= "{";
+                         $jsonResult .= "\"osm_id\": \"".$row['osm_id']."\",";
+                         $jsonResult .= "\"x\": \"".$pt_X."\",";
+                         $jsonResult .= "\"y\": \"".$pt_Y."\",";
+                         $jsonResult .= "\"Lon\": \"".$pt_LON."\",";
+                         $jsonResult .= "\"Lat\": \"".$pt_LAT."\",";
+                         $jsonResult .= "\"ps_name\": \"".$row['ps_name']."\",";
+                         $jsonResult .= "\"city\": \"".$row['city']."\",";
+                         $jsonResult .= "\"address\": \"".$row['address']."\",";
+                         $jsonResult .= "\"tel\": \"".$row['tel']."\",";
+                         $jsonResult .= "\"email\": \"".$row['email']."\",";
+                         $jsonResult .= "\"url_website\": \"".$row['url_website']."\",";
 
                          # The white code details ...
                          $num_white_waiting = getDetailsWaitingXPATH($dom, $row['xpath_numeri_bianco_attesa'], $special_case, "num_white_waiting");
@@ -324,12 +385,27 @@
                        # Manage the XML data case ...
                        //case "XML":
                        case (($row['data_type'] == "XML") and ($data != "Error")):
+                         /*
                          $jsonResult .= "\"error\": [{";
                          $jsonResult .= "\"status\": \"OK\",";
                          $jsonResult .= "\"url\": \"\",";
                          $jsonResult .= "\"http_code\": \"\",";
                          $jsonResult .= "\"text_error\": \"\"";
                          $jsonResult .= "}],";
+                         */
+
+                         $jsonResult .= "{";
+                         $jsonResult .= "\"osm_id\": \"".$row['osm_id']."\",";
+                         $jsonResult .= "\"x\": \"".$pt_X."\",";
+                         $jsonResult .= "\"y\": \"".$pt_Y."\",";
+                         $jsonResult .= "\"Lon\": \"".$pt_LON."\",";
+                         $jsonResult .= "\"Lat\": \"".$pt_LAT."\",";
+                         $jsonResult .= "\"ps_name\": \"".$row['ps_name']."\",";
+                         $jsonResult .= "\"city\": \"".$row['city']."\",";
+                         $jsonResult .= "\"address\": \"".$row['address']."\",";
+                         $jsonResult .= "\"tel\": \"".$row['tel']."\",";
+                         $jsonResult .= "\"email\": \"".$row['email']."\",";
+                         $jsonResult .= "\"url_website\": \"".$row['url_website']."\",";
 
                          # The white code details ...
                          $num_white_waiting = getDetailsWaitingXML($data, $row['xpath_numeri_bianco_attesa']);
@@ -377,12 +453,27 @@
                              case "OspedaleCaserta":
                                $pieces = explode (",", $data);
 
+                               /*
                                $jsonResult .= "\"error\": [{";
                                $jsonResult .= "\"status\": \"OK\",";
                                $jsonResult .= "\"url\": \"\",";
                                $jsonResult .= "\"http_code\": \"\",";
                                $jsonResult .= "\"text_error\": \"\"";
                                $jsonResult .= "}],";
+                               */
+
+                               $jsonResult .= "{";
+                               $jsonResult .= "\"osm_id\": \"".$row['osm_id']."\",";
+                               $jsonResult .= "\"x\": \"".$pt_X."\",";
+                               $jsonResult .= "\"y\": \"".$pt_Y."\",";
+                               $jsonResult .= "\"Lon\": \"".$pt_LON."\",";
+                               $jsonResult .= "\"Lat\": \"".$pt_LAT."\",";
+                               $jsonResult .= "\"ps_name\": \"".$row['ps_name']."\",";
+                               $jsonResult .= "\"city\": \"".$row['city']."\",";
+                               $jsonResult .= "\"address\": \"".$row['address']."\",";
+                               $jsonResult .= "\"tel\": \"".$row['tel']."\",";
+                               $jsonResult .= "\"email\": \"".$row['email']."\",";
+                               $jsonResult .= "\"url_website\": \"".$row['url_website']."\",";
 
                                # The white code details ...
                                $num_white_waiting = $pieces[4];
@@ -587,7 +678,7 @@
 
    # Get the data for Sardinia Hospitals via POST request  ...
    function getDataViaPostOspedaliSardegna($row) {
-     global $jsonResult;
+     //global $jsonResult;
 
      $ch = curl_init();
 
@@ -612,6 +703,11 @@
 
      if ($server_output === false || $curl_info['http_code'] != 200) {
        // curl request KO ...
+       $errorText = "Errore in chiamata in POST (Ospedali Sardegna): ".$row['url_data']." - HTTP code error: ".$curl_info['http_code']." - Errore: ".$curl_error;
+       invokeErrorManagerBot("OpenProntoSoccorsoBot", $errorManagerTelegramBot, $chatIdForErrors, $errorText);
+
+
+       /*
        $jsonResult .= "\"error\": [{";
        $jsonResult .= "\"status\": \"KO\",";
        $jsonResult .= "\"url\": \"".$row['url_data']."\",";
@@ -635,6 +731,7 @@
        $jsonResult .= "\"numeri_rosso_in_visita\": \"\",";
        $jsonResult .= "\"tempi_rosso_in_visita\": \"\"";
        $jsonResult .= "}";
+       */
 
        return "Error";
      }
@@ -678,6 +775,10 @@
 
      if ($data === false || $curl_info['http_code'] != 200) {
        // curl request KO ...
+       $errorText = "Errore in chiamata in GET (Ospedale Prato): ".$row['url_data']." - HTTP code error: ".$curl_info['http_code']." - Errore: ".$curl_error;
+       invokeErrorManagerBot("OpenProntoSoccorsoBot", $errorManagerTelegramBot, $chatIdForErrors, $errorText);
+
+       /*
        $jsonResult .= "\"error\": [{";
        $jsonResult .= "\"status\": \"KO\",";
        $jsonResult .= "\"url\": \"".$row['url_data']."\",";
@@ -701,6 +802,7 @@
        $jsonResult .= "\"numeri_rosso_in_visita\": \"\",";
        $jsonResult .= "\"tempi_rosso_in_visita\": \"\"";
        $jsonResult .= "}";
+       */
 
        return "Error";
      }
@@ -708,5 +810,25 @@
       return $data;
      }
    }
+
+   function invokeErrorManagerBot($bot, $errorManagerTelegramBot, $chatIdForErrors, $theErrorMessage) {
+     $website="https://api.telegram.org/bot".$errorManagerTelegramBot;
+     $params=[
+         'chat_id'=>$chatIdForErrors,
+         'text'=>$bot.' - '.$theErrorMessage,
+     ];
+     $ch = curl_init($website . '/sendMessage');
+     curl_setopt($ch, CURLOPT_HEADER, false);
+     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+     curl_setopt($ch, CURLOPT_POST, 1);
+     curl_setopt($ch, CURLOPT_POSTFIELDS, ($params));
+     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+     $result = curl_exec($ch);
+     curl_close($ch);
+   }
+
+
+
+
 
 ?>

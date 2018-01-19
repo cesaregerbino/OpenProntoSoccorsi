@@ -6,4 +6,6 @@
   define('DATA_SESSIONS_DB_PATH','/var/www/html/OpenProntoSoccorso/TelegramBot');
   //define('BASE_PATH','D:\Cesare\Personale\DocumentRootApache24\Telegram\OpenProntoSoccorsoBot');
   define('API','AIzaSyDdKAB-KN2EiCmG9plWDSf6iLlAHbdWRZM'); // api google shortner
+  define('ERROR_MANAGER_TELEGRAM_BOT','537208603:AAGn5ODgLppFu04-bi088F4SyKAiITfXH1w'); // token for the Error Manager Telegram Bot
+  define('CHAT_ID_FOR_TO_SEND_ERROR_MESSAGES','143645120'); // ChatId to use tosend error messages to rror Manager Telegram Bot. NOTE: MUST be a personal chatId !!!!
 ?>
