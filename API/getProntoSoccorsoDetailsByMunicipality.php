@@ -15,9 +15,9 @@
    $special_case = '';
 
    # Get the Municipality name ...
-   $municipality = $_GET['municipality'];
+   //$municipality = $_GET['municipality'];
 
-   //$municipality = "Alassio";
+   $municipality = "Cagliari";
 
    //echo "Municipality = ".$_GET['municipality'];
    //echo "\n";
@@ -80,36 +80,12 @@
                  $firstIteration = FALSE;
                  # Get the generic details ...
 
-                 /*
-                 $jsonResult .= "{";
-                 $jsonResult .= "\"osm_id\": \"".$row['osm_id']."\",";
-                 $jsonResult .= "\"x\": \"".$pt_X."\",";
-                 $jsonResult .= "\"y\": \"".$pt_Y."\",";
-                 $jsonResult .= "\"Lon\": \"".$pt_LON."\",";
-                 $jsonResult .= "\"Lat\": \"".$pt_LAT."\",";
-                 $jsonResult .= "\"ps_name\": \"".$row['ps_name']."\",";
-                 $jsonResult .= "\"city\": \"".$row['city']."\",";
-                 $jsonResult .= "\"address\": \"".$row['address']."\",";
-                 $jsonResult .= "\"tel\": \"".$row['tel']."\",";
-                 $jsonResult .= "\"email\": \"".$row['email']."\",";
-                 $jsonResult .= "\"url_website\": \"".$row['url_website']."\",";
-                 */
-
-
-                 //echo "..... JsonResult = ".$jsonResult;
-                 //echo "\n";
-                 //echo "\n";
-                 //echo "..... url_data = ".$row['url_data'];
-                 //echo "\n";
-                 //echo "\n";
-
-
                  if ($row['data_type'] == "POST") {
                    switch ($row['specific_function']) {
                         # The Sardinia hospitals case ...
                         case "OspedaliSardegna":
                           # Get the data via POST request for Sardinia hospital ...
-                          $data = getDataViaPostOspedaliSardegna($row);
+                          $data = getDataViaPostOspedaliSardegna($row, $errorManagerTelegramBot, $chatIdForErrors);
 
                           if ($data != "Error") {
                             $dom = new DOMDocument();
@@ -186,34 +162,22 @@
 
                    if ($data === false || $curl_info['http_code'] != 200) {
                      // curl request KO ...
-                     $errorText = "Errore in chiamata in GET: ".$row['url_data']." - HTTP code error: ".$curl_info['http_code']." - Errore: ".$curl_error;
-                     invokeErrorManagerBot("OpenProntoSoccorsoBot", $errorManagerTelegramBot, $chatIdForErrors, $errorText);
+                     //$errorText = "Errore in chiamata in GET: ".$row['url_data']." - HTTP code error: ".$curl_info['http_code']." - Errore: ".$curl_error;
 
-                     /*
-                     $jsonResult .= "\"error\": [{";
-                     $jsonResult .= "\"status\": \"KO\",";
-                     $jsonResult .= "\"url\": \"".$row['url_data']."\",";
-                     $jsonResult .= "\"http_code\": \"".$curl_info['http_code']."\",";
-                     $jsonResult .= "\"text_error\": \"".$curl_error."\"";
-                     $jsonResult .= "}],";
-                     $jsonResult .= "\"numeri_bianco_attesa\": \"\",";
-                     $jsonResult .= "\"tempi_bianco_attesa\": \"\",";
-                     $jsonResult .= "\"numeri_bianco_in_visita\": \"\",";
-                     $jsonResult .= "\"tempi_bianco_in_visita\": \"\",";
-                     $jsonResult .= "\"numeri_verde_attesa\": \"\",";
-                     $jsonResult .= "\"tempi_verde_attesa\": \"\",";
-                     $jsonResult .= "\"numeri_verde_in_visita\": \"\",";
-                     $jsonResult .= "\"tempi_verde_in_visita\": \"\",";
-                     $jsonResult .= "\"numeri_giallo_attesa\": \"\",";
-                     $jsonResult .= "\"tempi_giallo_attesa\": \"\",";
-                     $jsonResult .= "\"numeri_giallo_in_visita\": \"\",";
-                     $jsonResult .= "\"tempi_giallo_in_visita\": \"\",";
-                     $jsonResult .= "\"numeri_rosso_attesa\": \"\",";
-                     $jsonResult .= "\"tempi_rosso_attesa\": \"\",";
-                     $jsonResult .= "\"numeri_rosso_in_visita\": \"\",";
-                     $jsonResult .= "\"tempi_rosso_in_visita\": \"\"";
-                     $jsonResult .= "}";
-                     */
+                     $errorText = "<b>OpenProntoSoccorsoBot</b>";
+                     $errorText .= "\n";
+                     $errorText .= "\n";
+                     $errorText .= "Errore in chiamata in GET : ".$row['url_data'];
+                     $errorText .= "\n";
+                     $errorText .= "\n";
+                     $errorText .= "HTTP code error: ".$curl_info['http_code'];
+                     $errorText .= "\n";
+                     $errorText .= "\n";
+                     $errorText .= "Errore: ".$curl_error;;
+                     $errorText .= "\n";
+                     $errorText .= "\n";
+
+                     invokeErrorManagerBot($errorManagerTelegramBot, $chatIdForErrors, $errorText);
                    }
                    else {
                      # Manage the special cases ...
@@ -249,70 +213,86 @@
                        # Manage the JSON data case ...
                        //case "JSON":
                        case (($row['data_type'] == "JSON") and ($data != "Error")):
-                         //$parser = new Services_JSON(SERVICES_JSON_LOOSE_TYPE);
-                         //$o = $parser->decode($data);
-                         $jsonObject = new JsonPath\JsonObject($data);
-                         //print_r ($o);
+                         try {
 
-                         /*
-                         $jsonResult .= "\"error\": [{";
-                         $jsonResult .= "\"status\": \"OK\",";
-                         $jsonResult .= "\"url\": \"\",";
-                         $jsonResult .= "\"http_code\": \"\",";
-                         $jsonResult .= "\"text_error\": \"\"";
-                         $jsonResult .= "}],";
-                         */
-                         $jsonResult .= "{";
-                         $jsonResult .= "\"osm_id\": \"".$row['osm_id']."\",";
-                         $jsonResult .= "\"x\": \"".$pt_X."\",";
-                         $jsonResult .= "\"y\": \"".$pt_Y."\",";
-                         $jsonResult .= "\"Lon\": \"".$pt_LON."\",";
-                         $jsonResult .= "\"Lat\": \"".$pt_LAT."\",";
-                         $jsonResult .= "\"ps_name\": \"".$row['ps_name']."\",";
-                         $jsonResult .= "\"city\": \"".$row['city']."\",";
-                         $jsonResult .= "\"address\": \"".$row['address']."\",";
-                         $jsonResult .= "\"tel\": \"".$row['tel']."\",";
-                         $jsonResult .= "\"email\": \"".$row['email']."\",";
-                         $jsonResult .= "\"url_website\": \"".$row['url_website']."\",";
+                           $jsonObject = new JsonPath\JsonObject($data);
 
+                           # The white code details ...
+                           $waitingDetails[0] = getDetailsWaitingJSON($row['xpath_numeri_bianco_attesa']);
+                           checkParsingErrors($waitingDetails[0], "JSON", "numeri codice bianco in attesa", $row, $errorManagerTelegramBot, $chatIdForErrors);
+                           $waitingDetails[1] = getDetailsWaitingJSON($row['xpath_tempi_bianco_attesa']);
+                           checkParsingErrors($waitingDetails[1], "JSON", "tempi codice bianco in attesa", $row, $errorManagerTelegramBot, $chatIdForErrors);
+                           $waitingDetails[2] = getDetailsWaitingJSON($row['xpath_numeri_bianco_visita']);
+                           checkParsingErrors($waitingDetails[2], "JSON", "numeri codice bianco in visita", $row, $errorManagerTelegramBot, $chatIdForErrors);
+                           $waitingDetails[3] = getDetailsWaitingJSON($row['xpath_tempi_bianco_visita']);
+                           checkParsingErrors($waitingDetails[3], "JSON", "tempi codice bianco in visita", $row, $errorManagerTelegramBot, $chatIdForErrors);
 
-                         # The white code details ...
-                         $num_white_waiting = getDetailsWaitingJSON($row['xpath_numeri_bianco_attesa']);
-                         $jsonResult .= "\"numeri_bianco_attesa\": \"".$num_white_waiting."\"";
-                         $time_white_waiting = getDetailsWaitingJSON($row['xpath_tempi_bianco_attesa']);
-                         $jsonResult .= ",\"tempi_bianco_attesa\": \"".$time_white_waiting."\"";
-                         $num_white_in_visita = getDetailsWaitingJSON($row['xpath_numeri_bianco_visita']);
-                         $jsonResult .= ",\"numeri_bianco_in_visita\": \"".$num_white_in_visita."\"";
-                         $time_white_in_visita = getDetailsWaitingJSON($row['xpath_tempi_bianco_visita']);
-                         $jsonResult .= ",\"tempi_bianco_in_visita\": \"".$time_white_in_visita."\"";
-                         # The yellow code details ...
-                         $num_yellow_waiting = getDetailsWaitingJSON($row['xpath_numeri_giallo_attesa']);
-                         $jsonResult .= ",\"numeri_giallo_attesa\": \"".$num_yellow_waiting."\"";
-                         $time_yellow_waiting = getDetailsWaitingJSON($row['xpath_tempi_giallo_attesa']);
-                         $jsonResult .= ",\"tempi_giallo_attesa\": \"".$time_yellow_waiting."\"";
-                         $num_yellow_in_visita = getDetailsWaitingJSON($row['xpath_numeri_giallo_visita']);
-                         $jsonResult .= ",\"numeri_giallo_in_visita\": \"".$num_yellow_in_visita."\"";
-                         $time_yellow_in_visita = getDetailsWaitingJSON($row['xpath_tempi_giallo_visita']);
-                         $jsonResult .= ",\"tempi_giallo_in_visita\": \"".$time_yellow_in_visita."\"";
-                         # The green code details ...
-                         $num_green_waiting = getDetailsWaitingJSON($row['xpath_numeri_verde_attesa']);
-                         $jsonResult .= ",\"numeri_verde_attesa\": \"".$num_green_waiting."\"";
-                         $time_green_waiting = getDetailsWaitingJSON($row['xpath_tempi_verde_attesa']);
-                         $jsonResult .= ",\"tempi_verde_attesa\": \"".$time_green_waiting."\"";
-                         $num_green_in_visita = getDetailsWaitingJSON($row['xpath_numeri_verde_visita']);
-                         $jsonResult .= ",\"numeri_verde_in_visita\": \"".$num_green_in_visita."\"";
-                         $time_green_in_visita = getDetailsWaitingJSON($row['xpath_tempi_verde_visita']);
-                         $jsonResult .= ",\"tempi_verde_in_visita\": \"".$time_green_in_visita."\"";
-                         # The red code details ...
-                         $num_red_waiting = getDetailsWaitingJSON($row['xpath_numeri_rosso_attesa']);
-                         $jsonResult .= ",\"numeri_rosso_attesa\": \"".$num_red_waiting."\"";
-                         $time_red_waiting = getDetailsWaitingJSON($row['xpath_tempi_rosso_attesa']);
-                         $jsonResult .= ",\"tempi_rosso_attesa\": \"".$time_red_waiting."\"";
-                         $num_red_in_visita = getDetailsWaitingJSON($row['xpath_numeri_rosso_visita']);
-                         $jsonResult .= ",\"numeri_rosso_in_visita\": \"".$num_red_in_visita."\"";
-                         $time_red_in_visita = getDetailsWaitingJSON($row['xpath_tempi_rosso_visita']);
-                         $jsonResult .= ",\"tempi_rosso_in_visita\": \"".$time_red_in_visita."\"";
-                         $jsonResult .= "}";
+                           # The green code details ...
+                           $waitingDetails[4] = getDetailsWaitingJSON($row['xpath_numeri_verde_attesa']);
+                           checkParsingErrors($waitingDetails[4], "JSON", "numeri codice verde in attesa", $row, $errorManagerTelegramBot, $chatIdForErrors);
+                           $waitingDetails[5] = getDetailsWaitingJSON($row['xpath_tempi_verde_attesa']);
+                           checkParsingErrors($waitingDetails[5], "JSON", "tempi codice verde in attesa", $row, $errorManagerTelegramBot, $chatIdForErrors);
+                           $waitingDetails[6] = getDetailsWaitingJSON($row['xpath_numeri_verde_visita']);
+                           checkParsingErrors($waitingDetails[6], "JSON", "numeri codice verde in visita", $row, $errorManagerTelegramBot, $chatIdForErrors);
+                           $waitingDetails[7] = getDetailsWaitingJSON($row['xpath_tempi_verde_visita']);
+                           checkParsingErrors($waitingDetails[7], "JSON", "tempi codice verde in visita", $row, $errorManagerTelegramBot, $chatIdForErrors);
+
+                           # The yellow code details ...
+                           $waitingDetails[8] = getDetailsWaitingJSON($row['xpath_numeri_giallo_attesa']);
+                           checkParsingErrors($waitingDetails[8], "JSON", "numeri codice giallo in attesa", $row, $errorManagerTelegramBot, $chatIdForErrors);
+                           $waitingDetails[9] = getDetailsWaitingJSON($row['xpath_tempi_giallo_attesa']);
+                           checkParsingErrors($waitingDetails[9], "JSON", "tempi codice giallo in attesa", $row, $errorManagerTelegramBot, $chatIdForErrors);
+                           $waitingDetails[10] = getDetailsWaitingJSON($row['xpath_numeri_giallo_visita']);
+                           checkParsingErrors($waitingDetails[10], "JSON", "numeri codice giallo in visita", $row, $errorManagerTelegramBot, $chatIdForErrors);
+                           $waitingDetails[11] = getDetailsWaitingJSON($row['xpath_tempi_giallo_visita']);
+                           checkParsingErrors($waitingDetails[11], "JSON", "tempi codice giallo in visita", $row, $errorManagerTelegramBot, $chatIdForErrors);
+
+                           # The red code details ...
+                           $waitingDetails[12] = getDetailsWaitingJSON($row['xpath_numeri_rosso_attesa']);
+                           checkParsingErrors($waitingDetails[12], "JSON", "numeri codice rosso in attesa", $row, $errorManagerTelegramBot, $chatIdForErrors);
+                           $waitingDetails[13] = getDetailsWaitingJSON($row['xpath_tempi_rosso_attesa']);
+                           checkParsingErrors($waitingDetails[13], "JSON", "tempi codice rosso in attesa", $row, $errorManagerTelegramBot, $chatIdForErrors);
+                           $waitingDetails[14] = getDetailsWaitingJSON($row['xpath_numeri_rosso_visita']);
+                           checkParsingErrors($waitingDetails[14], "JSON", "numeri codice rosso in visita", $row, $errorManagerTelegramBot, $chatIdForErrors);
+                           $waitingDetails[15] = getDetailsWaitingJSON($row['xpath_tempi_rosso_visita']);
+                           checkParsingErrors($waitingDetails[15], "JSON", "tempi codice rosso in visita", $row, $errorManagerTelegramBot, $chatIdForErrors);
+
+                           $isNullValue = 0;
+                           foreach ($waitingDetails as $detail) {
+                               if (is_null($detail)) {
+                                 $isNullValue = -1;
+                                 }
+                           }
+
+                           if ($isNullValue == 0) {
+                              $jsonResult .= writeJsonResult($row, $pt_X, $pt_Y, $pt_LON, $pt_LAT, $waitingDetails);
+                           }
+                         } catch (Exception $e) {
+                           //$errorText = "Errore parsing JSON di: ".$data." - Catturata eccezione: ".$e->getMessage();
+                           $errorText = "<b>OpenProntoSoccorsoBot</b>";
+                           $errorText .= "\n";
+                           $errorText .= "\n";
+                           $errorText .= "Pronto Soccorso:  ".$row['ps_name'];
+                           $errorText .= "\n";
+                           $errorText .= "\n";
+                           $errorText .= "Citta': ".$row['city'];
+                           $errorText .= "\n";
+                           $errorText .= "\n";
+                           $errorText .= "Url: ".$row['url_data'];
+                           $errorText .= "\n";
+                           $errorText .= "\n";
+                           $errorText .= "Tipo parsing: JSON";
+                           $errorText .= "\n";
+                           $errorText .= "\n";
+                           $errorText .= "Errore parsing JSON di: ".$data;
+                           $errorText .= "\n";
+                           $errorText .= "\n";
+                           $errorText .= "Catturata eccezione: ".$e->getMessage();
+                           $errorText .= "\n";
+                           $errorText .= "\n";
+
+                           invokeErrorManagerBot($errorManagerTelegramBot, $chatIdForErrors, $errorText);
+                         }
 
                          break;
                        # Manage the XPATH data case ...
@@ -320,15 +300,6 @@
                        case (($row['data_type'] == "XPATH") and ($data != "Error")):
                          $dom = new DOMDocument();
                          @$dom->loadHTML($data);
-
-                         /*
-                         $jsonResult .= "\"error\": [{";
-                         $jsonResult .= "\"status\": \"OK\",";
-                         $jsonResult .= "\"url\": \"\",";
-                         $jsonResult .= "\"http_code\": \"\",";
-                         $jsonResult .= "\"text_error\": \"\"";
-                         $jsonResult .= "}],";
-                         */
 
                          $jsonResult .= "{";
                          $jsonResult .= "\"osm_id\": \"".$row['osm_id']."\",";
@@ -385,15 +356,6 @@
                        # Manage the XML data case ...
                        //case "XML":
                        case (($row['data_type'] == "XML") and ($data != "Error")):
-                         /*
-                         $jsonResult .= "\"error\": [{";
-                         $jsonResult .= "\"status\": \"OK\",";
-                         $jsonResult .= "\"url\": \"\",";
-                         $jsonResult .= "\"http_code\": \"\",";
-                         $jsonResult .= "\"text_error\": \"\"";
-                         $jsonResult .= "}],";
-                         */
-
                          $jsonResult .= "{";
                          $jsonResult .= "\"osm_id\": \"".$row['osm_id']."\",";
                          $jsonResult .= "\"x\": \"".$pt_X."\",";
@@ -452,15 +414,6 @@
                            switch ($special_case) {
                              case "OspedaleCaserta":
                                $pieces = explode (",", $data);
-
-                               /*
-                               $jsonResult .= "\"error\": [{";
-                               $jsonResult .= "\"status\": \"OK\",";
-                               $jsonResult .= "\"url\": \"\",";
-                               $jsonResult .= "\"http_code\": \"\",";
-                               $jsonResult .= "\"text_error\": \"\"";
-                               $jsonResult .= "}],";
-                               */
 
                                $jsonResult .= "{";
                                $jsonResult .= "\"osm_id\": \"".$row['osm_id']."\",";
@@ -581,8 +534,6 @@
 
    # Get the details in the case of JSON (data form open services) ...
    function getDetailsWaitingJSON($xpath_for_parsing) {
-     //global $parser;
-     //global $o;
      global $jsonObject;
 
      if ($xpath_for_parsing == "N.D.") {
@@ -677,7 +628,7 @@
    }
 
    # Get the data for Sardinia Hospitals via POST request  ...
-   function getDataViaPostOspedaliSardegna($row) {
+   function getDataViaPostOspedaliSardegna($row, $errorManagerTelegramBot, $chatIdForErrors) {
      //global $jsonResult;
 
      $ch = curl_init();
@@ -703,47 +654,61 @@
 
      if ($server_output === false || $curl_info['http_code'] != 200) {
        // curl request KO ...
-       $errorText = "Errore in chiamata in POST (Ospedali Sardegna): ".$row['url_data']." - HTTP code error: ".$curl_info['http_code']." - Errore: ".$curl_error;
-       invokeErrorManagerBot("OpenProntoSoccorsoBot", $errorManagerTelegramBot, $chatIdForErrors, $errorText);
+       //$errorText = "Errore in chiamata in POST (Ospedali Sardegna): ".$row['url_data']." - HTTP code error: ".$curl_info['http_code']." - Errore: ".$curl_error;
 
+       $errorText = "<b>OpenProntoSoccorsoBot</b>";
+       $errorText .= "\n";
+       $errorText .= "\n";
+       $errorText .= "Errore in chiamata in POST (Ospedali Sardegna): ".$row['url_data'];
+       $errorText .= "\n";
+       $errorText .= "\n";
+       $errorText .= "HTTP code error: ".$curl_info['http_code'];
+       $errorText .= "\n";
+       $errorText .= "\n";
+       $errorText .= "Errore: ".$curl_error;
+       $errorText .= "\n";
+       $errorText .= "\n";
 
-       /*
-       $jsonResult .= "\"error\": [{";
-       $jsonResult .= "\"status\": \"KO\",";
-       $jsonResult .= "\"url\": \"".$row['url_data']."\",";
-       $jsonResult .= "\"http_code\": \"".$curl_info['http_code']."\",";
-       $jsonResult .= "\"text_error\": \"".$curl_error."\"";
-       $jsonResult .= "}],";
-       $jsonResult .= "\"numeri_bianco_attesa\": \"\",";
-       $jsonResult .= "\"tempi_bianco_attesa\": \"\",";
-       $jsonResult .= "\"numeri_bianco_in_visita\": \"\",";
-       $jsonResult .= "\"tempi_bianco_in_visita\": \"\",";
-       $jsonResult .= "\"numeri_verde_attesa\": \"\",";
-       $jsonResult .= "\"tempi_verde_attesa\": \"\",";
-       $jsonResult .= "\"numeri_verde_in_visita\": \"\",";
-       $jsonResult .= "\"tempi_verde_in_visita\": \"\",";
-       $jsonResult .= "\"numeri_giallo_attesa\": \"\",";
-       $jsonResult .= "\"tempi_giallo_attesa\": \"\",";
-       $jsonResult .= "\"numeri_giallo_in_visita\": \"\",";
-       $jsonResult .= "\"tempi_giallo_in_visita\": \"\",";
-       $jsonResult .= "\"numeri_rosso_attesa\": \"\",";
-       $jsonResult .= "\"tempi_rosso_attesa\": \"\",";
-       $jsonResult .= "\"numeri_rosso_in_visita\": \"\",";
-       $jsonResult .= "\"tempi_rosso_in_visita\": \"\"";
-       $jsonResult .= "}";
-       */
+       invokeErrorManagerBot($errorManagerTelegramBot, $chatIdForErrors, $errorText);
 
        return "Error";
      }
      else {
-       $jsonObject = new JsonPath\JsonObject($server_output);
+       try {
+         $jsonObject = new JsonPath\JsonObject($server_output);
 
-       $jsonPathExpr = '$..view';
+         $jsonPathExpr = '$..view';
 
-       $res = $jsonObject->get($jsonPathExpr);
+         $res = $jsonObject->get($jsonPathExpr);
 
-       return $res[0];
-   }
+         return $res[0];
+       } catch (Exception $e) {
+         //$errorText = "Errore parsing JSON di: ".$server_output." - Catturata eccezione: ".$e->getMessage();
+         $errorText = "<b>OpenProntoSoccorsoBot</b>";
+         $errorText .= "\n";
+         $errorText .= "\n";
+         $errorText .= "Pronto Soccorso:  ".$row['ps_name'];
+         $errorText .= "\n";
+         $errorText .= "\n";
+         $errorText .= "Citta': ".$row['city'];
+         $errorText .= "\n";
+         $errorText .= "\n";
+         $errorText .= "Url: ".$row['url_data'];
+         $errorText .= "\n";
+         $errorText .= "\n";
+         $errorText .= "Tipo parsing: JSON";
+         $errorText .= "\n";
+         $errorText .= "\n";
+         $errorText .= "Errore parsing JSON di: ".$server_output;
+         $errorText .= "\n";
+         $errorText .= "\n";
+         $errorText .= "Catturata eccezione: ".$e->getMessage();
+         $errorText .= "\n";
+         $errorText .= "\n";
+
+         invokeErrorManagerBot($errorManagerTelegramBot, $chatIdForErrors, $errorText);
+       }
+    }
    }
 
    # Get the data for Prato Hospital ...
@@ -775,35 +740,22 @@
 
      if ($data === false || $curl_info['http_code'] != 200) {
        // curl request KO ...
-       $errorText = "Errore in chiamata in GET (Ospedale Prato): ".$row['url_data']." - HTTP code error: ".$curl_info['http_code']." - Errore: ".$curl_error;
-       invokeErrorManagerBot("OpenProntoSoccorsoBot", $errorManagerTelegramBot, $chatIdForErrors, $errorText);
+       //$errorText = "Errore in chiamata in GET (Ospedale Prato): ".$row['url_data']." - HTTP code error: ".$curl_info['http_code']." - Errore: ".$curl_error;
 
-       /*
-       $jsonResult .= "\"error\": [{";
-       $jsonResult .= "\"status\": \"KO\",";
-       $jsonResult .= "\"url\": \"".$row['url_data']."\",";
-       $jsonResult .= "\"http_code\": \"".$curl_info['http_code']."\",";
-       $jsonResult .= "\"text_error\": \"".$curl_error."\"";
-       $jsonResult .= "}],";
-       $jsonResult .= "\"numeri_bianco_attesa\": \"\",";
-       $jsonResult .= "\"tempi_bianco_attesa\": \"\",";
-       $jsonResult .= "\"numeri_bianco_in_visita\": \"\",";
-       $jsonResult .= "\"tempi_bianco_in_visita\": \"\",";
-       $jsonResult .= "\"numeri_verde_attesa\": \"\",";
-       $jsonResult .= "\"tempi_verde_attesa\": \"\",";
-       $jsonResult .= "\"numeri_verde_in_visita\": \"\",";
-       $jsonResult .= "\"tempi_verde_in_visita\": \"\",";
-       $jsonResult .= "\"numeri_giallo_attesa\": \"\",";
-       $jsonResult .= "\"tempi_giallo_attesa\": \"\",";
-       $jsonResult .= "\"numeri_giallo_in_visita\": \"\",";
-       $jsonResult .= "\"tempi_giallo_in_visita\": \"\",";
-       $jsonResult .= "\"numeri_rosso_attesa\": \"\",";
-       $jsonResult .= "\"tempi_rosso_attesa\": \"\",";
-       $jsonResult .= "\"numeri_rosso_in_visita\": \"\",";
-       $jsonResult .= "\"tempi_rosso_in_visita\": \"\"";
-       $jsonResult .= "}";
-       */
+       $errorText = "<b>OpenProntoSoccorsoBot</b>";
+       $errorText .= "\n";
+       $errorText .= "\n";
+       $errorText .= "Errore in chiamata in GET (Ospedale Prato): ".$row['url_data'];
+       $errorText .= "\n";
+       $errorText .= "\n";
+       $errorText .= "HTTP code error: ".$curl_info['http_code'];
+       $errorText .= "\n";
+       $errorText .= "\n";
+       $errorText .= "Errore: ".$curl_error;;
+       $errorText .= "\n";
+       $errorText .= "\n";
 
+       invokeErrorManagerBot($errorManagerTelegramBot, $chatIdForErrors, $errorText);
        return "Error";
      }
     else {
@@ -811,11 +763,12 @@
      }
    }
 
-   function invokeErrorManagerBot($bot, $errorManagerTelegramBot, $chatIdForErrors, $theErrorMessage) {
+   function invokeErrorManagerBot($errorManagerTelegramBot, $chatIdForErrors, $theErrorMessage) {
      $website="https://api.telegram.org/bot".$errorManagerTelegramBot;
      $params=[
          'chat_id'=>$chatIdForErrors,
-         'text'=>$bot.' - '.$theErrorMessage,
+         'text'=>$theErrorMessage,
+         'parse_mode'=> "HTML"
      ];
      $ch = curl_init($website . '/sendMessage');
      curl_setopt($ch, CURLOPT_HEADER, false);
@@ -828,7 +781,76 @@
    }
 
 
+   function writeJsonResult($row, $pt_X, $pt_Y, $pt_LON, $pt_LAT, $waitingDetails) {
+     $jsonResult  = "{";
+     $jsonResult .= "\"osm_id\": \"".$row['osm_id']."\",";
+     $jsonResult .= "\"x\": \"".$pt_X."\",";
+     $jsonResult .= "\"y\": \"".$pt_Y."\",";
+     $jsonResult .= "\"Lon\": \"".$pt_LON."\",";
+     $jsonResult .= "\"Lat\": \"".$pt_LAT."\",";
+     $jsonResult .= "\"ps_name\": \"".$row['ps_name']."\",";
+     $jsonResult .= "\"city\": \"".$row['city']."\",";
+     $jsonResult .= "\"address\": \"".$row['address']."\",";
+     $jsonResult .= "\"tel\": \"".$row['tel']."\",";
+     $jsonResult .= "\"email\": \"".$row['email']."\",";
+     $jsonResult .= "\"url_website\": \"".$row['url_website']."\",";
+
+     //echo $jsonResult;
+
+     # The white code details ...
+     $jsonResult .= "\"numeri_bianco_attesa\": \"".$waitingDetails[0]."\"";
+     $jsonResult .= ",\"tempi_bianco_attesa\": \"".$waitingDetails[1]."\"";
+     $jsonResult .= ",\"numeri_bianco_in_visita\": \"".$waitingDetails[2]."\"";
+     $jsonResult .= ",\"tempi_bianco_in_visita\": \"".$waitingDetails[3]."\"";
+     # The green code details ...
+     $jsonResult .= ",\"numeri_verde_attesa\": \"".$waitingDetails[4]."\"";
+     $jsonResult .= ",\"tempi_verde_attesa\": \"".$waitingDetails[5]."\"";
+     $jsonResult .= ",\"numeri_verde_in_visita\": \"".$waitingDetails[6]."\"";
+     $jsonResult .= ",\"tempi_verde_in_visita\": \"".$waitingDetails[7]."\"";
+     # The yellow code details ...
+     $jsonResult .= ",\"numeri_giallo_attesa\": \"".$waitingDetails[8]."\"";
+     $jsonResult .= ",\"tempi_giallo_attesa\": \"".$waitingDetails[9]."\"";
+     $jsonResult .= ",\"numeri_giallo_in_visita\": \"".$waitingDetails[10]."\"";
+     $jsonResult .= ",\"tempi_giallo_in_visita\": \"".$waitingDetails[11]."\"";
+     # The red code details ...
+     $jsonResult .= ",\"numeri_rosso_attesa\": \"".$waitingDetails[12]."\"";
+     $jsonResult .= ",\"tempi_rosso_attesa\": \"".$waitingDetails[13]."\"";
+     $jsonResult .= ",\"numeri_rosso_in_visita\": \"".$waitingDetails[14]."\"";
+     $jsonResult .= ",\"tempi_rosso_in_visita\": \"".$waitingDetails[15]."\"";
+
+     $jsonResult .= "}";
+
+     //echo $jsonResult;
+
+     return $jsonResult;
+   }
 
 
+   function checkParsingErrors($waitingDetails, $parsingType, $dataSearched, $row, $errorManagerTelegramBot, $chatIdForErrors) {
+     if (is_null($waitingDetails)) {
+       $errorText = "<b>OpenProntoSoccorsoBot</b>";
+       $errorText .= "\n";
+       $errorText .= "\n";
+       $errorText .= "Errore per recupero ".$dataSearched;
+       $errorText .= "\n";
+       $errorText .= "\n";
+       $errorText .= "Pronto Soccorso:  ".$row['ps_name'];
+       $errorText .= "\n";
+       $errorText .= "\n";
+       $errorText .= "Citta': ".$row['city'];
+       $errorText .= "\n";
+       $errorText .= "\n";
+       $errorText .= "Url: ".$row['url_data'];
+       $errorText .= "\n";
+       $errorText .= "\n";
+       $errorText .= "Tipo parsing: ".$parsingType;
+       $errorText .= "\n";
+       $errorText .= "\n";
+       $errorText .= "Parsing: ".$row['xpath_numeri_bianco_attesa'];
+       $errorText .= "\n";
+       $errorText .= "\n";
+       invokeErrorManagerBot($errorManagerTelegramBot, $chatIdForErrors, $errorText);
+     }
+   }
 
 ?>
