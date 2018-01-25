@@ -17,7 +17,7 @@
    # Get the Municipality name ...
    //$municipality = $_GET['municipality'];
 
-   $municipality = "Cagliari";
+   $municipality = "Trieste";
 
    //echo "Municipality = ".$_GET['municipality'];
    //echo "\n";
@@ -88,60 +88,141 @@
                           $data = getDataViaPostOspedaliSardegna($row, $errorManagerTelegramBot, $chatIdForErrors);
 
                           if ($data != "Error") {
-                            $dom = new DOMDocument();
-                            @$dom->loadHTML($data);
+                            try {
+                              $dom = new DOMDocument();
+                              @$dom->loadHTML($data);
 
-                            $jsonResult .= "{";
-                            $jsonResult .= "\"osm_id\": \"".$row['osm_id']."\",";
-                            $jsonResult .= "\"x\": \"".$pt_X."\",";
-                            $jsonResult .= "\"y\": \"".$pt_Y."\",";
-                            $jsonResult .= "\"Lon\": \"".$pt_LON."\",";
-                            $jsonResult .= "\"Lat\": \"".$pt_LAT."\",";
-                            $jsonResult .= "\"ps_name\": \"".$row['ps_name']."\",";
-                            $jsonResult .= "\"city\": \"".$row['city']."\",";
-                            $jsonResult .= "\"address\": \"".$row['address']."\",";
-                            $jsonResult .= "\"tel\": \"".$row['tel']."\",";
-                            $jsonResult .= "\"email\": \"".$row['email']."\",";
-                            $jsonResult .= "\"url_website\": \"".$row['url_website']."\",";
+                              # The white code details ...
+                              $waitingDetails[0] = getDetailsWaitingXPATH($dom, $row['xpath_numeri_bianco_attesa'], $special_case, "num_white_waiting");
+                              checkParsingErrors($waitingDetails[0], "XPATH", "numeri codice bianco in attesa", $row['xpath_numeri_bianco_attesa'], $row, $errorManagerTelegramBot, $chatIdForErrors);
+                              $waitingDetails[1] = getDetailsWaitingXPATH($dom, $row['xpath_tempi_bianco_attesa'], $special_case, "time_white_waiting");
+                              checkParsingErrors($waitingDetails[1], "XPATH", "tempi codice bianco in attesa", $row['xpath_tempi_bianco_attesa'], $row, $errorManagerTelegramBot, $chatIdForErrors);
+                              $waitingDetails[2] = getDetailsWaitingXPATH($dom, $row['xpath_numeri_bianco_visita'], $special_case, "num_white_in_visita");
+                              checkParsingErrors($waitingDetails[2], "XPATH", "numeri codice bianco in visita", $row['xpath_numeri_bianco_visita'], $row, $errorManagerTelegramBot, $chatIdForErrors);
+                              $waitingDetails[3] = getDetailsWaitingXPATH($dom, $row['xpath_tempi_bianco_visita'], $special_case, "time_white_in_visita");
+                              checkParsingErrors($waitingDetails[3], "XPATH", "tempi codice bianco in visita", $row['xpath_tempi_bianco_visita'], $row, $errorManagerTelegramBot, $chatIdForErrors);
+
+                              # The green code details ...
+                              $waitingDetails[4] = getDetailsWaitingXPATH($dom, $row['xpath_numeri_verde_attesa'], $special_case, "num_green_waiting");
+                              checkParsingErrors($waitingDetails[4], "XPATH", "numeri codice verde in attesa", $row['xpath_numeri_verde_attesa'], $row, $errorManagerTelegramBot, $chatIdForErrors);
+                              $waitingDetails[5] = getDetailsWaitingXPATH($dom, $row['xpath_tempi_verde_attesa'], $special_case, "time_green_waiting");
+                              checkParsingErrors($waitingDetails[5], "XPATH", "tempi codice verde in attesa", $row['xpath_tempi_verde_attesa'], $row, $errorManagerTelegramBot, $chatIdForErrors);
+                              $waitingDetails[6] = getDetailsWaitingXPATH($dom, $row['xpath_numeri_verde_visita'], $special_case, "num_green_in_visita");
+                              checkParsingErrors($waitingDetails[6], "XPATH", "numeri codice verde in visita", $row['xpath_numeri_verde_visita'], $row, $errorManagerTelegramBot, $chatIdForErrors);
+                              $waitingDetails[7] = getDetailsWaitingXPATH($dom, $row['xpath_tempi_verde_visita'], $special_case, "time_green_in_visita");
+                              checkParsingErrors($waitingDetails[7], "XPATH", "tempi codice verde in visita", $row['xpath_tempi_verde_visita'], $row, $errorManagerTelegramBot, $chatIdForErrors);
+
+                              # The yellow code details ...
+                              $waitingDetails[8] = getDetailsWaitingXPATH($dom, $row['xpath_numeri_giallo_attesa'], $special_case, "num_yellow_waiting");
+                              checkParsingErrors($waitingDetails[8], "XPATH", "numeri codice giallo in attesa", $row['xpath_numeri_giallo_attesa'],  $row, $errorManagerTelegramBot, $chatIdForErrors);
+                              $waitingDetails[9] = getDetailsWaitingXPATH($dom, $row['xpath_tempi_giallo_attesa'], $special_case, "time_yellow_waiting");
+                              checkParsingErrors($waitingDetails[9], "XPATH", "tempi codice giallo in attesa", $row['xpath_tempi_giallo_attesa'], $row, $errorManagerTelegramBot, $chatIdForErrors);
+                              $waitingDetails[10] = getDetailsWaitingXPATH($dom, $row['xpath_numeri_giallo_visita'], $special_case, "num_yellow_in_visita");
+                              checkParsingErrors($waitingDetails[10], "XPATH", "numeri codice giallo in visita", $row['xpath_numeri_giallo_visita'], $row, $errorManagerTelegramBot, $chatIdForErrors);
+                              $waitingDetails[11] = getDetailsWaitingXPATH($dom, $row['xpath_tempi_giallo_visita'], $special_case, "time_yellow_in_visita");
+                              checkParsingErrors($waitingDetails[11], "XPATH", "tempi codice giallo in visita", $row['xpath_tempi_giallo_visita'], $row, $errorManagerTelegramBot, $chatIdForErrors);
+
+                              # The red code details ...
+                              $waitingDetails[12] = getDetailsWaitingXPATH($dom, $row['xpath_numeri_rosso_attesa'], $special_case, "num_red_waiting");
+                              checkParsingErrors($waitingDetails[12], "XPATH", "numeri codice rosso in attesa", $row['xpath_numeri_rosso_attesa'], $row, $errorManagerTelegramBot, $chatIdForErrors);
+                              $waitingDetails[13] = getDetailsWaitingXPATH($dom, $row['xpath_tempi_rosso_attesa'], $special_case, "time_red_waiting");
+                              checkParsingErrors($waitingDetails[13], "XPATH", "tempi codice rosso in attesa", $row['xpath_tempi_rosso_attesa'], $row, $errorManagerTelegramBot, $chatIdForErrors);
+                              $waitingDetails[14] = getDetailsWaitingXPATH($dom, $row['xpath_numeri_rosso_visita'], $special_case, "num_red_in_visita");
+                              checkParsingErrors($waitingDetails[14], "XPATH", "numeri codice rosso in visita", $row['xpath_numeri_rosso_visita'], $row, $errorManagerTelegramBot, $chatIdForErrors);
+                              $waitingDetails[15] = getDetailsWaitingXPATH($dom, $row['xpath_tempi_rosso_visita'], $special_case, "time_red_in_visita");
+                              checkParsingErrors($waitingDetails[15], "XPATH", "tempi codice rosso in visita", $row['xpath_tempi_rosso_visita'], $row, $errorManagerTelegramBot, $chatIdForErrors);
+
+                              $isNullValue = 0;
+                              foreach ($waitingDetails as $detail) {
+                                  if (is_null($detail)) {
+                                    $isNullValue = -1;
+                                    }
+                              }
+
+                              //echo $isNullValue;
+
+                              if ($isNullValue == 0) {
+                                 $jsonResult .= writeJsonResult($row, $pt_X, $pt_Y, $pt_LON, $pt_LAT, $waitingDetails);
+                              }
+
+                              /*
+                              $jsonResult .= "{";
+                              $jsonResult .= "\"osm_id\": \"".$row['osm_id']."\",";
+                              $jsonResult .= "\"x\": \"".$pt_X."\",";
+                              $jsonResult .= "\"y\": \"".$pt_Y."\",";
+                              $jsonResult .= "\"Lon\": \"".$pt_LON."\",";
+                              $jsonResult .= "\"Lat\": \"".$pt_LAT."\",";
+                              $jsonResult .= "\"ps_name\": \"".$row['ps_name']."\",";
+                              $jsonResult .= "\"city\": \"".$row['city']."\",";
+                              $jsonResult .= "\"address\": \"".$row['address']."\",";
+                              $jsonResult .= "\"tel\": \"".$row['tel']."\",";
+                              $jsonResult .= "\"email\": \"".$row['email']."\",";
+                              $jsonResult .= "\"url_website\": \"".$row['url_website']."\",";
 
 
-                            # The white code details ...
-                            $num_white_waiting = getDetailsWaitingXPATH($dom, $row['xpath_numeri_bianco_attesa'], $special_case, "num_white_waiting");
-                            $jsonResult .= "\"numeri_bianco_attesa\": \"".$num_white_waiting."\"";
-                            $time_white_waiting = getDetailsWaitingXPATH($dom, $row['xpath_tempi_bianco_attesa'], $special_case, "time_white_waiting");
-                            $jsonResult .= ",\"tempi_bianco_attesa\": \"".$time_white_waiting."\"";
-                            $num_white_in_visita = getDetailsWaitingXPATH($dom, $row['xpath_numeri_bianco_visita'], $special_case, "num_white_in_visita");
-                            $jsonResult .= ",\"numeri_bianco_in_visita\": \"".$num_white_in_visita."\"";
-                            $time_white_in_visita = getDetailsWaitingXPATH($dom, $row['xpath_tempi_bianco_visita'], $special_case, "time_white_in_visita");
-                            $jsonResult .= ",\"tempi_bianco_in_visita\": \"".$time_white_in_visita."\"";
-                            # The green code details ...
-                            $num_green_waiting = getDetailsWaitingXPATH($dom, $row['xpath_numeri_verde_attesa'], $special_case, "num_green_waiting");
-                            $jsonResult .= ",\"numeri_verde_attesa\": \"".$num_green_waiting."\"";
-                            $time_green_waiting = getDetailsWaitingXPATH($dom, $row['xpath_tempi_verde_attesa'], $special_case, "time_green_waiting");
-                            $jsonResult .= ",\"tempi_verde_attesa\": \"".$time_green_waiting."\"";
-                            $num_green_in_visita = getDetailsWaitingXPATH($dom, $row['xpath_numeri_verde_visita'], $special_case, "num_green_in_visita");
-                            $jsonResult .= ",\"numeri_verde_in_visita\": \"".$num_green_in_visita."\"";
-                            $time_green_in_visita = getDetailsWaitingXPATH($dom, $row['xpath_tempi_verde_visita'], $special_case, "time_green_in_visita");
-                            $jsonResult .= ",\"tempi_verde_in_visita\": \"".$time_green_in_visita."\"";
-                            # The yellow details ...
-                            $num_yellow_waiting = getDetailsWaitingXPATH($dom, $row['xpath_numeri_giallo_attesa'], $special_case, "num_yellow_waiting");
-                            $jsonResult .= ",\"numeri_giallo_attesa\": \"".$num_yellow_waiting."\"";
-                            $time_yellow_waiting = getDetailsWaitingXPATH($dom, $row['xpath_tempi_giallo_attesa'], $special_case, "time_yellow_waiting");
-                            $jsonResult .= ",\"tempi_giallo_attesa\": \"".$time_yellow_waiting."\"";
-                            $num_yellow_in_visita = getDetailsWaitingXPATH($dom, $row['xpath_numeri_giallo_visita'], $special_case, "num_yellow_in_visita");
-                            $jsonResult .= ",\"numeri_giallo_in_visita\": \"".$num_yellow_in_visita."\"";
-                            $time_yellow_in_visita = getDetailsWaitingXPATH($dom, $row['xpath_tempi_giallo_visita'], $special_case, "time_yellow_in_visita");
-                            $jsonResult .= ",\"tempi_giallo_in_visita\": \"".$time_yellow_in_visita."\"";
-                            # The red details ...
-                            $num_red_waiting = getDetailsWaitingXPATH($dom, $row['xpath_numeri_rosso_attesa'], $special_case, "num_red_waiting");
-                            $jsonResult .= ",\"numeri_rosso_attesa\": \"".$num_red_waiting."\"";
-                            $time_red_waiting = getDetailsWaitingXPATH($dom, $row['xpath_tempi_rosso_attesa'], $special_case, "time_red_waiting");
-                            $jsonResult .= ",\"tempi_rosso_attesa\": \"".$time_red_waiting."\"";
-                            $num_red_in_visita = getDetailsWaitingXPATH($dom, $row['xpath_numeri_rosso_visita'], $special_case, "num_red_in_visita");
-                            $jsonResult .= ",\"numeri_rosso_in_visita\": \"".$num_red_in_visita."\"";
-                            $time_red_in_visita = getDetailsWaitingXPATH($dom, $row['xpath_tempi_rosso_visita'], $special_case, "time_red_in_visita");
-                            $jsonResult .= ",\"tempi_rosso_in_visita\": \"".$time_red_in_visita."\"";
-                            $jsonResult .= "}";
+                              # The white code details ...
+                              $num_white_waiting = getDetailsWaitingXPATH($dom, $row['xpath_numeri_bianco_attesa'], $special_case, "num_white_waiting");
+                              $jsonResult .= "\"numeri_bianco_attesa\": \"".$num_white_waiting."\"";
+                              $time_white_waiting = getDetailsWaitingXPATH($dom, $row['xpath_tempi_bianco_attesa'], $special_case, "time_white_waiting");
+                              $jsonResult .= ",\"tempi_bianco_attesa\": \"".$time_white_waiting."\"";
+                              $num_white_in_visita = getDetailsWaitingXPATH($dom, $row['xpath_numeri_bianco_visita'], $special_case, "num_white_in_visita");
+                              $jsonResult .= ",\"numeri_bianco_in_visita\": \"".$num_white_in_visita."\"";
+                              $time_white_in_visita = getDetailsWaitingXPATH($dom, $row['xpath_tempi_bianco_visita'], $special_case, "time_white_in_visita");
+                              $jsonResult .= ",\"tempi_bianco_in_visita\": \"".$time_white_in_visita."\"";
+                              # The green code details ...
+                              $num_green_waiting = getDetailsWaitingXPATH($dom, $row['xpath_numeri_verde_attesa'], $special_case, "num_green_waiting");
+                              $jsonResult .= ",\"numeri_verde_attesa\": \"".$num_green_waiting."\"";
+                              $time_green_waiting = getDetailsWaitingXPATH($dom, $row['xpath_tempi_verde_attesa'], $special_case, "time_green_waiting");
+                              $jsonResult .= ",\"tempi_verde_attesa\": \"".$time_green_waiting."\"";
+                              $num_green_in_visita = getDetailsWaitingXPATH($dom, $row['xpath_numeri_verde_visita'], $special_case, "num_green_in_visita");
+                              $jsonResult .= ",\"numeri_verde_in_visita\": \"".$num_green_in_visita."\"";
+                              $time_green_in_visita = getDetailsWaitingXPATH($dom, $row['xpath_tempi_verde_visita'], $special_case, "time_green_in_visita");
+                              $jsonResult .= ",\"tempi_verde_in_visita\": \"".$time_green_in_visita."\"";
+                              # The yellow details ...
+                              $num_yellow_waiting = getDetailsWaitingXPATH($dom, $row['xpath_numeri_giallo_attesa'], $special_case, "num_yellow_waiting");
+                              $jsonResult .= ",\"numeri_giallo_attesa\": \"".$num_yellow_waiting."\"";
+                              $time_yellow_waiting = getDetailsWaitingXPATH($dom, $row['xpath_tempi_giallo_attesa'], $special_case, "time_yellow_waiting");
+                              $jsonResult .= ",\"tempi_giallo_attesa\": \"".$time_yellow_waiting."\"";
+                              $num_yellow_in_visita = getDetailsWaitingXPATH($dom, $row['xpath_numeri_giallo_visita'], $special_case, "num_yellow_in_visita");
+                              $jsonResult .= ",\"numeri_giallo_in_visita\": \"".$num_yellow_in_visita."\"";
+                              $time_yellow_in_visita = getDetailsWaitingXPATH($dom, $row['xpath_tempi_giallo_visita'], $special_case, "time_yellow_in_visita");
+                              $jsonResult .= ",\"tempi_giallo_in_visita\": \"".$time_yellow_in_visita."\"";
+                              # The red details ...
+                              $num_red_waiting = getDetailsWaitingXPATH($dom, $row['xpath_numeri_rosso_attesa'], $special_case, "num_red_waiting");
+                              $jsonResult .= ",\"numeri_rosso_attesa\": \"".$num_red_waiting."\"";
+                              $time_red_waiting = getDetailsWaitingXPATH($dom, $row['xpath_tempi_rosso_attesa'], $special_case, "time_red_waiting");
+                              $jsonResult .= ",\"tempi_rosso_attesa\": \"".$time_red_waiting."\"";
+                              $num_red_in_visita = getDetailsWaitingXPATH($dom, $row['xpath_numeri_rosso_visita'], $special_case, "num_red_in_visita");
+                              $jsonResult .= ",\"numeri_rosso_in_visita\": \"".$num_red_in_visita."\"";
+                              $time_red_in_visita = getDetailsWaitingXPATH($dom, $row['xpath_tempi_rosso_visita'], $special_case, "time_red_in_visita");
+                              $jsonResult .= ",\"tempi_rosso_in_visita\": \"".$time_red_in_visita."\"";
+                              $jsonResult .= "}";
+                              */
+                          } catch (Exception $e) {
+                              $errorText = "<b>OpenProntoSoccorsoBot</b>";
+                              $errorText .= "\n";
+                              $errorText .= "\n";
+                              $errorText .= "Pronto Soccorso:  ".$row['ps_name'];
+                              $errorText .= "\n";
+                              $errorText .= "\n";
+                              $errorText .= "Citta': ".$row['city'];
+                              $errorText .= "\n";
+                              $errorText .= "\n";
+                              $errorText .= "Url: ".$row['url_data'];
+                              $errorText .= "\n";
+                              $errorText .= "\n";
+                              $errorText .= "Tipo parsing: XPATH";
+                              $errorText .= "\n";
+                              $errorText .= "\n";
+                              $errorText .= "Errore parsing XPATH di: ".$data;
+                              $errorText .= "\n";
+                              $errorText .= "\n";
+                              $errorText .= "Catturata eccezione: ".$e->getMessage();
+                              $errorText .= "\n";
+                              $errorText .= "\n";
+
+                              invokeErrorManagerBot($errorManagerTelegramBot, $chatIdForErrors, $errorText);
+                          }
 
                           break;
                         }
@@ -214,48 +295,47 @@
                        //case "JSON":
                        case (($row['data_type'] == "JSON") and ($data != "Error")):
                          try {
-
                            $jsonObject = new JsonPath\JsonObject($data);
 
                            # The white code details ...
                            $waitingDetails[0] = getDetailsWaitingJSON($row['xpath_numeri_bianco_attesa']);
-                           checkParsingErrors($waitingDetails[0], "JSON", "numeri codice bianco in attesa", $row, $errorManagerTelegramBot, $chatIdForErrors);
+                           checkParsingErrors($waitingDetails[0], "JSON", "numeri codice bianco in attesa", $row['xpath_numeri_bianco_attesa'], $row, $errorManagerTelegramBot, $chatIdForErrors);
                            $waitingDetails[1] = getDetailsWaitingJSON($row['xpath_tempi_bianco_attesa']);
-                           checkParsingErrors($waitingDetails[1], "JSON", "tempi codice bianco in attesa", $row, $errorManagerTelegramBot, $chatIdForErrors);
+                           checkParsingErrors($waitingDetails[1], "JSON", "tempi codice bianco in attesa", $row['xpath_tempi_bianco_attesa'], $row, $errorManagerTelegramBot, $chatIdForErrors);
                            $waitingDetails[2] = getDetailsWaitingJSON($row['xpath_numeri_bianco_visita']);
-                           checkParsingErrors($waitingDetails[2], "JSON", "numeri codice bianco in visita", $row, $errorManagerTelegramBot, $chatIdForErrors);
+                           checkParsingErrors($waitingDetails[2], "JSON", "numeri codice bianco in visita", $row['xpath_numeri_bianco_visita'], $row, $errorManagerTelegramBot, $chatIdForErrors);
                            $waitingDetails[3] = getDetailsWaitingJSON($row['xpath_tempi_bianco_visita']);
-                           checkParsingErrors($waitingDetails[3], "JSON", "tempi codice bianco in visita", $row, $errorManagerTelegramBot, $chatIdForErrors);
+                           checkParsingErrors($waitingDetails[3], "JSON", "tempi codice bianco in visita", $row['xpath_tempi_bianco_visita'], $row, $errorManagerTelegramBot, $chatIdForErrors);
 
                            # The green code details ...
                            $waitingDetails[4] = getDetailsWaitingJSON($row['xpath_numeri_verde_attesa']);
-                           checkParsingErrors($waitingDetails[4], "JSON", "numeri codice verde in attesa", $row, $errorManagerTelegramBot, $chatIdForErrors);
+                           checkParsingErrors($waitingDetails[4], "JSON", "numeri codice verde in attesa", $row['xpath_numeri_verde_attesa'], $row, $errorManagerTelegramBot, $chatIdForErrors);
                            $waitingDetails[5] = getDetailsWaitingJSON($row['xpath_tempi_verde_attesa']);
-                           checkParsingErrors($waitingDetails[5], "JSON", "tempi codice verde in attesa", $row, $errorManagerTelegramBot, $chatIdForErrors);
+                           checkParsingErrors($waitingDetails[5], "JSON", "tempi codice verde in attesa", $row['xpath_tempi_verde_attesa'], $row, $errorManagerTelegramBot, $chatIdForErrors);
                            $waitingDetails[6] = getDetailsWaitingJSON($row['xpath_numeri_verde_visita']);
-                           checkParsingErrors($waitingDetails[6], "JSON", "numeri codice verde in visita", $row, $errorManagerTelegramBot, $chatIdForErrors);
+                           checkParsingErrors($waitingDetails[6], "JSON", "numeri codice verde in visita", $row['xpath_numeri_verde_visita'], $row, $errorManagerTelegramBot, $chatIdForErrors);
                            $waitingDetails[7] = getDetailsWaitingJSON($row['xpath_tempi_verde_visita']);
-                           checkParsingErrors($waitingDetails[7], "JSON", "tempi codice verde in visita", $row, $errorManagerTelegramBot, $chatIdForErrors);
+                           checkParsingErrors($waitingDetails[7], "JSON", "tempi codice verde in visita", $row['xpath_tempi_verde_visita'], $row, $errorManagerTelegramBot, $chatIdForErrors);
 
                            # The yellow code details ...
                            $waitingDetails[8] = getDetailsWaitingJSON($row['xpath_numeri_giallo_attesa']);
-                           checkParsingErrors($waitingDetails[8], "JSON", "numeri codice giallo in attesa", $row, $errorManagerTelegramBot, $chatIdForErrors);
+                           checkParsingErrors($waitingDetails[8], "JSON", "numeri codice giallo in attesa", $row['xpath_numeri_giallo_attesa'], $row, $errorManagerTelegramBot, $chatIdForErrors);
                            $waitingDetails[9] = getDetailsWaitingJSON($row['xpath_tempi_giallo_attesa']);
-                           checkParsingErrors($waitingDetails[9], "JSON", "tempi codice giallo in attesa", $row, $errorManagerTelegramBot, $chatIdForErrors);
+                           checkParsingErrors($waitingDetails[9], "JSON", "tempi codice giallo in attesa", $row['xpath_tempi_giallo_attesa'], $row, $errorManagerTelegramBot, $chatIdForErrors);
                            $waitingDetails[10] = getDetailsWaitingJSON($row['xpath_numeri_giallo_visita']);
-                           checkParsingErrors($waitingDetails[10], "JSON", "numeri codice giallo in visita", $row, $errorManagerTelegramBot, $chatIdForErrors);
+                           checkParsingErrors($waitingDetails[10], "JSON", "numeri codice giallo in visita", $row['xpath_numeri_giallo_visita'], $row, $errorManagerTelegramBot, $chatIdForErrors);
                            $waitingDetails[11] = getDetailsWaitingJSON($row['xpath_tempi_giallo_visita']);
-                           checkParsingErrors($waitingDetails[11], "JSON", "tempi codice giallo in visita", $row, $errorManagerTelegramBot, $chatIdForErrors);
+                           checkParsingErrors($waitingDetails[11], "JSON", "tempi codice giallo in visita", $row['xpath_tempi_giallo_visita'], $row, $errorManagerTelegramBot, $chatIdForErrors);
 
                            # The red code details ...
                            $waitingDetails[12] = getDetailsWaitingJSON($row['xpath_numeri_rosso_attesa']);
-                           checkParsingErrors($waitingDetails[12], "JSON", "numeri codice rosso in attesa", $row, $errorManagerTelegramBot, $chatIdForErrors);
+                           checkParsingErrors($waitingDetails[12], "JSON", "numeri codice rosso in attesa", $row['xpath_numeri_rosso_attesa'], $row, $errorManagerTelegramBot, $chatIdForErrors);
                            $waitingDetails[13] = getDetailsWaitingJSON($row['xpath_tempi_rosso_attesa']);
-                           checkParsingErrors($waitingDetails[13], "JSON", "tempi codice rosso in attesa", $row, $errorManagerTelegramBot, $chatIdForErrors);
+                           checkParsingErrors($waitingDetails[13], "JSON", "tempi codice rosso in attesa", $row['xpath_tempi_rosso_attesa'], $row, $errorManagerTelegramBot, $chatIdForErrors);
                            $waitingDetails[14] = getDetailsWaitingJSON($row['xpath_numeri_rosso_visita']);
-                           checkParsingErrors($waitingDetails[14], "JSON", "numeri codice rosso in visita", $row, $errorManagerTelegramBot, $chatIdForErrors);
+                           checkParsingErrors($waitingDetails[14], "JSON", "numeri codice rosso in visita", $row['xpath_numeri_rosso_visita'], $row, $errorManagerTelegramBot, $chatIdForErrors);
                            $waitingDetails[15] = getDetailsWaitingJSON($row['xpath_tempi_rosso_visita']);
-                           checkParsingErrors($waitingDetails[15], "JSON", "tempi codice rosso in visita", $row, $errorManagerTelegramBot, $chatIdForErrors);
+                           checkParsingErrors($waitingDetails[15], "JSON", "tempi codice rosso in visita", $row['xpath_tempi_rosso_visita'], $row, $errorManagerTelegramBot, $chatIdForErrors);
 
                            $isNullValue = 0;
                            foreach ($waitingDetails as $detail) {
@@ -509,27 +589,33 @@
 
    # Get the details in the case o  XPATH (data inside HTML pages) ..
    function getDetailsWaitingXPATH($dom, $xpath_for_parsing, $special_case, $type) {
-     $xpath = new DOMXPath($dom);
-     $colorWaitingNumber = $xpath->query($xpath_for_parsing);
-     $theValue =  'N.D.';
-     foreach( $colorWaitingNumber as $node )
-     {
-       $theValue = $node->nodeValue;
-     }
+     if ($xpath_for_parsing == "N.D.") {
+        return "N.D.";
+       }
+     else {
+       $xpath = new DOMXPath($dom);
+       $colorWaitingNumber = $xpath->query($xpath_for_parsing);
+       $theValue = null;
 
-     # Post elaboration for the special cases ...
-     switch ($special_case) {
-         case "OspedaliBologna": # Postprocess the jsonResult to eliminate strings ...
-            if (($type == "num_white_waiting") or ($type == "num_green_waiting") or ($type == "num_yellow_waiting") or ($type == "num_red_waiting")) {
-              $theValue = substr($theValue, strpos($theValue, 'Utenti in coda: ') + 16);
-            }
-            if (($type == "time_white_waiting") or ($type == "time_green_waiting") or ($type == "time_yellow_waiting") or ($type == "time_red_waiting")) {
-              $theValue = strstr($theValue, ' - Utenti in coda', true);
-            }
-            break;
-     }
+       foreach( $colorWaitingNumber as $node )
+       {
+         $theValue = $node->nodeValue;
+       }
 
-     return  $theValue;
+       # Post elaboration for the special cases ...
+       switch ($special_case) {
+           case "OspedaliBologna": # Postprocess the jsonResult to eliminate strings ...
+              if (($type == "num_white_waiting") or ($type == "num_green_waiting") or ($type == "num_yellow_waiting") or ($type == "num_red_waiting")) {
+                $theValue = substr($theValue, strpos($theValue, 'Utenti in coda: ') + 16);
+              }
+              if (($type == "time_white_waiting") or ($type == "time_green_waiting") or ($type == "time_yellow_waiting") or ($type == "time_red_waiting")) {
+                $theValue = strstr($theValue, ' - Utenti in coda', true);
+              }
+              break;
+       }
+
+       return  $theValue;
+     }
    }
 
    # Get the details in the case of JSON (data form open services) ...
@@ -826,7 +912,7 @@
    }
 
 
-   function checkParsingErrors($waitingDetails, $parsingType, $dataSearched, $row, $errorManagerTelegramBot, $chatIdForErrors) {
+   function checkParsingErrors($waitingDetails, $parsingType, $dataSearched, $parsingString, $row, $errorManagerTelegramBot, $chatIdForErrors) {
      if (is_null($waitingDetails)) {
        $errorText = "<b>OpenProntoSoccorsoBot</b>";
        $errorText .= "\n";
@@ -846,7 +932,7 @@
        $errorText .= "Tipo parsing: ".$parsingType;
        $errorText .= "\n";
        $errorText .= "\n";
-       $errorText .= "Parsing: ".$row['xpath_numeri_bianco_attesa'];
+       $errorText .= "Parsing: ".$parsingString;
        $errorText .= "\n";
        $errorText .= "\n";
        invokeErrorManagerBot($errorManagerTelegramBot, $chatIdForErrors, $errorText);
