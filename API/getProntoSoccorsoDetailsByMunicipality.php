@@ -17,7 +17,7 @@
    # Get the Municipality name ...
    //$municipality = $_GET['municipality'];
 
-   $municipality = "Trieste";
+   $municipality = "Trento";
 
    //echo "Municipality = ".$_GET['municipality'];
    //echo "\n";
@@ -248,7 +248,13 @@
                      $errorText = "<b>OpenProntoSoccorsoBot</b>";
                      $errorText .= "\n";
                      $errorText .= "\n";
-                     $errorText .= "Errore in chiamata in GET : ".$row['url_data'];
+                     $errorText .= "Pronto Soccorso:  ".$row['ps_name'];
+                     $errorText .= "\n";
+                     $errorText .= "\n";
+                     $errorText .= "Citta': ".$row['city'];
+                     $errorText .= "\n";
+                     $errorText .= "\n";
+                     $errorText .= "Url : ".$row['url_data'];
                      $errorText .= "\n";
                      $errorText .= "\n";
                      $errorText .= "HTTP code error: ".$curl_info['http_code'];
@@ -378,9 +384,93 @@
                        # Manage the XPATH data case ...
                        //case "XPATH":
                        case (($row['data_type'] == "XPATH") and ($data != "Error")):
-                         $dom = new DOMDocument();
-                         @$dom->loadHTML($data);
+                         try {
+                           $dom = new DOMDocument();
+                           @$dom->loadHTML($data);
 
+                           # The white code details ...
+                           $waitingDetails[0] = getDetailsWaitingXPATH($dom, $row['xpath_numeri_bianco_attesa'], $special_case, "num_white_waiting");
+                           checkParsingErrors($waitingDetails[0], "XPATH", "numeri codice bianco in attesa", $row['xpath_numeri_bianco_attesa'], $row, $errorManagerTelegramBot, $chatIdForErrors);
+                           $waitingDetails[1] = getDetailsWaitingXPATH($dom, $row['xpath_tempi_bianco_attesa'], $special_case, "time_white_waiting");
+                           checkParsingErrors($waitingDetails[1], "XPATH", "tempi codice bianco in attesa", $row['xpath_tempi_bianco_attesa'], $row, $errorManagerTelegramBot, $chatIdForErrors);
+                           $waitingDetails[2] = getDetailsWaitingXPATH($dom, $row['xpath_numeri_bianco_visita'], $special_case, "num_white_in_visita");
+                           checkParsingErrors($waitingDetails[2], "XPATH", "numeri codice bianco in visita", $row['xpath_numeri_bianco_visita'], $row, $errorManagerTelegramBot, $chatIdForErrors);
+                           $waitingDetails[3] = getDetailsWaitingXPATH($dom, $row['xpath_tempi_bianco_visita'], $special_case, "time_white_in_visita");
+                           checkParsingErrors($waitingDetails[3], "XPATH", "tempi codice bianco in visita", $row['xpath_tempi_bianco_visita'], $row, $errorManagerTelegramBot, $chatIdForErrors);
+
+                           # The green code details ...
+                           $waitingDetails[4] = getDetailsWaitingXPATH($dom, $row['xpath_numeri_verde_attesa'], $special_case, "num_green_waiting");
+                           checkParsingErrors($waitingDetails[4], "XPATH", "numeri codice verde in attesa", $row['xpath_numeri_verde_attesa'], $row, $errorManagerTelegramBot, $chatIdForErrors);
+                           $waitingDetails[5] = getDetailsWaitingXPATH($dom, $row['xpath_tempi_verde_attesa'], $special_case, "time_green_waiting");
+                           checkParsingErrors($waitingDetails[5], "XPATH", "tempi codice verde in attesa", $row['xpath_tempi_verde_attesa'], $row, $errorManagerTelegramBot, $chatIdForErrors);
+                           $waitingDetails[6] = getDetailsWaitingXPATH($dom, $row['xpath_numeri_verde_visita'], $special_case, "num_green_in_visita");
+                           checkParsingErrors($waitingDetails[6], "XPATH", "numeri codice verde in visita", $row['xpath_numeri_verde_visita'], $row, $errorManagerTelegramBot, $chatIdForErrors);
+                           $waitingDetails[7] = getDetailsWaitingXPATH($dom, $row['xpath_tempi_verde_visita'], $special_case, "time_green_in_visita");
+                           checkParsingErrors($waitingDetails[7], "XPATH", "tempi codice verde in visita", $row['xpath_tempi_verde_visita'], $row, $errorManagerTelegramBot, $chatIdForErrors);
+
+                           # The yellow code details ...
+                           $waitingDetails[8] = getDetailsWaitingXPATH($dom, $row['xpath_numeri_giallo_attesa'], $special_case, "num_yellow_waiting");
+                           checkParsingErrors($waitingDetails[8], "XPATH", "numeri codice giallo in attesa", $row['xpath_numeri_giallo_attesa'],  $row, $errorManagerTelegramBot, $chatIdForErrors);
+                           $waitingDetails[9] = getDetailsWaitingXPATH($dom, $row['xpath_tempi_giallo_attesa'], $special_case, "time_yellow_waiting");
+                           checkParsingErrors($waitingDetails[9], "XPATH", "tempi codice giallo in attesa", $row['xpath_tempi_giallo_attesa'], $row, $errorManagerTelegramBot, $chatIdForErrors);
+                           $waitingDetails[10] = getDetailsWaitingXPATH($dom, $row['xpath_numeri_giallo_visita'], $special_case, "num_yellow_in_visita");
+                           checkParsingErrors($waitingDetails[10], "XPATH", "numeri codice giallo in visita", $row['xpath_numeri_giallo_visita'], $row, $errorManagerTelegramBot, $chatIdForErrors);
+                           $waitingDetails[11] = getDetailsWaitingXPATH($dom, $row['xpath_tempi_giallo_visita'], $special_case, "time_yellow_in_visita");
+                           checkParsingErrors($waitingDetails[11], "XPATH", "tempi codice giallo in visita", $row['xpath_tempi_giallo_visita'], $row, $errorManagerTelegramBot, $chatIdForErrors);
+
+                           # The red code details ...
+                           $waitingDetails[12] = getDetailsWaitingXPATH($dom, $row['xpath_numeri_rosso_attesa'], $special_case, "num_red_waiting");
+                           checkParsingErrors($waitingDetails[12], "XPATH", "numeri codice rosso in attesa", $row['xpath_numeri_rosso_attesa'], $row, $errorManagerTelegramBot, $chatIdForErrors);
+                           $waitingDetails[13] = getDetailsWaitingXPATH($dom, $row['xpath_tempi_rosso_attesa'], $special_case, "time_red_waiting");
+                           checkParsingErrors($waitingDetails[13], "XPATH", "tempi codice rosso in attesa", $row['xpath_tempi_rosso_attesa'], $row, $errorManagerTelegramBot, $chatIdForErrors);
+                           $waitingDetails[14] = getDetailsWaitingXPATH($dom, $row['xpath_numeri_rosso_visita'], $special_case, "num_red_in_visita");
+                           checkParsingErrors($waitingDetails[14], "XPATH", "numeri codice rosso in visita", $row['xpath_numeri_rosso_visita'], $row, $errorManagerTelegramBot, $chatIdForErrors);
+                           $waitingDetails[15] = getDetailsWaitingXPATH($dom, $row['xpath_tempi_rosso_visita'], $special_case, "time_red_in_visita");
+                           checkParsingErrors($waitingDetails[15], "XPATH", "tempi codice rosso in visita", $row['xpath_tempi_rosso_visita'], $row, $errorManagerTelegramBot, $chatIdForErrors);
+
+                           $isNullValue = 0;
+                           foreach ($waitingDetails as $detail) {
+                               if (is_null($detail)) {
+                                 $isNullValue = -1;
+                                 }
+                           }
+
+                           //echo $isNullValue;
+
+                           if ($isNullValue == 0) {
+                              $jsonResult .= writeJsonResult($row, $pt_X, $pt_Y, $pt_LON, $pt_LAT, $waitingDetails);
+                           }
+
+                         } catch (Exception $e) {
+                             $errorText = "<b>OpenProntoSoccorsoBot</b>";
+                             $errorText .= "\n";
+                             $errorText .= "\n";
+                             $errorText .= "Pronto Soccorso:  ".$row['ps_name'];
+                             $errorText .= "\n";
+                             $errorText .= "\n";
+                             $errorText .= "Citta': ".$row['city'];
+                             $errorText .= "\n";
+                             $errorText .= "\n";
+                             $errorText .= "Url: ".$row['url_data'];
+                             $errorText .= "\n";
+                             $errorText .= "\n";
+                             $errorText .= "Tipo parsing: XPATH";
+                             $errorText .= "\n";
+                             $errorText .= "\n";
+                             $errorText .= "Errore parsing XPATH di: ".$data;
+                             $errorText .= "\n";
+                             $errorText .= "\n";
+                             $errorText .= "Catturata eccezione: ".$e->getMessage();
+                             $errorText .= "\n";
+                             $errorText .= "\n";
+
+                             invokeErrorManagerBot($errorManagerTelegramBot, $chatIdForErrors, $errorText);
+                         }
+
+
+
+
+                         /*
                          $jsonResult .= "{";
                          $jsonResult .= "\"osm_id\": \"".$row['osm_id']."\",";
                          $jsonResult .= "\"x\": \"".$pt_X."\",";
@@ -431,11 +521,66 @@
                          $time_red_in_visita = getDetailsWaitingXPATH($dom, $row['xpath_tempi_rosso_visita'], $special_case, "time_red_in_visita");
                          $jsonResult .= ",\"tempi_rosso_in_visita\": \"".$time_red_in_visita."\"";
                          $jsonResult .= "}";
-
+                         */
                          break;
                        # Manage the XML data case ...
                        //case "XML":
                        case (($row['data_type'] == "XML") and ($data != "Error")):
+                         # The white code details ...
+                         $waitingDetails[0] = getDetailsWaitingXML($data, $row['xpath_numeri_bianco_attesa']);
+                         checkParsingErrors($waitingDetails[0], "XML", "numeri codice bianco in attesa", $row['xpath_numeri_bianco_attesa'], $row, $errorManagerTelegramBot, $chatIdForErrors);
+                         $waitingDetails[1] = getDetailsWaitingXML($data, $row['xpath_tempi_bianco_attesa']);
+                         checkParsingErrors($waitingDetails[1], "XML", "tempi codice bianco in attesa", $row['xpath_tempi_bianco_attesa'], $row, $errorManagerTelegramBot, $chatIdForErrors);
+                         $waitingDetails[2] = getDetailsWaitingXML($data, $row['xpath_numeri_bianco_visita']);
+                         checkParsingErrors($waitingDetails[2], "XML", "numeri codice bianco in visita", $row['xpath_numeri_bianco_visita'], $row, $errorManagerTelegramBot, $chatIdForErrors);
+                         $waitingDetails[3] = getDetailsWaitingXML($data, $row['xpath_tempi_bianco_visita']);
+                         checkParsingErrors($waitingDetails[3], "XML", "tempi codice bianco in visita", $row['xpath_tempi_bianco_visita'], $row, $errorManagerTelegramBot, $chatIdForErrors);
+
+                         # The green code details ...
+                         $waitingDetails[4] = getDetailsWaitingXML($data, $row['xpath_numeri_verde_attesa']);
+                         checkParsingErrors($waitingDetails[4], "XML", "numeri codice verde in attesa", $row['xpath_numeri_verde_attesa'], $row, $errorManagerTelegramBot, $chatIdForErrors);
+                         $waitingDetails[5] = getDetailsWaitingXML($data, $row['xpath_tempi_verde_attesa']);
+                         checkParsingErrors($waitingDetails[5], "XML", "tempi codice verde in attesa", $row['xpath_tempi_verde_attesa'], $row, $errorManagerTelegramBot, $chatIdForErrors);
+                         $waitingDetails[6] = getDetailsWaitingXML($data, $row['xpath_numeri_verde_visita']);
+                         checkParsingErrors($waitingDetails[6], "XML", "numeri codice verde in visita", $row['xpath_numeri_verde_visita'], $row, $errorManagerTelegramBot, $chatIdForErrors);
+                         $waitingDetails[7] = getDetailsWaitingXML($data, $row['xpath_tempi_verde_visita']);
+                         checkParsingErrors($waitingDetails[7], "XML", "tempi codice verde in visita", $row['xpath_tempi_verde_visita'], $row, $errorManagerTelegramBot, $chatIdForErrors);
+
+                         # The yellow code details ...
+                         $waitingDetails[8] = getDetailsWaitingXML($data, $row['xpath_numeri_giallo_attesa']);
+                         checkParsingErrors($waitingDetails[8], "XML", "numeri codice giallo in attesa", $row['xpath_numeri_giallo_attesa'],  $row, $errorManagerTelegramBot, $chatIdForErrors);
+                         $waitingDetails[9] = getDetailsWaitingXML($data, $row['xpath_tempi_giallo_attesa']);
+                         checkParsingErrors($waitingDetails[9], "XML", "tempi codice giallo in attesa", $row['xpath_tempi_giallo_attesa'], $row, $errorManagerTelegramBot, $chatIdForErrors);
+                         $waitingDetails[10] = getDetailsWaitingXML($data, $row['xpath_numeri_giallo_visita']);
+                         checkParsingErrors($waitingDetails[10], "XML", "numeri codice giallo in visita", $row['xpath_numeri_giallo_visita'], $row, $errorManagerTelegramBot, $chatIdForErrors);
+                         $waitingDetails[11] = getDetailsWaitingXML($data, $row['xpath_tempi_giallo_visita']);
+                         checkParsingErrors($waitingDetails[11], "XML", "tempi codice giallo in visita", $row['xpath_tempi_giallo_visita'], $row, $errorManagerTelegramBot, $chatIdForErrors);
+
+                         # The red code details ...
+                         $waitingDetails[12] = getDetailsWaitingXML($data, $row['xpath_numeri_rosso_attesa']);
+                         checkParsingErrors($waitingDetails[12], "XML", "numeri codice rosso in attesa", $row['xpath_numeri_rosso_attesa'], $row, $errorManagerTelegramBot, $chatIdForErrors);
+                         $waitingDetails[13] = getDetailsWaitingXML($data, $row['xpath_tempi_rosso_attesa']);
+                         checkParsingErrors($waitingDetails[13], "XML", "tempi codice rosso in attesa", $row['xpath_tempi_rosso_attesa'], $row, $errorManagerTelegramBot, $chatIdForErrors);
+                         $waitingDetails[14] = getDetailsWaitingXML($data, $row['xpath_numeri_rosso_visita']);
+                         checkParsingErrors($waitingDetails[14], "XML", "numeri codice rosso in visita", $row['xpath_numeri_rosso_visita'], $row, $errorManagerTelegramBot, $chatIdForErrors);
+                         $waitingDetails[15] = getDetailsWaitingXML($data, $row['xpath_tempi_rosso_visita']);
+                         checkParsingErrors($waitingDetails[15], "XML", "tempi codice rosso in visita", $row['xpath_tempi_rosso_visita'], $row, $errorManagerTelegramBot, $chatIdForErrors);
+
+                         $isNullValue = 0;
+                         foreach ($waitingDetails as $detail) {
+                             if (is_null($detail)) {
+                               $isNullValue = -1;
+                               }
+                         }
+
+                         //echo $isNullValue;
+
+                         if ($isNullValue == 0) {
+                            $jsonResult .= writeJsonResult($row, $pt_X, $pt_Y, $pt_LON, $pt_LAT, $waitingDetails);
+                         }
+
+
+                       /*
                          $jsonResult .= "{";
                          $jsonResult .= "\"osm_id\": \"".$row['osm_id']."\",";
                          $jsonResult .= "\"x\": \"".$pt_X."\",";
@@ -486,7 +631,7 @@
                          $time_red_in_visita = getDetailsWaitingXML($data, $row['xpath_tempi_rosso_visita']);
                          $jsonResult .= ",\"tempi_rosso_in_visita\": \"".$time_red_in_visita."\"";
                          $jsonResult .= "}";
-
+                         */
                          break;
 
                        //case "CUSTOM":
@@ -633,16 +778,22 @@
 
    # Get the details in the case of XML ...
    function getDetailsWaitingXML($data, $xpath_for_parsing) {
-     $xml = new SimpleXMLElement($data);
+     if ($xpath_for_parsing == "N.D.") {
+        return "N.D.";
+       }
+     else {
+       $xml = new SimpleXMLElement($data);
 
-     $result = $xml->xpath($xpath_for_parsing);
+       $result = $xml->xpath($xpath_for_parsing);
 
-     $theValue =  'N.D.';
-     while(list( , $node) = each($result)) {
+       $theValue = null;
+
+       while(list( , $node) = each($result)) {
          $theValue = $node;
-     }
+       }
 
-     return $theValue;
+       return $theValue;
+    }
    }
 
    # Manage the Molinette special case ...
