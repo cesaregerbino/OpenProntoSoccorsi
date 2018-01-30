@@ -17,7 +17,7 @@
    # Get the Municipality name ...
    //$municipality = $_GET['municipality'];
 
-   $municipality = "Trento";
+   $municipality = "Caserta";
 
    //echo "Municipality = ".$_GET['municipality'];
    //echo "\n";
@@ -638,6 +638,10 @@
                        case (($row['data_type'] == "CUSTOM") and ($data != "Error")):
                            switch ($special_case) {
                              case "OspedaleCaserta":
+                               $jsonResult = getDataOspedaleCaserta($data, $row, $pt_X, $pt_Y, $pt_LON, $pt_LAT);
+
+
+                               /*
                                $pieces = explode (",", $data);
 
                                $jsonResult .= "{";
@@ -690,6 +694,7 @@
                                $time_red_in_visita = "N.D.";
                                $jsonResult .= ",\"tempi_rosso_in_visita\": \"".$time_red_in_visita."\"";
                                $jsonResult .= "}";
+                               */
 
                                break;
                               }
@@ -1089,5 +1094,63 @@
        invokeErrorManagerBot($errorManagerTelegramBot, $chatIdForErrors, $errorText);
      }
    }
+
+   function getDataOspedaleCaserta($data, $row, $pt_X, $pt_Y, $pt_LON, $pt_LAT) {
+     $pieces = explode (",", $data);
+
+     $jsonResult  = "{";
+     $jsonResult .= "\"osm_id\": \"".$row['osm_id']."\",";
+     $jsonResult .= "\"x\": \"".$pt_X."\",";
+     $jsonResult .= "\"y\": \"".$pt_Y."\",";
+     $jsonResult .= "\"Lon\": \"".$pt_LON."\",";
+     $jsonResult .= "\"Lat\": \"".$pt_LAT."\",";
+     $jsonResult .= "\"ps_name\": \"".$row['ps_name']."\",";
+     $jsonResult .= "\"city\": \"".$row['city']."\",";
+     $jsonResult .= "\"address\": \"".$row['address']."\",";
+     $jsonResult .= "\"tel\": \"".$row['tel']."\",";
+     $jsonResult .= "\"email\": \"".$row['email']."\",";
+     $jsonResult .= "\"url_website\": \"".$row['url_website']."\",";
+
+     # The white code details ...
+     $num_white_waiting = $pieces[4];
+     $jsonResult .= "\"numeri_bianco_attesa\": \"".$num_white_waiting."\"";
+     $time_white_waiting = "N.D.";
+     $jsonResult .= ",\"tempi_bianco_attesa\": \"".$time_white_waiting."\"";
+     $num_white_in_visita = "N.D.";
+     $jsonResult .= ",\"numeri_bianco_in_visita\": \"".$num_white_in_visita."\"";
+     $time_white_in_visita = "N.D.";
+     $jsonResult .= ",\"tempi_bianco_in_visita\": \"".$time_white_in_visita."\"";
+     # The green code details ...
+     $num_green_waiting = $pieces[3];
+     $jsonResult .= ",\"numeri_verde_attesa\": \"".$num_green_waiting."\"";
+     $time_green_waiting = "N.D.";
+     $jsonResult .= ",\"tempi_verde_attesa\": \"".$time_green_waiting."\"";
+     $num_green_in_visita = "N.D.";
+     $jsonResult .= ",\"numeri_verde_in_visita\": \"".$num_green_in_visita."\"";
+     $time_green_in_visita = "N.D.";
+     $jsonResult .= ",\"tempi_verde_in_visita\": \"".$time_green_in_visita."\"";
+     # The yellow details ...
+     $num_yellow_waiting = $pieces[2];
+     $jsonResult .= ",\"numeri_giallo_attesa\": \"".$num_yellow_waiting."\"";
+     $time_yellow_waiting = "N.D.";
+     $jsonResult .= ",\"tempi_giallo_attesa\": \"".$time_yellow_waiting."\"";
+     $num_yellow_in_visita = "N.D.";
+     $jsonResult .= ",\"numeri_giallo_in_visita\": \"".$num_yellow_in_visita."\"";
+     $time_yellow_in_visita = "N.D.";
+     $jsonResult .= ",\"tempi_giallo_in_visita\": \"".$time_yellow_in_visita."\"";
+     # The red details ...
+     $num_red_waiting = $pieces[1];
+     $jsonResult .= ",\"numeri_rosso_attesa\": \"".$num_red_waiting."\"";
+     $time_red_waiting = "N.D.";
+     $jsonResult .= ",\"tempi_rosso_attesa\": \"".$time_red_waiting."\"";
+     $num_red_in_visita = "N.D.";
+     $jsonResult .= ",\"numeri_rosso_in_visita\": \"".$num_red_in_visita."\"";
+     $time_red_in_visita = "N.D.";
+     $jsonResult .= ",\"tempi_rosso_in_visita\": \"".$time_red_in_visita."\"";
+     $jsonResult .= "}";
+
+     return $jsonResult;
+   }
+
 
 ?>
