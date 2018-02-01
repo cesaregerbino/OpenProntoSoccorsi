@@ -491,7 +491,7 @@
                        case (($row['data_type'] == "CUSTOM") and ($data != "Error")):
                            switch ($special_case) {
                              case "OspedaleCaserta":
-                               $jsonResult = getDataOspedaleCaserta($data, $row, $pt_X, $pt_Y, $pt_LON, $pt_LAT);
+                               $jsonResult .= getDataOspedaleCaserta($data, $row, $pt_X, $pt_Y, $pt_LON, $pt_LAT);
 
                                break;
                               }
@@ -893,7 +893,7 @@
    function getDataOspedaleCaserta($data, $row, $pt_X, $pt_Y, $pt_LON, $pt_LAT) {
      $pieces = explode (",", $data);
 
-     $jsonResult  = "{";
+     $jsonResult .= "{";
      $jsonResult .= "\"osm_id\": \"".$row['osm_id']."\",";
      $jsonResult .= "\"x\": \"".$pt_X."\",";
      $jsonResult .= "\"y\": \"".$pt_Y."\",";

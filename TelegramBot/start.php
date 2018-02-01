@@ -1,7 +1,7 @@
 #!/usr/bin/php
 <?php
 
-include('settings_t.php');
+//include('settings_t.php');
 include('getUpdates.php');
 
 

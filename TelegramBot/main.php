@@ -298,35 +298,6 @@ Per maggiori dettagli http://cesaregerbino.wordpress.com/xxxxxxxxxxxx\n";*/
 
 			$psWaitTime = '';
 			foreach ($json['prontoSoccorsi'] as $ps) {
-					/*echo "Nome = ".$ps['ps_name'];
-					echo "\n";
-					echo "\n";*/
-					//$psWaitTime .= "*Nome PS* :".$ps['ps_name'];
-					//$my_Comune = $municipality;
-
-					//echo "****** ".$ps['error'][0];
-					//print_r($ps['error'][0]['status']);
-					echo "Status = ".$ps['error'][0]['status'];
-					echo "\n";
-					echo "\n";
-
-					if ($ps['error'][0]['status'] == "KO") {
-             //537208603:AAGn5ODgLppFu04-bi088F4SyKAiITfXH1w
-						 echo "Sono nel caso KO !!!!";
-						 echo "\n";
-						 echo "\n";
-
-						 $chat_errors_id = "537208603:AAGn5ODgLppFu04-bi088F4SyKAiITfXH1w";
-						 $error_message = "Errore nella chiamata: ".$ps['error'][0]['url'];
-						 $error_message .= "\n";
-						 $error_message .= "Codice di errore http: ".$ps['error'][0]['http_code'];
-						 $error_message .= "\n";
-						 $error_message .= "Testo errore: ".$ps['error'][0]['text_error'];
-						 $error_message .= "\n";
-						 $content = array('chat_id' => $chat_errors_id, 'text' => $error_message,'parse_mode'=> "HTML", 'disable_web_page_preview'=>true);
-						 $telegram->sendMessage($content);
-						}
-					else {
 						$psWaitTime .= "Nome: <b>".$ps['ps_name']."</b>";
 						$psWaitTime .= "\n";
 						$psWaitTime .= "Città: <b>".$ps['city']."</b>";
@@ -407,7 +378,6 @@ Per maggiori dettagli http://cesaregerbino.wordpress.com/xxxxxxxxxxxx\n";*/
 						$telegram->sendMessage($content);
 
 						$psWaitTime = "";
-					}
 				}
 		}
 
