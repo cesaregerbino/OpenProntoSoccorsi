@@ -20,13 +20,19 @@
    //echo "\n";
    //echo "\n";
 
+   # Substituite single quote in municipality name with two single quote ,otherwise there will be an error in the db query selection ...
+   $municipality  = str_replace("'","''",$municipality);
+
    # Set access to data base...
    $db = new SQLite3('../Data/OpenProntoSoccorso.sqlite');
 
    //echo ".... DB connection OK ...";
 
-   # Set the query for the current Municipality ...
-   $q="SELECT * FROM dist_com_ps_2 WHERE pg_COMUNE = '".$municipality."'";
+   # Set the query for the current Municipality for First Aid inside the municipality or in a 10 Km buffer distance...
+   //$q="SELECT * FROM dist_com_ps_2 WHERE pg_COMUNE = '".$municipality."'";
+   $q="SELECT * FROM dist_com_ps_1 WHERE pg_COMUNE = '".$municipality."' and dist < 10000";
+
+   //SELECT * FROM dist_com_ps_1 WHERE pg_COMUNE = 'Roma' and dist < 10000
 
    //echo "Query = ".$q;
    //echo "\n";
@@ -41,6 +47,18 @@
 
         # Execute the query ...
         $results = $stmt->execute();
+
+        # Check for no data in result set ...
+        if (empty((array) $results)) {
+          # Set the query for the current Municipality for the first five First Aids ...
+          $q="SELECT * FROM dist_com_ps_1 WHERE pg_COMUNE = '".$municipality."' LIMIT 4";
+
+          # Prepare for the query ...
+          $stmt = $db->prepare($q);
+
+          # Execute the query ...
+          $results = $stmt->execute();
+        }
 
         $firstIteration = TRUE;
 
