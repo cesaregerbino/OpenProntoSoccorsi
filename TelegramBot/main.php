@@ -130,7 +130,51 @@ class mainloop{
 						 //$content = array('chat_id' => $chat_id, 'text' => $theReply,'disable_web_page_preview'=>true);
 						 //$telegram->sendMessage($content);
 
-						 $this->sendResponse($chat_id, $telegram, $my_Comune, $my_lat, $my_lon, $currentLanguage);
+						 //$this->sendResponse($chat_id, $telegram, $my_Comune, $my_lat, $my_lon, $currentLanguage);
+
+
+
+						 $db = new SQLite3(DATA_ACCESSES_DB_PATH.'/DataSessionsDB/DataSessionsDB.sqlite');
+
+						 //## Accedo al db di sessione per eliminare i dati di sessione per di interesse per l'id di chat ...
+						 $q="DELETE FROM municipality_sessions WHERE Chat_id = :Chat_id";
+						 try {
+							 $stmt = $db->prepare($q);
+							 $stmt->bindvalue(':Chat_id', $chat_id, SQLITE3_TEXT);
+							 $results = $stmt->execute();
+						 }
+						 catch(PDOException $e) {
+								 print "Something went wrong or Connection to database failed! ".$e->getMessage();
+							 }
+
+						 $q = "INSERT INTO municipality_sessions (chat_id, municipality) VALUES (:chat_id, :municipality)";
+						 //$q="SELECT * FROM municipality_sessions WHERE chat_id = '".$chat_id."'";
+						 try {
+									 $stmt = $db->prepare($q);
+
+									 //## Bind parameters to statement variables
+									 $stmt->bindParam(':chat_id', $chat_id);
+									 $stmt->bindParam(':municipality', $my_Comune);
+
+									 //## Execute statement
+									 $stmt->execute();
+							 }
+							catch(PDOException $e) {
+											print "Something went wrong or Connection to database failed! ".$e->getMessage();
+							}
+						 $db_data_sessions = null;
+
+						 //## Preparo la keyboard con le opzioni di scelta per il raggio di ricerca intorno al punto di interesse ...
+						 $search_distances = array(["0","20 km"],["50 km","100 km"]);
+						 $keyb = $telegram->buildKeyBoard($search_distances, $onetime=true);
+						 $content = array('chat_id' => $chat_id, 'reply_markup' => $keyb, 'text' => "Seleziona il raggio di ricerca intorno al comune ");
+						 $telegram->sendMessage($content);
+
+
+
+
+
+
 
 					 }
 				 //*** Municipality NOT founded ...
@@ -222,6 +266,41 @@ Per maggiori dettagli http://cesaregerbino.wordpress.com/xxxxxxxxxxxx\n";*/
 					$arrayMessages = getArrayMessages("EN");
 				}
 		 //*** The user has typed a Municipality name ...
+
+
+		 elseif ((strtoupper($text) == "0") OR (strtoupper($text) == "20 KM") OR (strtoupper($text) == "50 KM") OR (strtoupper($text) == "100 KM"))  {
+							## Accedo al db di sessione per recuperare il dato del comune di interesse per l'id di chat ...
+							//$db_data_sessions = new SQLite3('/DataSessionsDB/DataSessionsDB.sqlite');
+							$db_data_sessions = new SQLite3(DATA_ACCESSES_DB_PATH.'/DataSessionsDB/DataSessionsDB.sqlite');
+							$q="SELECT ds.Municipality
+									FROM municipality_sessions as ds
+									WHERE ds.Chat_id = :Chat_id";
+							try {
+								$stmt = $db_data_sessions->prepare($q);
+								$stmt->bindvalue(':Chat_id', $chat_id, SQLITE3_TEXT);
+								$results = $stmt->execute();
+								while ($row = $results->fetchArray(SQLITE3_ASSOC)){
+									$municipality = $row['municipality'];
+								}
+							}
+							catch(PDOException $e) {
+									print "Something went wrong or Connection to database failed! ".$e->getMessage();
+								}
+
+							$db_data_sessions = null;
+
+							## To convert user entry in distance ...
+							if ($text == "0") $distance = 0;
+							if ($text == "20 km") $distance = 20000;
+							if ($text == "50 km") $distance = 50000;
+							if ($text == "100 km") $distance = 100000;
+
+							$this->sendResponse($chat_id,$telegram,$municipality,$distance,0,0,$currentLanguage);
+	}
+
+
+
+
 		 elseif ($currentLanguage != '') //Check ithe text typed by the user --> Probably the user has typed the Comune name ...
 				 {
 					 /* $theReply1="The text you've typed is: ".$text;
@@ -235,7 +314,43 @@ Per maggiori dettagli http://cesaregerbino.wordpress.com/xxxxxxxxxxxx\n";*/
            //*** The name is an Italian Municipality ...
 					 if ($isComune == 1)
 					   {
-               $this->sendResponse($chat_id, $telegram, $text,0,0,$currentLanguage);
+							 $db = new SQLite3(DATA_ACCESSES_DB_PATH.'/DataSessionsDB/DataSessionsDB.sqlite');
+
+							 //## Accedo al db di sessione per eliminare i dati di sessione per di interesse per l'id di chat ...
+							 $q="DELETE FROM municipality_sessions WHERE Chat_id = :Chat_id";
+							 try {
+								 $stmt = $db->prepare($q);
+								 $stmt->bindvalue(':Chat_id', $chat_id, SQLITE3_TEXT);
+								 $results = $stmt->execute();
+							 }
+							 catch(PDOException $e) {
+									 print "Something went wrong or Connection to database failed! ".$e->getMessage();
+								 }
+
+							 $q = "INSERT INTO municipality_sessions (chat_id, municipality) VALUES (:chat_id, :municipality)";
+							 //$q="SELECT * FROM municipality_sessions WHERE chat_id = '".$chat_id."'";
+				  		 try {
+				  					 $stmt = $db->prepare($q);
+
+					 					 //## Bind parameters to statement variables
+					           $stmt->bindParam(':chat_id', $chat_id);
+					           $stmt->bindParam(':municipality', $text);
+
+										 //## Execute statement
+					 					 $stmt->execute();
+				 				 }
+				  			catch(PDOException $e) {
+				  							print "Something went wrong or Connection to database failed! ".$e->getMessage();
+				  			}
+				  		 $db_data_sessions = null;
+
+							 //## Preparo la keyboard con le opzioni di scelta per il raggio di ricerca intorno al punto di interesse ...
+							 $search_distances = array(["0","20 km"],["50 km","100 km"]);
+							 $keyb = $telegram->buildKeyBoard($search_distances, $onetime=true);
+				       $content = array('chat_id' => $chat_id, 'reply_markup' => $keyb, 'text' => "Seleziona il raggio di ricerca intorno al comune ");
+				       $telegram->sendMessage($content);
+
+               //$this->sendResponse($chat_id, $telegram, $text,0,0,$currentLanguage);
 						 }
 					 //*** The name is NOT an Italian Municipality ...
 					 elseif ($isComune == 0)
@@ -254,10 +369,13 @@ Per maggiori dettagli http://cesaregerbino.wordpress.com/xxxxxxxxxxxx\n";*/
 							 $telegram->sendMessage($content);
 					   }
 			   }
+
+
+
 		}
 
 
-		function sendResponse($chat_id, $telegram, $municipality, $my_lat, $my_lon, $currentLanguage)
+		function sendResponse($chat_id, $telegram, $municipality, $distance, $my_lat, $my_lon, $currentLanguage)
  		{
 			$arrayMessages = array();
 			$arrayMessages = getArrayMessages($currentLanguage);
@@ -267,12 +385,12 @@ Per maggiori dettagli http://cesaregerbino.wordpress.com/xxxxxxxxxxxx\n";*/
 			$content = array('chat_id' => $chat_id, 'text' => $theReply,'disable_web_page_preview'=>true,'parse_mode'=> "HTML");
 			$telegram->sendMessage($content);
 
-			$url = 'http://localhost/OpenProntoSoccorso/API/getProntoSoccorsoDetailsByMunicipality.php?municipality='.$municipality;
+			$url = 'http://localhost/OpenProntoSoccorso/API/getProntoSoccorsoDetailsByMunicipality.php?municipality='.$municipality.'&distance='.$distance;
 
 
-			/*echo "URL = ".$url;
+			echo "URL = ".$url;
 			echo "\n";
-			echo "\n";*/
+			echo "\n";
 
 
 			//#Set CURL parameters: pay attention to the PROXY config !!!!
@@ -417,7 +535,7 @@ Per maggiori dettagli http://cesaregerbino.wordpress.com/xxxxxxxxxxxx\n";*/
 			//echo "\n";
 
 			$db = new SQLite3(DATA_ACCESSES_DB_PATH.'/DataSessionsDB/DataSessionsDB.sqlite');
- 			$q="SELECT * FROM data_sessions WHERE chat_id = '".$chat_id."'";
+ 			$q="SELECT * FROM language_sessions WHERE chat_id = '".$chat_id."'";
  			try {
  					 $stmt = $db->prepare($q);
  					 $results = $stmt->execute();
@@ -429,7 +547,7 @@ Per maggiori dettagli http://cesaregerbino.wordpress.com/xxxxxxxxxxxx\n";*/
 						//echo "Stò per inserire la lingua ...".$currentLanguage;
 						//echo "\n";
 						//echo "\n";
-            $insert = "INSERT INTO data_sessions (chat_id, language) VALUES (:chat_id, :language)";
+            $insert = "INSERT INTO language_sessions (chat_id, language) VALUES (:chat_id, :language)";
 						//echo "La insert ...".$insert;
 						//echo "\n";
 						//echo "\n";
@@ -443,7 +561,7 @@ Per maggiori dettagli http://cesaregerbino.wordpress.com/xxxxxxxxxxxx\n";*/
 						 //echo "Stò per aggiornare la lingua ...".$currentLanguage." Quella salvata era : ".$savedLanguage;
 						 //echo "\n";
 						 //echo "\n";
-					   $update = "UPDATE data_sessions SET language=? WHERE chat_id = '".$chat_id."'";
+					   $update = "UPDATE language_sessions SET language=? WHERE chat_id = '".$chat_id."'";
 						 $stmt = $db->prepare($update);
 						 //## Bind parameters to statement variables
 						 $stmt->bindValue(1,$currentLanguage);
@@ -462,7 +580,7 @@ Per maggiori dettagli http://cesaregerbino.wordpress.com/xxxxxxxxxxxx\n";*/
 	 function getSelectedLanguageFromSession($chat_id)
 		{
 			$db_data_sessions = new SQLite3(DATA_SESSIONS_DB_PATH.'/DataSessionsDB/DataSessionsDB.sqlite');
-			$q="SELECT * FROM data_sessions WHERE chat_id = '".$chat_id."'";
+			$q="SELECT * FROM language_sessions WHERE chat_id = '".$chat_id."'";
 			//echo "Query = ".$q;
 			//echo"\n";
 			//echo"\n";

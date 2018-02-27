@@ -75,9 +75,52 @@
         .c4{
         	background:#ff0000;
         }
+
+        #menu {
+             background: #fff;
+             position: absolute;
+             z-index: 1;
+             top: 160px;
+             right: 10px;
+             border-radius: 1px;
+             width: 120px;
+             border: 1px solid rgba(0,0,0,0.4);
+             font-family: 'Open Sans', sans-serif;
+         }
+
+         #menu a {
+             font-size: 13px;
+             color: #404040;
+             display: block;
+             margin: 0;
+             padding: 0;
+             padding: 10px;
+             text-decoration: none;
+             border-bottom: 1px solid rgba(0,0,0,0.25);
+             text-align: center;
+         }
+
+         #menu a:last-child {
+             border: none;
+         }
+
+         #menu a:hover {
+             background-color: #f8f8f8;
+             color: #404040;
+         }
+
+         #menu a.active {
+             background-color: #3887be;
+             color: #ffffff;
+         }
+
+         #menu a.active:hover {
+             background: #3074a4;
+         }
     </style>
   </head>
   <body>
+    <nav id="menu"></nav>
     <div id='map'></div>
 
     <!-- *** Get the MapBox API key ... -->
@@ -116,11 +159,55 @@
                       "id": "ps",
                       "type": "circle",
                       "source": "ps",
+                      'layout': {
+                          'visibility': 'visible'
+                       },
                       "paint": {
                               "circle-radius": 5,
                               "circle-color": "#ff0000"
                       }
               });
+
+              // Insert the layer beneath any symbol layer.
+              var layers = map.getStyle().layers;
+
+              var labelLayerId;
+              for (var i = 0; i < layers.length; i++) {
+                  if (layers[i].type === 'symbol' && layers[i].layout['text-field']) {
+                      labelLayerId = layers[i].id;
+                      break;
+                  }
+              }
+
+              map.addLayer({
+                  'id': '3d-buildings',
+                  'source': 'composite',
+                  'source-layer': 'building',
+                  'filter': ['==', 'extrude', 'true'],
+                  'type': 'fill-extrusion',
+                  'minzoom': 15,
+                  'layout': {
+                      'visibility': 'visible'
+                   },
+                  'paint': {
+                      'fill-extrusion-color': '#aaa',
+
+                      // use an 'interpolate' expression to add a smooth transition effect to the
+                      // buildings as the user zooms in
+                      'fill-extrusion-height': [
+                          "interpolate", ["linear"], ["zoom"],
+                          15, 0,
+                          15.05, ["get", "height"]
+                      ],
+                      'fill-extrusion-base': [
+                          "interpolate", ["linear"], ["zoom"],
+                          15, 0,
+                          15.05, ["get", "min_height"]
+                      ],
+                      'fill-extrusion-opacity': .6
+                  }
+              }, labelLayerId);
+
       });
 
       map.addControl(new MapboxGeocoder({
@@ -130,6 +217,40 @@
 
       // *** Add the navigation control ...
       map.addControl(new mapboxgl.NavigationControl());
+
+
+
+      var toggleableLayerIds = [ 'ps', '3d-buildings' ];
+
+      for (var i = 0; i < toggleableLayerIds.length; i++) {
+          var id = toggleableLayerIds[i];
+
+          var link = document.createElement('a');
+          link.href = '#';
+          link.className = 'active';
+          link.textContent = id;
+
+          link.onclick = function (e) {
+              var clickedLayer = this.textContent;
+              e.preventDefault();
+              e.stopPropagation();
+
+              var visibility = map.getLayoutProperty(clickedLayer, 'visibility');
+
+              if (visibility === 'visible') {
+                  map.setLayoutProperty(clickedLayer, 'visibility', 'none');
+                  this.className = '';
+              } else {
+                  this.className = 'active';
+                  map.setLayoutProperty(clickedLayer, 'visibility', 'visible');
+              }
+          };
+
+          var layers = document.getElementById('menu');
+          layers.appendChild(link);
+      }
+
+
 
       // When a click event occurs on a feature in the places layer, open a popup at the
       // location of the feature, with description HTML from its properties.

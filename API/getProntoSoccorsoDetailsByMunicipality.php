@@ -14,11 +14,20 @@
    # Get the Municipality name ...
    $municipality = $_GET['municipality'];
 
-   //$municipality = "Caserta";
+   //$municipality = "Varese";
 
    //echo "Municipality = ".$_GET['municipality'];
    //echo "\n";
    //echo "\n";
+
+   # Get the distance ...
+   $distance = $_GET['distance'];
+
+   //$distance = 0;
+   //echo "Distance = ".$_GET['distance'];
+   //echo "\n";
+   //echo "\n";
+
 
    # Substituite single quote in municipality name with two single quote ,otherwise there will be an error in the db query selection ...
    $municipality  = str_replace("'","''",$municipality);
@@ -29,8 +38,10 @@
    //echo ".... DB connection OK ...";
 
    # Set the query for the current Municipality for First Aid inside the municipality or in a 10 Km buffer distance...
-   //$q="SELECT * FROM dist_com_ps_2 WHERE pg_COMUNE = '".$municipality."'";
-   $q="SELECT * FROM dist_com_ps_1 WHERE pg_COMUNE = '".$municipality."' and dist < 10000";
+   //$q="SELECT * FROM dist_com_ps_1 WHERE pg_COMUNE = '".$municipality."'";
+   $q="SELECT * FROM dist_com_ps_1 WHERE pg_COMUNE = '".$municipality."' and dist <= ".$distance;
+
+   //$q="SELECT * FROM dist_com_ps_2 WHERE pg_COMUNE = 'Roma'";
 
    //SELECT * FROM dist_com_ps_1 WHERE pg_COMUNE = 'Roma' and dist < 10000
 
@@ -48,10 +59,20 @@
         # Execute the query ...
         $results = $stmt->execute();
 
+
+        $num_records = 0;
+        while($row = $results->fetchArray(SQLITE3_ASSOC)){
+          $num_records = $num_records + 1;
+        }
+
         # Check for no data in result set ...
-        if (empty((array) $results)) {
+        if ($num_records == 0) {
           # Set the query for the current Municipality for the first five First Aids ...
           $q="SELECT * FROM dist_com_ps_1 WHERE pg_COMUNE = '".$municipality."' LIMIT 4";
+
+          //echo "Query 2 = ".$q;
+          //echo "\n";
+          //echo "\n";
 
           # Prepare for the query ...
           $stmt = $db->prepare($q);
@@ -67,7 +88,7 @@
           # Set the query for the current osm_id ...
           $q1="SELECT * FROM ps_details WHERE osm_id = '".$row['pt_osm_id']."'";
 
-          //echo "..... Query = ".$q1;
+          //echo "Query = ".$q1;
           //echo "\n";
           //echo "\n";
 
@@ -358,6 +379,8 @@
                        # Manage the XPATH data case ...
                        case (($row['data_type'] == "XPATH") and ($data != "Error")):
                          try {
+
+
                            # Create a new DOM Document and load into the data ...
                            $dom = new DOMDocument();
                            @$dom->loadHTML($data);
@@ -839,6 +862,7 @@
 
 
    function writeJsonResult($row, $pt_X, $pt_Y, $pt_LON, $pt_LAT, $waitingDetails) {
+
      $jsonResult  = "{";
      $jsonResult .= "\"osm_id\": \"".$row['osm_id']."\",";
      $jsonResult .= "\"x\": \"".$pt_X."\",";
