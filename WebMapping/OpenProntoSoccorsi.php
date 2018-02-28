@@ -279,7 +279,7 @@
         $.ajax({
           url: "http://localhost/OpenProntoSoccorso/API/getProntoSoccorsoDetailsByMunicipality.php",
           method: "GET",
-          data: {municipality: Citta}
+          data: {municipality: Citta, distance:0}
         })
         .done(function(output) {
           try {

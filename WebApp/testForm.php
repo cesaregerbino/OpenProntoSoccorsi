@@ -69,7 +69,7 @@
 
     function getDataForProntoSoccorso($comune)
      {
-       $url = 'http://localhost/OpenProntoSoccorso/API/getProntoSoccorsoDetailsByMunicipality.php?municipality='.$comune;
+       $url = 'http://localhost/OpenProntoSoccorso/API/getProntoSoccorsoDetailsByMunicipality.php?municipality='.$comune.'&distance=0';
 
  			 //echo "URL = ".$url;
  			 //echo "<br>";

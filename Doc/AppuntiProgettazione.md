@@ -208,6 +208,12 @@ CREATE TABLE dist_com_ps_2 AS
 DELETE FROM dist_com_ps_2 WHERE seqno > 10;
 ```
 
+#### Step 4 ####
+Creazione dell'indice per velocizzare la query
+```
+create index idx_dist_com_ps_1_pg_COMUNE_dist on dist_com_ps_1(pg_COMUNE, dist);
+```
+
 #### Varie ####
 Alternative sono state suggerite per POSTGRESQL (NON provate ... ), in seguito ad una richiesta su
 StackExchange (lista GIS - http://gis.stackexchange.com/questions/229505/the-first-n-points-near-a-polygon-spatialite-or-postgis-query)
@@ -268,6 +274,28 @@ che si potrebbero aggiungere allo shapefile ps_From_OSM_32632 facendole calcolar
               PROC-NAME
               DATA-TYPE (es. HTML, JSON)
               XPATH
+
+## Creazione layer pronto soccorsi per web mapping ##
+Per la parte di web mapping è necessario avere un layer dei pronto soccorsi da aggiungere sulla mappa.
+
+Si può utilizzare un GeoJSON.
+
+Da Spatialite è possibile creare una tabella che contiene le info ceh servono con questo comando:
+
+    CREATE TABLE ps_layer
+      AS SELECT
+     t2.osm_id as osm_id,
+     t2.ps_name as Nome,
+     t2.city as Citta,
+     t2.address as Indirizzo,
+     t2.url_website as Url,
+     t1.pt_X as X,
+     t1.pt_Y as Y,
+     t1.pt_LON as LON,
+     t1.pt_LAT as LAT
+    FROM dist_com_ps_2 AS t1,
+      ps_details AS t2
+    WHERE t1.pt_osm_id = t2.osm_id;
 
 
 
@@ -330,4 +358,10 @@ che si potrebbero aggiungere allo shapefile ps_From_OSM_32632 facendole calcolar
      -) Codice Bianco: numero pazienti in attesa
      -) Codice Bianco: tempo medio di attesa
 
-05)
+05) Trattare il caso di Roma o similare in cui vi sono nel comune più di 10 Pronti soccorso e quindi si rischia che non si visualizzino tutti: aumentare il numero di PS considerati? fare delle 2eccezioni" e solo per questi aumentare? Da analizzare e progettare
+
+06) Fare web application semplice con solo un campi di iinput in cui l'utente  inserisci il nome del comune. Da analizzare e progettare
+
+07) Fare web mapping application con la visualizzazione dei soli PS dicui si hanno dati e la possibilità di fare "identify" sul PS e restituire le info dei numeri e tempi di attesa. La API NON funzionano per id PS ma solo per Comune. Da analizzare e progettare
+
+08) Rivedere il tag dei PS inseriti in OSM coem suggerito da lista e poi capire come recuperare gli stessi dati sia Overpass Turbo
