@@ -87,12 +87,11 @@
  			 $data = curl_exec($ch);
  			 curl_close($ch);
 
+       //echo "JSON = ".$data;
+ 			 //echo "<br>";
+ 			 //echo "<br>";
+
        return $data;
-
-
- 			 //echo "JSON = ".$data;
- 			 //echo "<br>";
- 			 //echo "<br>";
      }
 
 
@@ -101,8 +100,9 @@
         //#Convert to string (json) ...
   			$json = json_decode($data, true);
 
-  			//$psWaitTime = '';
+  			$emptyData = TRUE;
   			foreach ($json['prontoSoccorsi'] as $ps) {
+              $emptyData = FALSE;
   						echo "Nome: <b>".$ps['ps_name']."</b>";
   						echo "<br>";
   						echo "Città: <b>".$ps['city']."</b>";
@@ -167,7 +167,11 @@
   						echo "*************";
   						echo "<br>";
   						echo "<br>";
-      }
+        }
+
+        if ($emptyData == TRUE) {
+              echo "Per il comune di interesse non è stato possibile individuare alcun Pronto Soccorso che fornisca i dati di attesa";
+        }
       }
 
   ?>

@@ -414,8 +414,10 @@ Per maggiori dettagli http://cesaregerbino.wordpress.com/xxxxxxxxxxxx\n";*/
 			//#Convert to string (json) ...
 			$json = json_decode($data, true);
 
+      $emptyData = TRUE;
 			$psWaitTime = '';
 			foreach ($json['prontoSoccorsi'] as $ps) {
+            $emptyData = FALSE;
 						$psWaitTime .= "Nome: <b>".$ps['ps_name']."</b>";
 						$psWaitTime .= "\n";
 						$psWaitTime .= "Città: <b>".$ps['city']."</b>";
@@ -497,6 +499,14 @@ Per maggiori dettagli http://cesaregerbino.wordpress.com/xxxxxxxxxxxx\n";*/
 
 						$psWaitTime = "";
 				}
+
+				if ($emptyData == TRUE) {
+					  $theReply = "Per il comune di interesse non è stato possibile individuare alcun Pronto Soccorso che fornisca i dati di attesa";
+					  $content = array('chat_id' => $chat_id,  'text' => $theReply, 'parse_mode'=> "HTML", 'disable_web_page_preview'=>true);
+					  //$content = array('chat_id' => $chat_id,  'text' => $psWaitTime,  'disable_web_page_preview'=>true);
+					  $telegram->sendMessage($content);
+			  }
+
 		}
 
 
