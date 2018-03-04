@@ -3,7 +3,7 @@
  *** Open Pronto Soccorso - Web Mapping based on MapBox GL JS
  *** Description: Create a web map that shows the Italian First Aids locations and the waiting list numbers
  ***              for each code (white, green, yellow and red ones)
- ***        Note: This map shows NOT all Italian First Aids locations but the only for which
+ ***        Note: This map shows NOT all Italian First Aids locations but the only ones for which
  ***              the waiting list numbers for each code white, green, yellow and red ones) are available
  ***              in open data (services) or in some HTML web portal pages
  ***      Author: Cesare Gerbino
@@ -36,7 +36,7 @@
                  position:fixed;
                  left:2px;
                  bottom:20px;
-           font-size: 11px;
+                 font-size: 11px;
                  z-index:9999;
                  border-radius: 10px;
                  -moz-border-radius: 10px;
@@ -50,7 +50,6 @@
             max-width: 400px;
             font: 12px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
         }
-
         tr th{
         	font-weight:bold;
             }
@@ -75,7 +74,6 @@
         .c4{
         	background:#ff0000;
         }
-
         #menu {
              background: #fff;
              position: absolute;
@@ -87,7 +85,6 @@
              border: 1px solid rgba(0,0,0,0.4);
              font-family: 'Open Sans', sans-serif;
          }
-
          #menu a {
              font-size: 13px;
              color: #404040;
@@ -99,21 +96,17 @@
              border-bottom: 1px solid rgba(0,0,0,0.25);
              text-align: center;
          }
-
          #menu a:last-child {
              border: none;
          }
-
          #menu a:hover {
              background-color: #f8f8f8;
              color: #404040;
          }
-
          #menu a.active {
              background-color: #3887be;
              color: #ffffff;
          }
-
          #menu a.active:hover {
              background: #3074a4;
          }
@@ -210,6 +203,7 @@
 
       });
 
+      // *** Add the geocoder control ...
       map.addControl(new MapboxGeocoder({
           accessToken: mapboxgl.accessToken,
           position: "top-right"
@@ -219,9 +213,8 @@
       map.addControl(new mapboxgl.NavigationControl());
 
 
-
+      // *** The layers menu ...
       var toggleableLayerIds = [ 'ps', '3d-buildings' ];
-
       for (var i = 0; i < toggleableLayerIds.length; i++) {
           var id = toggleableLayerIds[i];
 
@@ -250,8 +243,6 @@
           layers.appendChild(link);
       }
 
-
-
       // When a click event occurs on a feature in the places layer, open a popup at the
       // location of the feature, with description HTML from its properties.
       map.on('click', 'ps', function (e) {
@@ -273,6 +264,7 @@
           map.getCanvas().style.cursor = '';
       });
 
+      // Get the First Aid details ...
       function getPsDetails(Citta) {
         var responseStringHTML;
 
@@ -385,8 +377,16 @@
     </script>
 
     <div id="infodiv" style="leaflet-popup-content-wrapper">
-        I dettagli relativi ai dati originali con le url di pubblicazione, di download, le licenze d''uso e di download dei dati elaborati usati per la creazione della mappa sono <a href="http://www.cesaregerbino.com/ItalyOpenAddresses/List/ItalyOpenAddressesList-V02.csv" target="link">scaricabili qui</a>.<br>
-        Maggiori dettagli <a href="https://cesaregerbino.wordpress.com/2015/02/04/numeri-civici-open-data-in-italia-disponibile-la-release-2-0-della-raccolta/" target="link">qui</a>
+      Questa applicazione permette di fornire le informazioni sulle attese (numeri e tempi) dei Pronto Soccorsi italiani.<br>
+      Non tutti i pronto soccorsi italiani sono individuati ma solo quelli per cui risultino essere disponibili, in open data o come sito web, le
+      informazioni sulle attese (numeri e tempi)<br>
+      Questa applicazione e'' stata realizzata a titolo sperimentale  da Cesare Gerbino (cesare.gerbino@gmail.com)
+      &nbsp;-&nbsp;
+      Il codice sorgente  <a href="https://github.com/cesaregerbino/OpenProntoSoccorso" target="github">è disponibile su GitHub</a>
+      &nbsp;-&nbsp;
+      Licenza: <a href="https://opensource.org/licenses/MIT" target="licenza">MIT</a>
+      &nbsp;-&nbsp;
+      Maggiori <a href="https://cesaregerbino.wordpress.com/2015/02/04/numeri-civici-open-data-in-italia-disponibile-la-release-2-0-della-raccolta/" target="link">dettagli</a>
     </div>
 
   </body>

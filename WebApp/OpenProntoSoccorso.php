@@ -1,3 +1,17 @@
+<!--
+ ***************************************************************************************************
+ *** Open Pronto Soccorso - Web Mapping
+ *** Description: Simple web app HTML / PHP: Given a municipality name search the Italian First Aids waiting list numbers
+ ***              for each code (white, green, yellow and red ones)
+ ***        Note: This web app manages NOT all Italian First Aids locations but the only ones for which
+ ***              the waiting list numbers for each code white, green, yellow and red ones) are available
+ ***              in open data (services) or in some HTML web portal pages
+ ***      Author: Cesare Gerbino
+ ***        Code: https://github.com/cesaregerbino/OpenProntoSoccorso
+ ***     License: MIT (https://opensource.org/licenses/MIT)
+ ***************************************************************************************************
+-->
+
 <html>
  <head>
   <title>
@@ -20,13 +34,24 @@
   </style>
  </head>
  <body>
+   <!-- *** The info div  -->
    <div id="infodiv" style="leaflet-popup-content-wrapper">
-       I dettagli relativi ai dati originali con le url di pubblicazione, di download, le licenze d'uso e di download dei dati elaborati usati per la creazione della mappa sono <a href="http://www.cesaregerbino.com/ItalyOpenAddresses/List/ItalyOpenAddressesList-V02.csv" target="link">scaricabili qui</a>.
-       Maggiori dettagli <a href="https://cesaregerbino.wordpress.com/2015/02/04/numeri-civici-open-data-in-italia-disponibile-la-release-2-0-della-raccolta/" target="link">qui</a>
+       Questa applicazione permette di fornire le informazioni sulle attese (numeri e tempi) dei Pronto Soccorsi italiani a partire dall'indicazione
+       del nome del comune e, al più, di un raggio di interesse nell'intorno del comune.<br>
+       Non tutti i pronto soccorsi italiani sono individuati, ma solo quelli per cui risultino essere disponibili, in open data o come sito web, le
+       informazioni sulle attese (numeri e tempi).<br>
+       Questa applicazione e'' stata realizzata a titolo sperimentale  da Cesare Gerbino (cesare.gerbino@gmail.com)
+       &nbsp;-&nbsp;
+       Il codice sorgente  <a href="https://github.com/cesaregerbino/OpenProntoSoccorso" target="github">è disponibile su GitHub</a>
+       &nbsp;-&nbsp;
+       Licenza: <a href="https://opensource.org/licenses/MIT" target="licenza">MIT</a>
+       &nbsp;-&nbsp;
+       Maggiori <a href="https://cesaregerbino.wordpress.com/2015/02/04/numeri-civici-open-data-in-italia-disponibile-la-release-2-0-della-raccolta/" target="link">dettagli</a>
    </div>
 
   <br>
 
+  <!-- *** The form for user input -->
   <form name="test" id="infodiv" action="<?php echo htmlentities($_SERVER['PHP_SELF']); ?>" method="post">
    Nome del comune: <input type="text" name="comune"><br>
    <br>
@@ -40,9 +65,12 @@
    <br>
   </form>
 
-
+  <!-- *** TElaborate the user input -->
   <?php
    include("settings.php");
+
+   //header("Location: http://localhost/OpenProntoSoccorso/WebApp/OpenProntoSoccorso.php");
+   //exit;
 
    if(isset($_POST['submit']))
     {
@@ -82,6 +110,7 @@
      }
 
 
+    //*** The function to check if the municipality is in Italy ...
     function checkComune($nameComune)
      {
        $db_data_sessions = new SQLite3(DATA_DB_PATH.'/OpenProntoSoccorso.sqlite');
@@ -106,6 +135,7 @@
        $db_data_sessions = null;
     }
 
+    //*** Get the data  ...
     function getDataForProntoSoccorso($comune, $dist)
      {
        $url = 'http://localhost/OpenProntoSoccorso/API/getProntoSoccorsoDetailsByMunicipality.php?municipality='.$comune.'&distance='.$dist;
@@ -134,6 +164,7 @@
      }
 
 
+     //*** Print the data  ...
      function printDataPS($data)
       {
         //#Convert to string (json) ...
