@@ -82,6 +82,7 @@
         }
 
         $firstIteration = TRUE;
+        $isNullValue = 0;
 
         # Iterate on the Pronto Soccoro istances ...
         while ($row = $results->fetchArray(SQLITE3_ASSOC)) {
@@ -110,7 +111,7 @@
 
                # Get the Pronto Soccorso details ...
                while ($row = $results1->fetchArray(SQLITE3_ASSOC)) {
-                 if ($firstIteration == FALSE) {
+                 if (($firstIteration == FALSE) AND ($isNullValue == 0)) {
                    $jsonResult .= ",";
                  }
                  $firstIteration = FALSE;

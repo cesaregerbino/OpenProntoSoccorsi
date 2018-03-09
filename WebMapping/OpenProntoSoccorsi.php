@@ -127,6 +127,7 @@
       var osm_id;
       var coords;
       var detailsStringHTML;
+      var ps_name;
 
       // *** !!!! NOTABLE !!!: not the best solution but it's working. Share the MapBpox API key with Javascript !!!!! ...
       // *** Set the MapBox access key ...
@@ -248,7 +249,8 @@
       map.on('click', 'ps', function (e) {
           // Get the osm_id and coords information about the point ...
           osm_id = e.features[0].properties.osm_id;
-          coords = e.features[0].geometry.coordinates
+          coords = e.features[0].geometry.coordinates;
+          ps_name = e.features[0].properties.Nome;
 
           // Get the first aid details ...
           getPsDetails(e.features[0].properties.Citta);
@@ -277,6 +279,7 @@
           try {
             // handle success response
             var outputJSON = JSON.parse(output);
+            var responseStringHTML = "";
 
             for(var i = 0; i < outputJSON.prontoSoccorsi.length; ++i) {
                 if (outputJSON.prontoSoccorsi[i].osm_id == osm_id){
@@ -353,9 +356,18 @@
                       .addTo(map);
                 }
             }
+            if (responseStringHTML == "") {
+              responseStringHTML = "Non ci sono dati disponibili per: " + ps_name;
+
+              // Create a new pop-up  the first aid details ...
+              new mapboxgl.Popup()
+                  .setLngLat(coords)
+                  .setHTML(responseStringHTML)
+                  .addTo(map);
+            }
           }
           catch(err) {
-            responseStringHTML = "Probabile errore nella parsificazione del JSON ...";
+            responseStringHTML = "Mi spiace ma non e' stato possibile recuperare i dati.<br> Dettagli: probabile errore nella parsificazione del JSON ...";
 
             new mapboxgl.Popup()
                 .setLngLat(coords)
@@ -365,7 +377,7 @@
         })
         .fail(function() {
           // handle error response
-          responseStringHTML = "Problemi nel reperimento dei dati ...";
+          responseStringHTML = "Mi spiace ma non e' stato possibile recuperare i dati.\n Dettagli: probabile errore nella richiesta alla fonte dati ...";
 
           new mapboxgl.Popup()
               .setLngLat(coords)
@@ -380,7 +392,7 @@
       Questa applicazione permette di fornire le informazioni sulle attese (numeri e tempi) dei Pronto Soccorsi italiani.<br>
       Non tutti i pronto soccorsi italiani sono individuati ma solo quelli per cui risultino essere disponibili, in open data o come sito web, le
       informazioni sulle attese (numeri e tempi)<br>
-      Questa applicazione e'' stata realizzata a titolo sperimentale  da Cesare Gerbino (cesare.gerbino@gmail.com)
+      Questa applicazione è stata realizzata a titolo sperimentale  da Cesare Gerbino (cesare.gerbino@gmail.com)
       &nbsp;-&nbsp;
       Il codice sorgente  <a href="https://github.com/cesaregerbino/OpenProntoSoccorso" target="github">è disponibile su GitHub</a>
       &nbsp;-&nbsp;
