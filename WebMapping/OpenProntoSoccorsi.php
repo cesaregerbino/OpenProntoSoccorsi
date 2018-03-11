@@ -128,6 +128,7 @@
       var coords;
       var detailsStringHTML;
       var ps_name;
+      var ps_url;
 
       // *** !!!! NOTABLE !!!: not the best solution but it's working. Share the MapBpox API key with Javascript !!!!! ...
       // *** Set the MapBox access key ...
@@ -251,6 +252,7 @@
           osm_id = e.features[0].properties.osm_id;
           coords = e.features[0].geometry.coordinates;
           ps_name = e.features[0].properties.Nome;
+          ps_url = e.features[0].properties.Url;
 
           // Get the first aid details ...
           getPsDetails(e.features[0].properties.Citta);
@@ -347,7 +349,7 @@
                   responseStringHTML = responseStringHTML +  "</table>";
                   responseStringHTML = responseStringHTML +  "</center>";
 
-                  responseStringHTML = responseStringHTML +  "<a href=\"" + outputJSON.prontoSoccorsi[i].url_website + "\" target=\"fonteDati\">Fonte dati</a>";
+                  responseStringHTML = responseStringHTML +  "Verificare rispetto alla <a href=\"" + ps_url + "\" target=\"new\">fonte dati</a> di riferimento";
 
                   // Create a new pop-up  the first aid details ...
                   new mapboxgl.Popup()
@@ -357,7 +359,8 @@
                 }
             }
             if (responseStringHTML == "") {
-              responseStringHTML = "Non ci sono dati disponibili per: " + ps_name;
+              responseStringHTML = "Non ci sono dati disponibili per: " + ps_name + "</br>";
+              responseStringHTML = responseStringHTML + "Verificare rispetto alla <a href=\"" + ps_url + "\" target=\"new\">fonte dati</a> di riferimento";
 
               // Create a new pop-up  the first aid details ...
               new mapboxgl.Popup()
@@ -367,7 +370,8 @@
             }
           }
           catch(err) {
-            responseStringHTML = "Mi spiace ma non e' stato possibile recuperare i dati.<br> Dettagli: probabile errore nella parsificazione del JSON ...";
+            responseStringHTML = "Mi spiace ma non e' stato possibile recuperare i dati.<br> Dettagli: probabile errore nella parsificazione del JSON ...<br>";
+            responseStringHTML = responseStringHTML + "Verificare rispetto alla <a href=\"" + ps_url + "\" target=\"new\">fonte dati</a> di riferimento";
 
             new mapboxgl.Popup()
                 .setLngLat(coords)
@@ -377,7 +381,8 @@
         })
         .fail(function() {
           // handle error response
-          responseStringHTML = "Mi spiace ma non e' stato possibile recuperare i dati.\n Dettagli: probabile errore nella richiesta alla fonte dati ...";
+          responseStringHTML = "Mi spiace ma non e' stato possibile recuperare i dati.\n Dettagli: probabile errore nella richiesta alla fonte dati ...<br>";
+          responseStringHTML = responseStringHTML + "Verificare rispetto alla <a href=\"" + ps_url + "\" target=\"new\">fonte dati</a> di riferimento";
 
           new mapboxgl.Popup()
               .setLngLat(coords)
