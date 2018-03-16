@@ -14,6 +14,7 @@
 
 <html>
  <head>
+  <meta charset='utf-8' />
   <title>
     Open Pronto Soccorsi
   </title>
@@ -84,7 +85,15 @@
      if ($isComune == 1)
       {
          //echo "OK, ".$comune." e' un comune Italiano !!";
-         $dataPS = getDataForProntoSoccorso($comune, $dist);
+
+         ## To convert user entry in distance ...
+         if ($dist == "0") $distance = 0;
+         if ($dist == "20") $distance = 20000;
+         if ($dist == "50") $distance = 50000;
+         if ($dist == "100") $distance = 100000;
+
+
+         $dataPS = getDataForProntoSoccorso($comune, $distance);
          printDataPS($dataPS);
       }
      //*** The name is NOT an Italian Municipality ...

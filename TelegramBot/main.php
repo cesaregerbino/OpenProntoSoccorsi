@@ -385,7 +385,8 @@ Per maggiori dettagli http://cesaregerbino.wordpress.com/xxxxxxxxxxxx\n";*/
 			$content = array('chat_id' => $chat_id, 'text' => $theReply,'disable_web_page_preview'=>true,'parse_mode'=> "HTML");
 			$telegram->sendMessage($content);
 
-			$url = 'http://localhost/OpenProntoSoccorso/API/getProntoSoccorsoDetailsByMunicipality.php?municipality='.$municipality.'&distance='.$distance;
+			$url = 'http://localhost/OpenProntoSoccorso/PI/getProntoSoccorsoDetailsByMunicipality.php?municipality='.$municipality.'&distance='.$distance;
+
 
 
 			echo "URL = ".$url;
