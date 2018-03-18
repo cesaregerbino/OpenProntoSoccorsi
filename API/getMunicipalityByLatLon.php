@@ -1,9 +1,18 @@
+<!--
+ ***************************************************************************************************
+ *** Open Pronto Soccorso - get the name of italian muncipality giving Lat Lon
+ *** Description: get the name of italian muncipality giving Lat Lon
+ ***
+ ***        Note:
+ ***
+ ***
+ ***      Author: Cesare Gerbino
+ ***        Code: https://github.com/cesaregerbino/OpenProntoSoccorsi
+ ***     License: MIT (https://opensource.org/licenses/MIT)
+ ***************************************************************************************************
+-->
+
 <?php
-   //Coordinate: 44.351698 - 10.753116
-   // getMunicipalityByLatLon(10.753116, 44.351698 )
-
-   //http://localhost/OpenProntoSoccorsi/API/getMunicipalityByLatLon.php?lat=44.351698&lon=10.753116
-
    # Get the lat ...
    $lat = $_GET['lat'];
 

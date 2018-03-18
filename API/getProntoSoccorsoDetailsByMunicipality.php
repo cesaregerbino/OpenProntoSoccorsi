@@ -1,3 +1,17 @@
+<!--
+ ***************************************************************************************************
+ *** Open Pronto Soccorso - API to access data for Emergency Rooms in Italy
+ *** Description: get the italian Emergency Rooms data from open source sources or web pages (using scraping ...)
+ ***
+ ***        Note: NOT all Italian Emergency Rooms are founded but the only ones for which
+ ***              the waiting list numbers for each code white, green, yellow and red ones) are available
+ ***              in open data (services) or in some HTML web portal pages
+ ***      Author: Cesare Gerbino
+ ***        Code: https://github.com/cesaregerbino/OpenProntoSoccorsi
+ ***     License: MIT (https://opensource.org/licenses/MIT)
+ ***************************************************************************************************
+-->
+
 <?php
    include "../Utility/SkyScannerJsonPath/vendor/autoload.php";
 
@@ -40,10 +54,6 @@
    # Set the query for the current Municipality for First Aid inside the municipality or in a 10 Km buffer distance...
    //$q="SELECT * FROM dist_com_ps_1 WHERE pg_COMUNE = '".$municipality."'";
    $q="SELECT * FROM dist_com_ps_1 WHERE pg_COMUNE = '".$municipality."' and dist <= ".$distance;
-
-   //$q="SELECT * FROM dist_com_ps_2 WHERE pg_COMUNE = 'Roma'";
-
-   //SELECT * FROM dist_com_ps_1 WHERE pg_COMUNE = 'Roma' and dist < 10000
 
    //echo "Query = ".$q;
    //echo "\n";

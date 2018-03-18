@@ -1,9 +1,9 @@
 <!--
  ***************************************************************************************************
  *** Open Pronto Soccorso - Web Mapping based on MapBox GL JS
- *** Description: Create a web map that shows the Italian First Aids locations and the waiting list numbers
+ *** Description: Create a web map that shows the Italian Emergency Rooms locations and the waiting list numbers
  ***              for each code (white, green, yellow and red ones)
- ***        Note: This map shows NOT all Italian First Aids locations but the only ones for which
+ ***        Note: This map shows NOT all Italian Emergency Rooms locations but the only ones for which
  ***              the waiting list numbers for each code white, green, yellow and red ones) are available
  ***              in open data (services) or in some HTML web portal pages
  ***      Author: Cesare Gerbino

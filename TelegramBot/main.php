@@ -1,5 +1,4 @@
-<?php
-/*
+<!--
  ***************************************************************************************************
  *** Open Pronto Soccorso - Telegram Bot
  *** Description: main.php procedure
@@ -9,7 +8,8 @@
  ***        Code: https://github.com/cesaregerbino/OpenProntoSoccorsi
  ***     License: MIT (https://opensource.org/licenses/MIT)
  ***************************************************************************************************
-*/
+-->
+<?php
 
 include("Telegram.php");
 include("textMessages.php");
