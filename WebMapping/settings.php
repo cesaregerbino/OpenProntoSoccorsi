@@ -10,5 +10,5 @@
 
 <?php
   define('API_MAPBOX','pk.eyJ1IjoiY2VzYXJlIiwiYSI6Im1LdmxtRU0ifQ.uoGK9BB9eywCPknCRlB9JA'); // MapBox API key
-  define('URL_API', 'http://localhost/OpenProntoSoccorsi/API/getProntoSoccorsoDetailsByMunicipality.php')
+  define('URL_API', 'http://localhost/OpenProntoSoccorsi/API/getProntoSoccorsoDetailsByMunicipality.php') // API url reference ...
 ?>

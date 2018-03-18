@@ -116,7 +116,7 @@
     <nav id="menu"></nav>
     <div id='map'></div>
 
-    <!-- *** Get the MapBox API key ... -->
+    <!-- *** Get the MapBox API key and url API ... -->
     <?php
       include("settings.php");
       $MapBoxApiKey = API_MAPBOX;

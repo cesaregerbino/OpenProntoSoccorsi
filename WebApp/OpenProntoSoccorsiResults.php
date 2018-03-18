@@ -77,6 +77,9 @@
       if ( (isset($_SESSION['comune'])) AND (isset($_SESSION['dist'])) ) {
         include("settings.php");
 
+        //*** Get the  url API ... -->
+        $url_api = URL_API;
+
         //*** Get the user input ...
         $comune = $_SESSION['comune'];
         $dist = $_SESSION['dist'];
@@ -93,7 +96,7 @@
             if ($dist == "50") $distance = 50000;
             if ($dist == "100") $distance = 100000;
 
-            $dataPS = getDataForProntoSoccorso($comune, $distance);
+            $dataPS = getDataForProntoSoccorso($url_api, $comune, $distance);
             printDataPS($dataPS);
          }
         elseif ($isComune == 0)
@@ -151,9 +154,9 @@
      }
 
      //*** Get the data  ...
-     function getDataForProntoSoccorso($comune, $dist)
+     function getDataForProntoSoccorso($url_api, $comune, $dist)
       {
-        $url = 'http://localhost/OpenProntoSoccorsi/API/getProntoSoccorsoDetailsByMunicipality.php?municipality='.$comune.'&distance='.$dist;
+         $url = $url_api.'?municipality='.$comune.'&distance='.$dist;
 
   			 //#Set CURL parameters: pay attention to the PROXY config !!!!
   			 $ch = curl_init();
