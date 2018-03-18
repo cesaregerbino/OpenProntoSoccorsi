@@ -120,6 +120,7 @@
     <?php
       include("settings.php");
       $MapBoxApiKey = API_MAPBOX;
+      $url_api = URL_API;
     ?>;
 
     <script>
@@ -272,8 +273,10 @@
       function getPsDetails(Citta) {
         var responseStringHTML;
 
+        // *** !!!! NOTABLE !!!: not the best solution but it's working. Share the url API with Javascript !!!!! ...
+        var url_api = <?php echo json_encode($url_api); ?>; //Don't forget the extra semicolon!
         $.ajax({
-          url: "http://localhost/OpenProntoSoccorsi/API/getProntoSoccorsoDetailsByMunicipality.php",
+          url: url_api,
           method: "GET",
           data: {municipality: Citta, distance:0}
         })
