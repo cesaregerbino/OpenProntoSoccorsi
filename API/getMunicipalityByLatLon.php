@@ -1,18 +1,16 @@
-<!--
- ***************************************************************************************************
- *** Open Pronto Soccorso - get the name of italian muncipality giving Lat Lon
- *** Description: get the name of italian muncipality giving Lat Lon
- ***
- ***        Note:
- ***
- ***
- ***      Author: Cesare Gerbino
- ***        Code: https://github.com/cesaregerbino/OpenProntoSoccorsi
- ***     License: MIT (https://opensource.org/licenses/MIT)
- ***************************************************************************************************
--->
-
 <?php
+   #***************************************************************************************************
+   #*** Open Pronto Soccorso - get the name of italian muncipality giving Lat Lon
+   #*** Description: get the name of italian muncipality giving Lat Lon
+   #***
+   #***        Note:
+   #***
+   #***
+   #***      Author: Cesare Gerbino
+   #***        Code: https://github.com/cesaregerbino/OpenProntoSoccorsi
+   #***     License: MIT (https://opensource.org/licenses/MIT)
+   #***************************************************************************************************
+
    # Get the lat ...
    $lat = $_GET['lat'];
 

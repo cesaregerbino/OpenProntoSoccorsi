@@ -185,7 +185,7 @@
    			$emptyData = TRUE;
          echo "<div id='infodiv'>";
    			foreach ($json['prontoSoccorsi'] as $ps) {
-               $emptyData = FALSE;
+              $emptyData = FALSE;
    						echo "Nome: <b>".$ps['ps_name']."</b>";
    						echo "<br>";
    						echo "Città: <b>".$ps['city']."</b>";
@@ -196,8 +196,8 @@
    						echo "<br>";
    						echo "Email: <b>".$ps['email']."</b>";
    						echo "<br>";
-               $url = str_replace('&', '&amp;', $ps['url_website']);
-               echo "Sito web: <a href=\"".$url."\" target=\"newpage\">".$url."</a>";
+              $url = str_replace('&', '&amp;', $ps['url_website']);
+              echo "Sito web: <a href=\"".$url."\" target=\"newpage\">".$url."</a>";
    						echo "<br>";
    						echo "<br>";
 
@@ -212,7 +212,7 @@
    						echo "<br>";
    						echo "<br>";
 
-               echo "<span STYLE='height:15px;width:140px;display:block;overflow:auto;background:#008000'><b>CODICE VERDE</b></span>";
+              echo "<span STYLE='height:15px;width:140px;display:block;overflow:auto;background:#008000'><b>CODICE VERDE</b></span>";
    						echo "In attesa = <b>".$ps['numeri_verde_attesa']."</b>";
    						echo "<br>";
    						echo "Tempo stimato attesa = <b>".$ps['tempi_verde_attesa']."</b>";
@@ -223,7 +223,7 @@
    						echo "<br>";
    						echo "<br>";
 
-               echo "<span STYLE='height:15px;width:140px;display:block;overflow:auto;background:#FFFF00'><b>CODICE GIALLO</b></span>";
+              echo "<span STYLE='height:15px;width:140px;display:block;overflow:auto;background:#FFFF00'><b>CODICE GIALLO</b></span>";
    						echo "In attesa = <b>".$ps['numeri_giallo_attesa']."</b>";
    						echo "<br>";
    						echo "Tempo stimato attesa = <b>".$ps['tempi_giallo_attesa']."</b>";
@@ -234,7 +234,7 @@
    						echo "<br>";
    						echo "<br>";
 
-               echo "<span STYLE='height:15px;width:140px;display:block;overflow:auto;background:#FF0000'><b>CODICE ROSSO</b></span>";
+              echo "<span STYLE='height:15px;width:140px;display:block;overflow:auto;background:#FF0000'><b>CODICE ROSSO</b></span>";
    						echo "In attesa = <b>".$ps['numeri_rosso_attesa']."</b>";
    						echo "<br>";
    						echo "Tempo stimato attesa = <b>".$ps['tempi_rosso_attesa']."</b>";
