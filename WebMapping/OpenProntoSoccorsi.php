@@ -7,7 +7,7 @@
  ***              the waiting list numbers for each code white, green, yellow and red ones) are available
  ***              in open data (services) or in some HTML web portal pages
  ***      Author: Cesare Gerbino
- ***        Code: https://github.com/cesaregerbino/OpenProntoSoccorso
+ ***        Code: https://github.com/cesaregerbino/OpenProntoSoccorsi
  ***     License: MIT (https://opensource.org/licenses/MIT)
  ***************************************************************************************************
 -->
@@ -151,7 +151,7 @@
               });
 
               map.addLayer({
-                      "id": "ps",
+                      "id": "Pronto Soccorsi",
                       "type": "circle",
                       "source": "ps",
                       'layout': {
@@ -175,7 +175,7 @@
               }
 
               map.addLayer({
-                  'id': '3d-buildings',
+                  'id': 'Edifici 3D',
                   'source': 'composite',
                   'source-layer': 'building',
                   'filter': ['==', 'extrude', 'true'],
@@ -216,7 +216,7 @@
 
 
       // *** The layers menu ...
-      var toggleableLayerIds = [ 'ps', '3d-buildings' ];
+      var toggleableLayerIds = [ 'Pronto Soccorsi', 'Edifici 3D' ];
       for (var i = 0; i < toggleableLayerIds.length; i++) {
           var id = toggleableLayerIds[i];
 
@@ -273,7 +273,7 @@
         var responseStringHTML;
 
         $.ajax({
-          url: "http://localhost/OpenProntoSoccorso/API/getProntoSoccorsoDetailsByMunicipality.php",
+          url: "http://localhost/OpenProntoSoccorsi/API/getProntoSoccorsoDetailsByMunicipality.php",
           method: "GET",
           data: {municipality: Citta, distance:0}
         })
@@ -399,7 +399,7 @@
       informazioni sulle attese (numeri e tempi)<br>
       Questa applicazione è stata realizzata a titolo sperimentale  da Cesare Gerbino (cesare.gerbino@gmail.com)
       &nbsp;-&nbsp;
-      Il codice sorgente  <a href="https://github.com/cesaregerbino/OpenProntoSoccorso" target="github">è disponibile su GitHub</a>
+      Il codice sorgente  <a href="https://github.com/cesaregerbino/OpenProntoSoccorsi" target="github">è disponibile su GitHub</a>
       &nbsp;-&nbsp;
       Licenza: <a href="https://opensource.org/licenses/MIT" target="licenza">MIT</a>
       &nbsp;-&nbsp;

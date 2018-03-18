@@ -7,7 +7,7 @@
  ***              the waiting list numbers for each code white, green, yellow and red ones) are available
  ***              in open data (services) or in some HTML web portal pages
  ***      Author: Cesare Gerbino
- ***        Code: https://github.com/cesaregerbino/OpenProntoSoccorso
+ ***        Code: https://github.com/cesaregerbino/OpenProntoSoccorsi
  ***     License: MIT (https://opensource.org/licenses/MIT)
  ***************************************************************************************************
 -->

@@ -33,7 +33,7 @@
    $municipality  = str_replace("'","''",$municipality);
 
    # Set access to data base...
-   $db = new SQLite3('../Data/OpenProntoSoccorso.sqlite');
+   $db = new SQLite3('../Data/OpenProntoSoccorsi.sqlite');
 
    //echo ".... DB connection OK ...";
 
@@ -187,7 +187,7 @@
                               }
                           } catch (Exception $e) {
                               # Prepare the error message ...
-                              $errorText = "<b>OpenProntoSoccorsoBot</b>";
+                              $errorText = "<b>OpenProntoSoccorsiBot</b>";
                               $errorText .= "\n";
                               $errorText .= "\n";
                               $errorText .= "Pronto Soccorso:  ".$row['ps_name'];
@@ -235,7 +235,7 @@
                    # Manage the curl request KO case ...
                    if ($data === false || $curl_info['http_code'] != 200) {
                      # Prepare the error message ...
-                     $errorText = "<b>OpenProntoSoccorsoBot</b>";
+                     $errorText = "<b>OpenProntoSoccorsiBot</b>";
                      $errorText .= "\n";
                      $errorText .= "\n";
                      $errorText .= "Pronto Soccorso:  ".$row['ps_name'];
@@ -350,7 +350,7 @@
                            }
                          } catch (Exception $e) {
                            # Prepare the error message ...
-                           $errorText = "<b>OpenProntoSoccorsoBot</b>";
+                           $errorText = "<b>OpenProntoSoccorsiBot</b>";
                            $errorText .= "\n";
                            $errorText .= "\n";
                            $errorText .= "Pronto Soccorso:  ".$row['ps_name'];
@@ -444,7 +444,7 @@
 
                          } catch (Exception $e) {
                              # Prepare the error message ...
-                             $errorText = "<b>OpenProntoSoccorsoBot</b>";
+                             $errorText = "<b>OpenProntoSoccorsiBot</b>";
                              $errorText .= "\n";
                              $errorText .= "\n";
                              $errorText .= "Pronto Soccorso:  ".$row['ps_name'];
@@ -734,7 +734,7 @@
      # Manage the curl request KO case ...
      if ($server_output === false || $curl_info['http_code'] != 200) {
        # Prepare the error message ...
-       $errorText = "<b>OpenProntoSoccorsoBot</b>";
+       $errorText = "<b>OpenProntoSoccorsiBot</b>";
        $errorText .= "\n";
        $errorText .= "\n";
        $errorText .= "Errore in chiamata in POST (Ospedali Sardegna): ".$row['url_data'];
@@ -764,7 +764,7 @@
          return $res[0];
        } catch (Exception $e) {
          # Prepare the error message ...
-         $errorText = "<b>OpenProntoSoccorsoBot</b>";
+         $errorText = "<b>OpenProntoSoccorsiBot</b>";
          $errorText .= "\n";
          $errorText .= "\n";
          $errorText .= "Pronto Soccorso:  ".$row['ps_name'];
@@ -822,7 +822,7 @@
      # Manage the curl request KO case ...
      if ($data === false || $curl_info['http_code'] != 200) {
        # Prepare the error message ...
-       $errorText = "<b>OpenProntoSoccorsoBot</b>";
+       $errorText = "<b>OpenProntoSoccorsiBot</b>";
        $errorText .= "\n";
        $errorText .= "\n";
        $errorText .= "Errore in chiamata in GET (Ospedale Prato): ".$row['url_data'];
@@ -908,7 +908,7 @@
 
    function checkParsingErrors($waitingDetails, $parsingType, $dataSearched, $parsingString, $row, $errorManagerTelegramBot, $chatIdForErrors) {
      if (is_null($waitingDetails)) {
-       $errorText = "<b>OpenProntoSoccorsoBot</b>";
+       $errorText = "<b>OpenProntoSoccorsiBot</b>";
        $errorText .= "\n";
        $errorText .= "\n";
        $errorText .= "Errore per recupero ".$dataSearched;

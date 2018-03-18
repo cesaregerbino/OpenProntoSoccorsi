@@ -115,7 +115,7 @@
      //*** The function to check if the municipality is in Italy ...
      function checkComune($nameComune)
       {
-        $db_data_sessions = new SQLite3(DATA_DB_PATH.'/OpenProntoSoccorso.sqlite');
+        $db_data_sessions = new SQLite3(DATA_DB_PATH.'/OpenProntoSoccorsi.sqlite');
         $q="SELECT * FROM comuni_From_ISTAT_32632 WHERE comune = \"".$nameComune."\"";
 
         try {
@@ -139,7 +139,7 @@
      //*** Get the data  ...
      function getDataForProntoSoccorso($comune, $dist)
       {
-        $url = 'http://localhost/OpenProntoSoccorso/API/getProntoSoccorsoDetailsByMunicipality.php?municipality='.$comune.'&distance='.$dist;
+        $url = 'http://localhost/OpenProntoSoccorsi/API/getProntoSoccorsoDetailsByMunicipality.php?municipality='.$comune.'&distance='.$dist;
 
   			 //#Set CURL parameters: pay attention to the PROXY config !!!!
   			 $ch = curl_init();

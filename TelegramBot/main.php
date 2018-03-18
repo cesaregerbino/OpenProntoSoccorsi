@@ -6,7 +6,7 @@
  ***        Note: This Telegram Bot was derived from the Teleram Bot for Italian Museums of DBUnico Mibact Lic. CC-BY
  ***              @author Francesco Piero Paolicelli @piersoft
  ***      Author: Cesare Gerbino
- ***        Code: https://github.com/cesaregerbino/OpenProntoSoccorso
+ ***        Code: https://github.com/cesaregerbino/OpenProntoSoccorsi
  ***     License: MIT (https://opensource.org/licenses/MIT)
  ***************************************************************************************************
 */
@@ -85,8 +85,8 @@ class mainloop{
 				 //echo "Coordinate: " .$my_lat." - " .$my_lon;
 				 //echo "\n\n";
 
-         //http://localhost/OpenProntoSoccorso/API/getMunicipalityByLatLon.php?lat=44.351698&lon=10.753116
-         $url = 'http://localhost/OpenProntoSoccorso/API/getMunicipalityByLatLon.php?lat='.$my_lat.'&lon='.$my_lon;
+         //http://localhost/OpenProntoSoccorsi/API/getMunicipalityByLatLon.php?lat=44.351698&lon=10.753116
+         $url = 'http://localhost/OpenProntoSoccorsi/API/getMunicipalityByLatLon.php?lat='.$my_lat.'&lon='.$my_lon;
 
 		     /*
 				 echo "URL = ".$url;
@@ -205,7 +205,7 @@ Le mappe utilizzate sono quelle derivate dai dati di OpenStreetMap (rif. http://
 Il calcolo dei percorsi viene realizzato avvalendosi del servizio di routing di MapQuest (rif. https://developer.mapquest.com/products/directions)\n
 L'abbreviazione delle url viene realizzata avvalendosi del servizio Google URL Shortener (rif. https://goo.gl/)\n
 Questo bot e' stato realizzato a titolo sperimentale  da Cesare Gerbino (cesare.gerbino@gmail.com)\n
-Il codice dell'applicazione è disponibile al seguente url https://github.com/cesaregerbino/OpenProntoSoccorsoBot con licenza Licenza MIT Copyright (c) [2014] (rif. https://it.wikipedia.org/wiki/Licenza_MIT)\n
+Il codice dell'applicazione è disponibile al seguente url https://github.com/cesaregerbino/OpenProntoSoccorsiBot con licenza Licenza MIT Copyright (c) [2014] (rif. https://it.wikipedia.org/wiki/Licenza_MIT)\n
 Per maggiori dettagli http://cesaregerbino.wordpress.com/xxxxxxxxxxxx\n";*/
         $reply = $arrayMessages['START_MESSAGE'];
 				$content = array('chat_id' => $chat_id, 'text' => $reply,'disable_web_page_preview'=>true);
@@ -385,7 +385,7 @@ Per maggiori dettagli http://cesaregerbino.wordpress.com/xxxxxxxxxxxx\n";*/
 			$content = array('chat_id' => $chat_id, 'text' => $theReply,'disable_web_page_preview'=>true,'parse_mode'=> "HTML");
 			$telegram->sendMessage($content);
 
-			$url = 'http://localhost/OpenProntoSoccorso/PI/getProntoSoccorsoDetailsByMunicipality.php?municipality='.$municipality.'&distance='.$distance;
+			$url = 'http://localhost/OpenProntoSoccorsi/PI/getProntoSoccorsoDetailsByMunicipality.php?municipality='.$municipality.'&distance='.$distance;
 
 
 
@@ -481,7 +481,7 @@ Per maggiori dettagli http://cesaregerbino.wordpress.com/xxxxxxxxxxxx\n";*/
 						$psWaitTime .= "\n";
 
 						if (($my_lat != 0) AND ($my_lon != 0)) {
-							$longUrl = "http://localhost/OpenProntoSoccorso/TelegramBot/RenderRoute.php?lat_from=".$my_lat."&lon_from=".$my_lon."&lat_to=".$ps['Lat']."&lon_to=".$ps['Lon']."&map_type=2";
+							$longUrl = "http://localhost/OpenProntoSoccorsi/TelegramBot/RenderRoute.php?lat_from=".$my_lat."&lon_from=".$my_lon."&lat_to=".$ps['Lat']."&lon_to=".$ps['Lon']."&map_type=2";
 	            $shortUrl = $this->CompactUrl($longUrl);
 							echo "shortUrl = ".$shortUrl;
 							echo "\n";
@@ -653,7 +653,7 @@ Per maggiori dettagli http://cesaregerbino.wordpress.com/xxxxxxxxxxxx\n";*/
 
 	 function checkComune($nameComune)
  		{
- 			$db_data_sessions = new SQLite3(DATA_DB_PATH.'/OpenProntoSoccorso.sqlite');
+ 			$db_data_sessions = new SQLite3(DATA_DB_PATH.'/OpenProntoSoccorsi.sqlite');
  			$q="SELECT * FROM comuni_From_ISTAT_32632 WHERE comune = \"".$nameComune."\"";
 
  			try {

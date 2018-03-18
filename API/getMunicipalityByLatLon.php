@@ -2,7 +2,7 @@
    //Coordinate: 44.351698 - 10.753116
    // getMunicipalityByLatLon(10.753116, 44.351698 )
 
-   //http://localhost/OpenProntoSoccorso/API/getMunicipalityByLatLon.php?lat=44.351698&lon=10.753116
+   //http://localhost/OpenProntoSoccorsi/API/getMunicipalityByLatLon.php?lat=44.351698&lon=10.753116
 
    # Get the lat ...
    $lat = $_GET['lat'];
@@ -10,7 +10,7 @@
    # Get the lon ...
    $lon = $_GET['lon'];
 
-   $db_data_sessions = new SQLite3('../Data/OpenProntoSoccorso.sqlite');
+   $db_data_sessions = new SQLite3('../Data/OpenProntoSoccorsi.sqlite');
 
    # Loading SpatiaLite as an extension ...
    $db_data_sessions->loadExtension('mod_spatialite.so');

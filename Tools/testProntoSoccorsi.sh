@@ -7,12 +7,12 @@
 #***              the waiting list numbers for each code white, green, yellow and red ones) are available
 #***              in open data (services) or in some HTML web portal pages
 #***      Author: Cesare Gerbino
-#***        Code: https://github.com/cesaregerbino/OpenProntoSoccorso
+#***        Code: https://github.com/cesaregerbino/OpenProntoSoccorsi
 #***     License: MIT (https://opensource.org/licenses/MIT)
 #***************************************************************************************************
 
 while read comune; do
   echo "Test Pronto Soccorso del comune: " $comune
-  curl http://localhost/OpenProntoSoccorso/API/getProntoSoccorsoDetailsByMunicipality.php?municipality=${comune// /%20} > /dev/null
+  curl http://localhost/OpenProntoSoccorsi/API/getProntoSoccorsoDetailsByMunicipality.php?municipality=${comune// /%20} > /dev/null
   sleep 5
 done <ElencoComuni.txt

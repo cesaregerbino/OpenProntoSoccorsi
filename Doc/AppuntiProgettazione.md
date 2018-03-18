@@ -365,3 +365,5 @@ Da Spatialite è possibile creare una tabella che contiene le info ceh servono c
 07) Fare web mapping application con la visualizzazione dei soli PS dicui si hanno dati e la possibilità di fare "identify" sul PS e restituire le info dei numeri e tempi di attesa. La API NON funzionano per id PS ma solo per Comune. Da analizzare e progettare
 
 08) Rivedere il tag dei PS inseriti in OSM coem suggerito da lista e poi capire come recuperare gli stessi dati sia Overpass Turbo
+
+per l'installazione far ricreare le dipendenze di skyscanner a partire dal solo json e facendo rigirare composer update

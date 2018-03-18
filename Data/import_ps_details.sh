@@ -1,1 +1,1 @@
-sqlite3 OpenProntoSoccorso.sqlite < import_ps_details.txt
+sqlite3 OpenProntoSoccorsi.sqlite < import_ps_details.txt

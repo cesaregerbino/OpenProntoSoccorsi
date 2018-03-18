@@ -1,5 +1,9 @@
-CREATE TABLE data_sessions(
+CREATE TABLE language_sessions(
   chat_id TEXT,
   language TEXT
+);
+CREATE TABLE municipality_sessions(
+  chat_id TEXT,
+  municipality TEXT
 );
 .quit
