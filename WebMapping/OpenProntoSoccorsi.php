@@ -247,7 +247,7 @@
 
       // When a click event occurs on a feature in the places layer, open a popup at the
       // location of the feature, with description HTML from its properties.
-      map.on('click', 'ps', function (e) {
+      map.on('click', 'Pronto Soccorsi', function (e) {
           // Get the osm_id and coords information about the point ...
           osm_id = e.features[0].properties.osm_id;
           coords = e.features[0].geometry.coordinates;
@@ -259,12 +259,12 @@
       });
 
       // Change the cursor to a pointer when the mouse is over the places layer.
-      map.on('mouseenter', 'ps', function () {
+      map.on('mouseenter', 'Pronto Soccorsi', function () {
           map.getCanvas().style.cursor = 'pointer';
       });
 
       // Change it back to a pointer when it leaves.
-      map.on('mouseleave', 'ps', function () {
+      map.on('mouseleave', 'Pronto Soccorsi', function () {
           map.getCanvas().style.cursor = '';
       });
 

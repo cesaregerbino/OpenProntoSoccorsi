@@ -1,3 +1,17 @@
+<!--
+ ***************************************************************************************************
+ *** Open Pronto Soccorsi - Web Mapping
+ *** Description:
+ ***
+ ***        Note:
+ ***
+ ***
+ ***      Author: Cesare Gerbino
+ ***        Code: https://github.com/cesaregerbino/OpenProntoSoccorsi
+ ***     License: MIT (https://opensource.org/licenses/MIT)
+ ***************************************************************************************************
+-->
+
 <?php
   session_start();
 ?>
@@ -184,7 +198,7 @@
    						echo "<br>";
    						echo "<br>";
 
-               echo "<span STYLE='height:15px;width:110px;display:block;overflow:auto;background:#FFFFFF'><b>CODICE BIANCO</b></span>";
+              echo "<span STYLE='height:15px;width:140px;display:block;overflow:auto;background:#FFFFFF'><b>CODICE BIANCO</b></span>";
    						echo "In attesa = <b>".$ps['numeri_bianco_attesa']."</b>";
    						echo "<br>";
    						echo "Tempo stimato attesa = <b>".$ps['tempi_bianco_attesa']."</b>";
@@ -195,7 +209,7 @@
    						echo "<br>";
    						echo "<br>";
 
-               echo "<span STYLE='height:15px;width:110px;display:block;overflow:auto;background:#008000'><b>CODICE VERDE</b></span>";
+               echo "<span STYLE='height:15px;width:140px;display:block;overflow:auto;background:#008000'><b>CODICE VERDE</b></span>";
    						echo "In attesa = <b>".$ps['numeri_verde_attesa']."</b>";
    						echo "<br>";
    						echo "Tempo stimato attesa = <b>".$ps['tempi_verde_attesa']."</b>";
@@ -206,7 +220,7 @@
    						echo "<br>";
    						echo "<br>";
 
-               echo "<span STYLE='height:15px;width:110px;display:block;overflow:auto;background:#FFFF00'><b>CODICE GIALLO</b></span>";
+               echo "<span STYLE='height:15px;width:140px;display:block;overflow:auto;background:#FFFF00'><b>CODICE GIALLO</b></span>";
    						echo "In attesa = <b>".$ps['numeri_giallo_attesa']."</b>";
    						echo "<br>";
    						echo "Tempo stimato attesa = <b>".$ps['tempi_giallo_attesa']."</b>";
@@ -217,7 +231,7 @@
    						echo "<br>";
    						echo "<br>";
 
-               echo "<span STYLE='height:15px;width:110px;display:block;overflow:auto;background:#FF0000'><b>CODICE ROSSO</b></span>";
+               echo "<span STYLE='height:15px;width:140px;display:block;overflow:auto;background:#FF0000'><b>CODICE ROSSO</b></span>";
    						echo "In attesa = <b>".$ps['numeri_rosso_attesa']."</b>";
    						echo "<br>";
    						echo "Tempo stimato attesa = <b>".$ps['tempi_rosso_attesa']."</b>";
