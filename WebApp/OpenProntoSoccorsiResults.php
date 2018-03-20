@@ -249,7 +249,8 @@
          }
 
          if ($emptyData == TRUE) {
-               echo "Per ".$comune." non è stato possibile individuare alcun Pronto Soccorso che fornisca i dati di attesa. Provare ad aumentare il raggio di ricerca";
+               echo "Per ".$comune." non è stato possibile individuare alcun Pronto Soccorso che fornisca i dati di attesa. Provare ad aumentare il raggio di ricerca<br>";
+               echo "Puoi vedere la distribuzione su <a href=\"http://www.cesaregerbino.com/OpenProntoSoccorsi/WebMapping/OpenProntoSoccorsi.php\" target=\"mappa\">mappa</a> del territorio italiano dei pronto soccorsi per cui sono disponibili i dati di attesa (tempi e numeri) ";
          }
          echo "</div>";
          echo "<br>";
