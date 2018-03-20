@@ -14,6 +14,7 @@
 
 <?php
   session_start();
+          include("settings.php");
 ?>
 
 <html>
@@ -75,7 +76,7 @@
      {
       # echo results
       if ( (isset($_SESSION['comune'])) AND (isset($_SESSION['dist'])) ) {
-        include("settings.php");
+        //include("settings.php");
 
         //*** Get the  url API ... -->
         $url_api = URL_API;
@@ -117,10 +118,8 @@
              echo "</div>";
              echo "<br>";
            }
-
-        session_destroy();
-        session_start();
         $_SESSION['page1']=1;
+        unset($_SESSION["page2"]);
       }
      }
     else
