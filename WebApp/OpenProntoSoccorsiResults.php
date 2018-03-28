@@ -1,20 +1,18 @@
-<!--
- ***************************************************************************************************
- *** Open Pronto Soccorsi - Web Mapping
- *** Description:
- ***
- ***        Note:
- ***
- ***
- ***      Author: Cesare Gerbino
- ***        Code: https://github.com/cesaregerbino/OpenProntoSoccorsi
- ***     License: MIT (https://opensource.org/licenses/MIT)
- ***************************************************************************************************
--->
-
 <?php
+  # ***************************************************************************************************
+  # *** Open Pronto Soccorsi - Web Mapping
+  # *** Description:
+  # ***
+  # ***        Note:
+  # ***
+  # ***
+  # ***      Author: Cesare Gerbino
+  # ***        Code: https://github.com/cesaregerbino/OpenProntoSoccorsi
+  # ***     License: MIT (https://opensource.org/licenses/MIT)
+  # ***************************************************************************************************
+
   session_start();
-          include("settings.php");
+  include("settings.php");
 ?>
 
 <html>

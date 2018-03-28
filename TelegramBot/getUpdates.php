@@ -1,5 +1,3 @@
-
-
 <?php
 /**
  * Telegram Bot Example whitout WebHook.
@@ -24,20 +22,20 @@ function getUpdates($telegram){
 		// You NEED to call serveUpdate before accessing the values of message in Telegram Class
 		$telegram->serveUpdate($i);
 		$text = $telegram->Text();
-		echo "Input utente in Telegram: " .$text;
-		echo"\n";
+		//echo "Input utente in Telegram: " .$text;
+		//echo"\n";
 		$chat_id = $telegram->ChatID();
-		echo "ChatID: " .$chat_id;
-		echo"\n";
+		//echo "ChatID: " .$chat_id;
+		//echo"\n";
 		$user_id= $telegram->User_id();
-		echo "User ID: " .$user_id;
-		echo"\n";
+		//echo "User ID: " .$user_id;
+		//echo"\n";
 		$location= $telegram->Location();
-		echo "Location: " .$location;
-		echo"\n";
+		//echo "Location: " .$location;
+		//echo"\n";
 		$reply_to_msg= $telegram->ReplyToMessage();
-		echo "Reply to message: " .$reply_to_msg;
-		echo"\n";
+		//echo "Reply to message: " .$reply_to_msg;
+		//echo"\n";
 		$update_manager->shell($telegram,$text,$chat_id,$user_id,$location,$reply_to_msg);
 	}
 

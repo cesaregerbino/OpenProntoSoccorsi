@@ -1,18 +1,16 @@
-<!--
- ***************************************************************************************************
- *** Open Pronto Soccorsi - Web Mapping
- *** Description: Simple web app HTML / PHP: Given a municipality name search the Italian Emergency Rooms waiting list numbers
- ***              for each code (white, green, yellow and red ones)
- ***        Note: This web app manages NOT all Italian Emergency Rooms locations but the only ones for which
- ***              the waiting list numbers for each code white, green, yellow and red ones) are available
- ***              in open data (services) or in some HTML web portal pages
- ***      Author: Cesare Gerbino
- ***        Code: https://github.com/cesaregerbino/OpenProntoSoccorsi
- ***     License: MIT (https://opensource.org/licenses/MIT)
- ***************************************************************************************************
--->
-
 <?php
+  # ***************************************************************************************************
+  # *** Open Pronto Soccorsi - Web Mapping
+  # *** Description: Simple web app HTML / PHP: Given a municipality name search the Italian Emergency Rooms waiting list numbers
+  # ***              for each code (white, green, yellow and red ones)
+  # ***        Note: This web app manages NOT all Italian Emergency Rooms locations but the only ones for which
+  # ***              the waiting list numbers for each code white, green, yellow and red ones) are available
+  # ***              in open data (services) or in some HTML web portal pages
+  # ***      Author: Cesare Gerbino
+  # ***        Code: https://github.com/cesaregerbino/OpenProntoSoccorsi
+  # ***     License: MIT (https://opensource.org/licenses/MIT)
+  # ***************************************************************************************************
+
   session_start();
   $_SESSION['page1']=1;
 ?>
