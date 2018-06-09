@@ -13,6 +13,6 @@
 
 while read comune; do
   echo "Test Pronto Soccorso del comune: " $comune
-  curl http://localhost/OpenProntoSoccorsi/API/getProntoSoccorsoDetailsByMunicipality.php?municipality=${comune// /%20} > /dev/null
+  curl http://localhost/OpenProntoSoccorsi/API/getProntoSoccorsoDetailsByMunicipality.php?municipality=${comune// /%20}&distance=0 > /dev/null
   sleep 5
 done <ElencoComuni.txt

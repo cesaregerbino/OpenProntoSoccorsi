@@ -280,23 +280,26 @@ Per la parte di web mapping è necessario avere un layer dei pronto soccorsi da 
 
 Si può utilizzare un GeoJSON.
 
-Da Spatialite è possibile creare una tabella che contiene le info ceh servono con questo comando:
+Da Spatialite è possibile creare una tabella che contiene le info che servono con questo comando:
 
-    CREATE TABLE ps_layer
-      AS SELECT
-     t2.osm_id as osm_id,
-     t2.ps_name as Nome,
-     t2.city as Citta,
-     t2.address as Indirizzo,
-     t2.url_website as Url,
-     t1.pt_X as X,
-     t1.pt_Y as Y,
-     t1.pt_LON as LON,
-     t1.pt_LAT as LAT
-    FROM dist_com_ps_2 AS t1,
-      ps_details AS t2
-    WHERE t1.pt_osm_id = t2.osm_id;
+      CREATE TABLE ps_layer
+        AS SELECT
+           t2.osm_id as osm_id,
+           t2.ps_name as Nome,
+           t2.city as Citta,
+           t2.address as Indirizzo,
+           t2.url_website as Url,
+           t1.X as X,
+           t1.Y as Y,
+           t1.LON as LON,
+           t1.LAT as LAT
+        FROM ps_From_OSM_32632 AS t1, ps_details AS t2
+        WHERE t1.osm_id = t2.osm_id;
 
+Caricare questa tabella in QGIS.
+Esportala come file CSV
+Reimportarla come layer usando le coordinate X e Y (32632)
+Salvare come GeoJSON, avendo cura di indicare come sistema di riferimento EPSG:4326
 
 
 =========================================================
