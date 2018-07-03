@@ -283,10 +283,11 @@
         .done(function(output) {
           try {
             // handle success response
-            var outputJSON = JSON.parse(output);
+            //var outputJSON = JSON.parse(output);
+            var outputJSON = JSON.parse(output.replace(/[\n\r]+/g, ''));
             var responseStringHTML = "";
 
-            for(var i = 0; i < outputJSON.prontoSoccorsi.length; ++i) {
+            for(var i = 0; i < outputJSON.prontoSoccorsi.length; i++) {
                 if (outputJSON.prontoSoccorsi[i].osm_id == osm_id){
                   responseStringHTML = "<b>" + outputJSON.prontoSoccorsi[i].ps_name + "</b> <br>";
                   responseStringHTML = responseStringHTML +  "<b>Comune: " + outputJSON.Comune + "</b> <br>";
