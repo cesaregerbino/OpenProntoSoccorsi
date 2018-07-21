@@ -1,20 +1,25 @@
-
-
 <!DOCTYPE html>
 <html>
+
 <head>
   <title>RenderRoute</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
+  <script src='https://api.mapbox.com/mapbox.js/plugins/turf/v3.0.11/turf.min.js'></script>
+
   <?php
+    # ***************************************************************************************************
+    # *** Open Pronto Soccorsi - Render route
+    # *** Description: Render the route datails (description and map)
+    # ***        Note:
+    # ***
+    # ***      Author: Cesare Gerbino
+    # ***        Code: https://github.com/cesaregerbino/OpenProntoSoccorsi
+    # ***     License: MIT (https://opensource.org/licenses/MIT)
+    # ***************************************************************************************************
 
-  /**
-   * Render the route to the fuel station on a map
-   * Author: Cesare Gerbino code in https://github.com/cesaregerbino/?????
-  */
-
-
+    include('settings_t.php');
 
     //# Get the lat_form ...
     $lat_from = $_GET['lat_from'];
@@ -41,13 +46,16 @@
     //#echo 'map_type = '.$map_type;
     //#echo '<br>';
 
-    echo '<br>';
+    //echo '<br>';
 
-    $url = 'http://open.mapquestapi.com/directions/v2/route?key=sIGCXEck88pGXnH3ARGtdd4iBGGidSGw&outFormat=json&routeType=fastest&timeType=1&narrativeType=html&enhancedNarrative=true&shapeFormat=raw&generalize=0&locale=it_IT&unit=k&from='.$lat_from.','.$lon_from.'&to='.$lat_to.','.$lon_to.'&drivingStyle=2&highwayEfficiency=21.0';
+    $MapQuestKey = MAPQUEST_KEY;
+    $MapBoxAccessToken = MAPBOX_ACCESS_TOKEN;
 
-    #print $url;
-    #echo '<br>';
-    #echo '<br>';
+    $url = 'http://open.mapquestapi.com/directions/v2/route?key='.$MapQuestKey.'&outFormat=json&routeType=fastest&timeType=1&narrativeType=html&enhancedNarrative=true&shapeFormat=raw&generalize=0&locale=it_IT&unit=k&from='.$lat_from.','.$lon_from.'&to='.$lat_to.','.$lon_to.'&drivingStyle=2&highwayEfficiency=21.0';
+
+    //echo $url;
+    //echo '<br>';
+    //echo '<br>';
 
     //#Set CURL parameters: pay attention to the PROXY config !!!!
     $ch = curl_init();
@@ -114,28 +122,20 @@
        //# !!!! NOTABLE !!!: not the best solution but it's working. Share the PHP json object with Javascript !!!!!
        var json_route = <?php echo json_encode($json); ?>;
 
-       //# Calculate the new map center based on the route bounding box ...
-       lng_ul = json_route.route.boundingBox.ul.lng;
-       lat_ul = json_route.route.boundingBox.ul.lat;
-       lng_lr = json_route.route.boundingBox.lr.lng;
-       lat_lr = json_route.route.boundingBox.lr.lat;
-       lng_center = (lng_lr - lng_ul)/2 + lng_ul;
-       lat_center = (lat_ul - lat_lr)/2 + lat_lr;
+      //Create the map ...
+       var map = L.map('map');
 
+       //Get the MapBox token ...
+       var MapBoxAccessToken = <?php echo json_encode($MapBoxAccessToken); ?>;
 
-       //var map = L.map('map').setView([39.74739, -105], 13);
-       var map = L.map('map').setView([lat_center, lng_center], 15);
-
-
-// http://localhost/OpenProntoSoccorso/TelegramBot/RenderRoute.php?lat_from=44.399411&lon_from=8.953746&lat_to=44.408688700006&lon_to=8.9753667&map_type=2
-
-       //L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpandmbXliNDBjZWd2M2x6bDk3c2ZtOTkifQ._QA7i5Mpkd_m30IGElHziw', {
-       L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiY2VzYXJlIiwiYSI6Im1LdmxtRU0ifQ.uoGK9BB9eywCPknCRlB9JA', {
-			maxZoom: 18,
-			attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
-				'<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
-				'Imagery © <a href="http://mapbox.com">Mapbox</a>',
-			id: 'mapbox.emerald'
+       //L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiY2VzYXJlIiwiYSI6Im1LdmxtRU0ifQ.uoGK9BB9eywCPknCRlB9JA', {
+       L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={token}', {
+			  maxZoom: 18,
+			  attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
+				  '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+				  'Imagery © <a href="http://mapbox.com">Mapbox</a>',
+			  id: 'mapbox.emerald',
+        token: MapBoxAccessToken
        }).addTo(map);
 
        the_coords = '';
@@ -157,8 +157,36 @@
        //# Create le lineString json (object) of the route ...
        var lineString = JSON.parse(my_lineString);
 
+       //# Define a new style for the route rendering ...
+       var lineStyle = {
+         "color": "#FF0080",
+         "opacity": 0.80
+       };
+
        //# add the lineString json (object) of the route to the map ...
-       L.geoJson(lineString).addTo(map);
+       var geojsonLayer = L.geoJson(lineString, {style: lineStyle} ).addTo(map);
+
+       //# zoom the map to the json extent  ...
+       map.fitBounds(geojsonLayer.getBounds());
+
+       //# add start and stop icons ...
+       var start = document.getElementById('start');
+       var start_lon = <?php echo json_encode($lon_from); ?>;
+       var start_lat = <?php echo json_encode($lat_from); ?>;
+
+       var stop = document.getElementById('stop');
+       var stop_lon = <?php echo json_encode($lon_to); ?>;
+       var stop_lat = <?php echo json_encode($lat_to); ?>;
+
+       var startIcon = L.icon({
+                               iconUrl: 'start.gif',
+       });
+
+       var stopIcon = L.icon({
+                               iconUrl: 'end.gif',
+       });
+       L.marker([start_lat, start_lon], {icon: startIcon} ).addTo(map);
+       L.marker([stop_lat, stop_lon], {icon: stopIcon} ).addTo(map);
 
       </script>
   <?php
@@ -245,9 +273,9 @@
       <button class="inc">+</button>
     </div>
 
-    <div id="start" style="width:10px;height:10px;position:absolute;z-Index:10;border:0px solid red;"><img src="start.gif" alt="Start" ></div>
+    <div id="start" style="width:10px;height:10px;position:absolute;z-Index:10;border:0px solid red;"><img src="./start.gif" alt="Start" ></div>
 
-    <div id="stop" style="width:10px;height:10px;position:absolute;z-Index:10;border:0px solid red;"><img src="end.gif" alt="Stop" ></div>
+    <div id="stop" style="width:10px;height:10px;position:absolute;z-Index:10;border:0px solid red;"><img src="./end.gif" alt="Stop" ></div>
 
     <script>
       //# !!!! NOTABLE !!!: not the best solution but it's working. Share the PHP json object with Javascript !!!!!

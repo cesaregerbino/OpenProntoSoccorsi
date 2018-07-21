@@ -1,6 +1,6 @@
 <?php
    #***************************************************************************************************
-   #*** Open Pronto Soccorso - get the name of italian muncipality giving Lat Lon
+   #*** Open Pronto Soccorsi - get the name of italian muncipality giving Lat Lon
    #*** Description: get the name of italian muncipality giving Lat Lon
    #***
    #***        Note:

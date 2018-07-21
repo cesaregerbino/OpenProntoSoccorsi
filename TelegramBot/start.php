@@ -4,7 +4,6 @@
 //include('settings_t.php');
 include('getUpdates.php');
 
-
 	$bot_id = TELEGRAM_BOT;
 	$bot = new Telegram($bot_id);
 

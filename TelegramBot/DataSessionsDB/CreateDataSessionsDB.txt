@@ -4,6 +4,8 @@ CREATE TABLE language_sessions(
 );
 CREATE TABLE municipality_sessions(
   chat_id TEXT,
-  municipality TEXT
+  municipality TEXT,
+  my_lat DOUBLE,
+  my_lon DOUBLE
 );
 .quit

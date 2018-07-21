@@ -1,10 +1,10 @@
 <?php
    #***************************************************************************************************
-   #*** Open Pronto Soccorso - API to access data for Emergency Rooms in Italy
+   #*** Open Pronto Soccorsi - API to access data for Emergency Rooms in Italy
    #*** Description: get the italian Emergency Rooms data from open source sources or web pages (using scraping ...)
    #***
-   #***        Note: NOT all Italian Emergency Rooms are founded but the only ones for which
-   #***              the waiting list numbers for each code white, green, yellow and red ones) are available
+   #***        Note: NOT all Italian Emergency Rooms are founded, but the only ones for which
+   #***              the waiting list numbers for each code (white, green, yellow and red ones) are available
    #***              in open data (services) or in some HTML web portal pages
    #***      Author: Cesare Gerbino
    #***        Code: https://github.com/cesaregerbino/OpenProntoSoccorsi
@@ -39,7 +39,6 @@
    //echo "Distance = ".$_GET['distance'];
    //echo "\n";
    //echo "\n";
-
 
    # Substituite single quote in municipality name with two single quote ,otherwise there will be an error in the db query selection ...
    $municipality  = str_replace("'","''",$municipality);
@@ -92,7 +91,7 @@
         $firstIteration = TRUE;
         $isNullValue = 0;
 
-        # Iterate on the Pronto Soccoro istances ...
+        # Iterate on the Emergency Rooms istances ...
         while ($row = $results->fetchArray(SQLITE3_ASSOC)) {
           # Set the query for the current osm_id ...
           $q1="SELECT * FROM ps_details WHERE osm_id = '".$row['pt_osm_id']."'";
@@ -117,17 +116,8 @@
                //echo "\n";
                //echo "\n";
 
-               # Get the Pronto Soccorso details ...
+               # Get the Emergency Room details ...
                while ($row = $results1->fetchArray(SQLITE3_ASSOC)) {
-
-#echo $isNullValue;
-
-
-                 #if (($firstIteration == FALSE) AND ($isNullValue >= 0)) {
-                #   $jsonResult .= ",";
-                # }
-                # $firstIteration = FALSE;
-
                  # Manage the POST request case  ...
                  if ($row['data_type'] == "POST") {
                    switch ($row['specific_function']) {

@@ -1,8 +1,8 @@
 <?php
   # ***************************************************************************************************
-  # *** Open Pronto Soccorso - Telegram Bot
+  # *** Open Pronto Soccorsi - WebApp settings
   # *** Description: setting
-  # ***        Note: Define variables / constants used in OpenProntoiSoccorsiForm.php , OpenProntoSoccorsiClaculate.php and OpenProntoSoccorsiResults.php
+  # ***        Note: Define variables / constants used in OpenProntoSoccorsiForm.php , OpenProntoSoccorsiClaculate.php and OpenProntoSoccorsiResults.php
   # ***      Author: Cesare Gerbino
   # ***        Code: https://github.com/cesaregerbino/OpenProntoSoccorsi
   # ***     License: MIT (https://opensource.org/licenses/MIT)

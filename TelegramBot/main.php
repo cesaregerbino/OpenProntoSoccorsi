@@ -1,8 +1,8 @@
 <?php
 # ***************************************************************************************************
-# *** Open Pronto Soccorso - Telegram Bot
+# *** Open Pronto Soccorsi - Telegram Bot
 # *** Description: main.php procedure
-# ***        Note: This Telegram Bot was derived from the Teleram Bot for Italian Museums of DBUnico Mibact Lic. CC-BY
+# ***        Note: This Telegram Bot was derived from the Telegram Bot for Italian Museums of DBUnico Mibact Lic. CC-BY
 # ***              @author Francesco Piero Paolicelli @piersoft
 # ***      Author: Cesare Gerbino
 # ***        Code: https://github.com/cesaregerbino/OpenProntoSoccorsi
@@ -81,7 +81,7 @@ class mainloop{
 				 //echo "Coordinate: " .$my_lat." - " .$my_lon;
 				 //echo "\n\n";
 
-				 $url = URL_API.'?lat='.$my_lat.'&lon='.$my_lon;
+				 $url = URL_API2.'?lat='.$my_lat.'&lon='.$my_lon;
 				 //echo "URL = ".$url;
 				 //echo "\n";
 		     //echo "\n";
@@ -129,14 +129,15 @@ class mainloop{
 								 print "Something went wrong or Connection to database failed! ".$e->getMessage();
 							 }
 
-						 $q = "INSERT INTO municipality_sessions (chat_id, municipality) VALUES (:chat_id, :municipality)";
+						 $q = "INSERT INTO municipality_sessions (chat_id, municipality, my_lat, my_lon) VALUES (:chat_id, :municipality, :my_lat, :my_lon)";
 						 try {
 									 $stmt = $db->prepare($q);
 
 									 //## Bind parameters to statement variables
 									 $stmt->bindParam(':chat_id', $chat_id);
 									 $stmt->bindParam(':municipality', $my_Comune);
-
+									 $stmt->bindParam(':my_lat', $my_lat);
+									 $stmt->bindParam(':my_lon', $my_lon);
 									 //## Execute statement
 									 $stmt->execute();
 							 }
@@ -225,7 +226,7 @@ class mainloop{
 		 elseif ((strtoupper($text) == "0") OR (strtoupper($text) == "20 KM") OR (strtoupper($text) == "50 KM") OR (strtoupper($text) == "100 KM"))  {
 							## Accedo al db di sessione per recuperare il dato del comune di interesse per l'id di chat ...
 							$db_data_sessions = new SQLite3(DATA_ACCESSES_DB_PATH.'/DataSessionsDB/DataSessionsDB.sqlite');
-							$q="SELECT ds.Municipality
+							$q="SELECT ds.Municipality, ds.my_lat, ds.my_lon
 									FROM municipality_sessions as ds
 									WHERE ds.Chat_id = :Chat_id";
 							try {
@@ -234,6 +235,8 @@ class mainloop{
 								$results = $stmt->execute();
 								while ($row = $results->fetchArray(SQLITE3_ASSOC)){
 									$municipality = $row['municipality'];
+									$my_lat = $row['my_lat'];
+									$my_lon = $row['my_lon'];
 								}
 							}
 							catch(PDOException $e) {
@@ -248,9 +251,9 @@ class mainloop{
 							if ($text == "50 km") $distance = 50000;
 							if ($text == "100 km") $distance = 100000;
 
-							$this->sendResponse($chat_id,$telegram,$municipality,$distance,0,0,$currentLanguage);
+							$this->sendResponse($chat_id,$telegram,$municipality,$distance,$my_lat,$my_lon,$currentLanguage);
 	  }
-		 elseif ($currentLanguage != '') //Check ithe text typed by the user --> Probably the user has typed the Comune name ...
+		 elseif ($currentLanguage != '') //Check the text typed by the user --> Probably the user has typed the Comune name ...
 				 {
            //*** Check for the typed name ...
 					 $isComune = $this->checkComune($text);
@@ -296,7 +299,7 @@ class mainloop{
 					 //*** The name is NOT an Italian Municipality ...
 					 elseif ($isComune == 0)
 					   {
-							 $theReply = $text.$arrayMessages['NO_MUNICIPALITY_NAME'];
+							 $theReply = $arrayMessages['NO_MUNICIPALITY_NAME'];
 							 $content = array('chat_id' => $chat_id, 'text' => $theReply,'disable_web_page_preview'=>true);
 							 $telegram->sendMessage($content);
 					   }
@@ -304,7 +307,7 @@ class mainloop{
 					 elseif ($isComune == -1)
 					   {
 							 //$theReply = " Si è riscontrato un problema sull'accesso al nostro database. Riprovare più tardi: ci scusiamo per il disguido";
-							 $theReply = $text.$arrayMessages['DB_ACCESS_ERROR'];
+							 $theReply = $arrayMessages['DB_ACCESS_ERROR'];
 							 $content = array('chat_id' => $chat_id, 'text' => $theReply,'disable_web_page_preview'=>true);
 							 $telegram->sendMessage($content);
 					   }
@@ -314,6 +317,10 @@ class mainloop{
 
 		function sendResponse($chat_id, $telegram, $municipality, $distance, $my_lat, $my_lon, $currentLanguage)
  		{
+			//echo "Lingua = ".$currentLanguage;
+			//echo "\n";
+			//echo "\n";
+
 			$arrayMessages = array();
 			$arrayMessages = getArrayMessages($currentLanguage);
 
@@ -323,9 +330,9 @@ class mainloop{
 			$telegram->sendMessage($content);
 
 			$url = URL_API.'?municipality='.$municipality.'&distance='.$distance;
-			//echo "URL = ".$url;
-			//echo "\n";
-			//echo "\n";
+			echo "URL = ".$url;
+			echo "\n";
+			echo "\n";
 
 			//#Set CURL parameters: pay attention to the PROXY config !!!!
 			$ch = curl_init();
@@ -363,6 +370,24 @@ class mainloop{
 						$psWaitTime .= "Email: <b>".$ps['email']."</b>";
 						$psWaitTime .= "\n";
 						$psWaitTime .= "Sito web: ".str_replace('&', '&amp;', $ps['url_website']);
+						if (($my_lat != 0) AND ($my_lon != 0)) {
+							$longUrl = URL_API3."?lat_from=".$my_lat."&lon_from=".$my_lon."&lat_to=".$ps['Lat']."&lon_to=".$ps['Lon']."&map_type=0";
+	            $shortUrl = $this->CompactUrl($longUrl);
+							$psWaitTime .= "\n";
+							//echo "shortUrl = ".$shortUrl;
+							//echo "\n";
+							//echo "\n";
+							$psWaitTime .= "Descrizione del percorso: ".$shortUrl;
+
+							$longUrl = URL_API3."?lat_from=".$my_lat."&lon_from=".$my_lon."&lat_to=".$ps['Lat']."&lon_to=".$ps['Lon']."&map_type=2";
+	            $shortUrl = $this->CompactUrl($longUrl);
+							$psWaitTime .= "\n";
+							//echo "shortUrl = ".$shortUrl;
+							//echo "\n";
+							//echo "\n";
+							$psWaitTime .= "Percorso: ".$shortUrl;
+						}
+
 						$psWaitTime .= "\n";
 						$psWaitTime .= "\n";
 
@@ -412,15 +437,6 @@ class mainloop{
 						$psWaitTime .= "\n";
 						$psWaitTime .= "Tempo stimato visita = <b>".$ps['tempi_rosso_in_visita']."</b>";
 						$psWaitTime .= "\n";
-
-						if (($my_lat != 0) AND ($my_lon != 0)) {
-							$longUrl = URL_API."?lat_from=".$my_lat."&lon_from=".$my_lon."&lat_to=".$ps['Lat']."&lon_to=".$ps['Lon']."&map_type=2";
-	            $shortUrl = $this->CompactUrl($longUrl);
-							echo "shortUrl = ".$shortUrl;
-							echo "\n";
-							echo "\n";
-							$psWaitTime .= "Il percorso: ".$shortUrl;
-						}
 
 						$psWaitTime .= "\n";
 						$psWaitTime .= "*************";
