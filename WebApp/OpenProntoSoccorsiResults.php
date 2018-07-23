@@ -153,6 +153,10 @@
      //*** Get the data  ...
      function getDataForProntoSoccorso($url_api, $comune, $dist)
       {
+         // Prepare the municipality name to use in url in curl request ....
+  			 $comune = str_replace(" ", "%20", $comune);
+  			 $comune = str_replace("'", "%27", $comune);
+
          $url = $url_api.'?municipality='.$comune.'&distance='.$dist;
 
   			 //#Set CURL parameters: pay attention to the PROXY config !!!!
