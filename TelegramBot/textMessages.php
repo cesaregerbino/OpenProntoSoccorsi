@@ -67,7 +67,6 @@ This bot is an experiment created by Cesare Gerbino (cesare.gerbino@gmail.com).
 Source code is available at https://github.com/cesaregerbino/OpenProntoSoccorsi with license MIT Copyright (c) [2014] (rif. https://it.wikipedia.org/wiki/Licenza_MIT).
 
 More details (in italian language ...) at http://cesaregerbino.wordpress.com/xxxxxxxxxxxx\n';
-      $langEN['START_MESSAGE'] = 'Welcome! Here there will be a message in English, I hope !!';
       $langEN['SELECTED_LANGUAGE_IT'] = 'The selected language is: ITALIAN. All the following messagges will be in italian language';
       $langEN['SELECTED_LANGUAGE_EN'] = 'The selected language is: ENGLISH All the following messagges will be in english language';
       $langEN['MUNICIPALITY_NAME'] = ' is a Italian municipality!!';
