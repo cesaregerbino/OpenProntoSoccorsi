@@ -329,10 +329,14 @@ class mainloop{
 			$content = array('chat_id' => $chat_id, 'text' => $theReply,'disable_web_page_preview'=>true,'parse_mode'=> "HTML");
 			$telegram->sendMessage($content);
 
+      // Prepare the municipality name to use in url in curl request ....
+			$municipality = str_replace(" ", "%20", $municipality);
+			$municipality = str_replace("'", "%27", $municipality);
+
 			$url = URL_API.'?municipality='.$municipality.'&distance='.$distance;
-			echo "URL = ".$url;
-			echo "\n";
-			echo "\n";
+			//echo "URL = ".$url;
+			//echo "\n";
+			//echo "\n";
 
 			//#Set CURL parameters: pay attention to the PROXY config !!!!
 			$ch = curl_init();
@@ -346,11 +350,9 @@ class mainloop{
 			$data = curl_exec($ch);
 			curl_close($ch);
 
-
 			//echo "JSON = ".$data;
 			//echo "\n";
 			//echo "\n";
-
 
 			//#Convert to string (json) ...
 			$json = json_decode($data, true);
