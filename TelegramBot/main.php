@@ -149,7 +149,10 @@ class mainloop{
 						 //## Preparo la keyboard con le opzioni di scelta per il raggio di ricerca intorno al punto di interesse ...
 						 $search_distances = array(["0","20 km"],["50 km","100 km"]);
 						 $keyb = $telegram->buildKeyBoard($search_distances, $onetime=true);
-						 $content = array('chat_id' => $chat_id, 'reply_markup' => $keyb, 'text' => "Seleziona il raggio di ricerca intorno al comune ");
+
+						 //$theReply = "Seleziona il raggio di ricerca intorno al comune";
+						 $theReply = $arrayMessages['BUFFER_AROUND_MUNICIPALITY'];
+						 $content = array('chat_id' => $chat_id, 'reply_markup' => $keyb, 'text' => $theReply);
 						 $telegram->sendMessage($content);
 					 }
 				 //*** Municipality NOT founded ...

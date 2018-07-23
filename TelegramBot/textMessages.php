@@ -39,6 +39,8 @@ Per maggiori dettagli http://cesaregerbino.wordpress.com/xxxxxxxxxxxx\n';
       $langIT['MUNICIPALITY_NAME'] = ' è CORRETTAMENTE un comune italiano!!';
       $langIT['NO_MUNICIPALITY_NAME'] = ' non è un comune italiano. Provare a digitare correttamente: Il nome del comune deve iniziare con una lettera maiuscola, se è composto da più parole ogni parola deve iniziare con una lettera maiuscola (es. La Loggia è corretto La loggia è errato ... ), se compaiono lettere accentate NON usare l\'apostrofo (es. Agliè è corretto, Aglie\' è errato) ...';
       $langIT['SEARCHING_PS_INFO'] = 'Stò cercando le informazioni sui numeri e tempi di attesa dei Pronto Soccorso per il comune di ';
+      $langIT['BUFFER_AROUND_MUNICIPALITY'] = 'Seleziona il raggio di ricerca intorno al comune ';
+
 
       /*
       -----------------
@@ -72,6 +74,8 @@ More details (in italian language ...) at http://cesaregerbino.wordpress.com/xxx
       $langEN['MUNICIPALITY_NAME'] = ' is a Italian municipality!!';
       $langEN['NO_MUNICIPALITY_NAME'] = ' is not an Italian municipality. Try to digit in right mode: th emunicipality name must to start with a capital character, if the name is composed by several words each one must to start with a capital character (es. La Loggia is right, La loggia is wrong ... ), if there are accented letters NOT to use apostrophe (es. Agliè is right, Aglie\' is wrong) ...';
       $langEN['SEARCHING_PS_INFO'] = 'I\'m searching information on waiting time about Pronto Soccorso for the municipality of ';
+      $langEN['BUFFER_AROUND_MUNICIPALITY'] = 'Buffer distance around municipality ';
+
 
       $langCurrent = array();
       if ($language == "IT")
