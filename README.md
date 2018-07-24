@@ -27,7 +27,7 @@ dove è possibile modificare il nome del comune e in cui il parametro distance i
 
 Seppur non oggetto principale delle attività, a partire dei servizi di OpenProntoSoccorsi, e per rendere fruibili queste informazioni, ho provato ad implementare alcune applicazioni di esempio e precisamente:
 
-- una semplice web application che, immettendo il nome del comune di interesse ed un raggio di ricerca nel suo intorno restituisce l'elenco dei pronto soccorsi con relative info sui numeri e tempi di attese per tipologia (rif. http://www.cesaregerbino.com/OpenProntoSoccorsi/WebApp/OpenProntoSoccorsiResults.php )
+- una semplice web application che, immettendo il nome del comune di interesse ed un raggio di ricerca nel suo intorno restituisce l'elenco dei pronto soccorsi con relative info sui numeri e tempi di attese per tipologia (rif. http://www.cesaregerbino.com/OpenProntoSoccorsi/WebApp/OpenProntoSoccorsiForm.php )
 
 ![Open Pronto Soccorsi WebApp](Doc/openprontosoccorsiwebapp.png)
 
