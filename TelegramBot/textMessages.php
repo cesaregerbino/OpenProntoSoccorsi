@@ -33,7 +33,7 @@ Questo bot e\' stato realizzato a titolo sperimentale  da Cesare Gerbino (cesare
 
 Il codice dell\'applicazione è disponibile al seguente url https://github.com/cesaregerbino/OpenProntoSoccorsi con licenza Licenza MIT Copyright (c) [2014] (rif. https://it.wikipedia.org/wiki/Licenza_MIT).
 
-Per maggiori dettagli http://cesaregerbino.wordpress.com/\n';
+Per maggiori dettagli https://cesaregerbino.wordpress.com/2018/07/24/open-pronto-soccorsi-rendere-disponibili-ed-accessibili-i-dati-di-numeri-e-tempi-di-attesa-per-tipologia-dei-pronto-soccorsi-italiani/\n';
       $langIT['SELECTED_LANGUAGE_IT'] = 'La lingua scelta è: ITALIANO. Tutti i prossimi messaggi saranno nella lingua italiana';
       $langIT['SELECTED_LANGUAGE_EN'] = 'La lingua scelta è: INGLESE. Tutti i prossimi messaggi saranno nella lingua inglese';
       $langIT['MUNICIPALITY_NAME'] = ' è CORRETTAMENTE un comune italiano!!';
@@ -68,7 +68,7 @@ This bot is an experiment created by Cesare Gerbino (cesare.gerbino@gmail.com).
 
 Source code is available at https://github.com/cesaregerbino/OpenProntoSoccorsi with license MIT Copyright (c) [2014] (rif. https://it.wikipedia.org/wiki/Licenza_MIT).
 
-More details (in italian language ...) at http://cesaregerbino.wordpress.com/\n';
+More details (in italian language ...) at https://cesaregerbino.wordpress.com/2018/07/24/open-pronto-soccorsi-rendere-disponibili-ed-accessibili-i-dati-di-numeri-e-tempi-di-attesa-per-tipologia-dei-pronto-soccorsi-italiani/\n';
       $langEN['SELECTED_LANGUAGE_IT'] = 'The selected language is: ITALIAN. All the following messagges will be in italian language';
       $langEN['SELECTED_LANGUAGE_EN'] = 'The selected language is: ENGLISH All the following messagges will be in english language';
       $langEN['MUNICIPALITY_NAME'] = ' is a Italian municipality!!';

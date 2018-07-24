@@ -40,5 +40,5 @@ Seppur non oggetto principale delle attività, a partire dei servizi di OpenPron
 ![Open Pronto Soccorsi Telegram Bot](Doc/openprontosoccorsibot.png)
 
 Per approfondimenti e dettagli:
-- https://cesaregerbino.wordpress.com
-- https://cesaregerbino.wordpress.com
+- https://cesaregerbino.wordpress.com/2018/07/24/open-pronto-soccorsi-rendere-disponibili-ed-accessibili-i-dati-di-numeri-e-tempi-di-attesa-per-tipologia-dei-pronto-soccorsi-italiani/
+- https://cesaregerbino.wordpress.com/2018/07/24/open-pronto-soccorsi-come-e-fatto-dentro/

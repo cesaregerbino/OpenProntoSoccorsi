@@ -420,7 +420,7 @@
       &nbsp;-&nbsp;
       Licenza: <a href="https://opensource.org/licenses/MIT" target="licenza">MIT</a>
       &nbsp;-&nbsp;
-      Maggiori <a href="https://cesaregerbino.wordpress.com/2015/02/04/numeri-civici-open-data-in-italia-disponibile-la-release-2-0-della-raccolta/" target="link">dettagli</a>
+      Maggiori <a href="https://cesaregerbino.wordpress.com/2018/07/24/open-pronto-soccorsi-rendere-disponibili-ed-accessibili-i-dati-di-numeri-e-tempi-di-attesa-per-tipologia-dei-pronto-soccorsi-italiani/" target="link">dettagli</a>
     </div>
 
   </body>
