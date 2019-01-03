@@ -302,11 +302,6 @@
                            # Create a new JsonObject and load into the data ...
                            $jsonObject = new JsonPath\JsonObject($data);
 
-                           if (($firstIteration == FALSE) AND ($isNullValue >= 0)) {
-                             $jsonResult .= ",";
-                           }
-                           $firstIteration = FALSE;
-
                            # Use an array, $waitingDetails[] to mantain the parsed data.
                            # If there are some parsing errors there will be a 'null' value in the current array element
 
@@ -360,6 +355,10 @@
 
                           # If there are no 'null' values write the results in json format ...
                            if ($isNullValue == 0) {
+                              if (($firstIteration == FALSE) AND ($isNullValue >= 0)) {
+                                $jsonResult .= ",";
+                              }
+                              $firstIteration = FALSE;
                               $jsonResult .= writeJsonResult($row, $pt_X, $pt_Y, $pt_LON, $pt_LAT, $waitingDetails);
                            }
                          } catch (Exception $e) {
