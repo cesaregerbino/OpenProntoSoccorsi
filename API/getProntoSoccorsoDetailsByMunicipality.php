@@ -236,6 +236,7 @@
                    curl_setopt($ch, CURLOPT_URL, $row['url_data']);
                    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
                    curl_setopt($ch, CURLOPT_PROXY, '');
+                   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
                    $data = curl_exec($ch);
                    $curl_info = curl_getinfo($ch);
                    $curl_error = curl_error($ch);
@@ -835,6 +836,7 @@
      curl_setopt($ch, CURLOPT_URL, $url);
      curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
      curl_setopt($ch, CURLOPT_PROXY, '');
+     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 
      # In this case is needed manage cookies ..
      $cookies = "./cookie.txt";
